@@ -171,7 +171,7 @@ curl -L -o data_raw/geo/ne_110m_admin_0_countries.geojson \
 | `09_build_tables` | Làm sạch (A–J) + gộp hai nguồn | `torrents_clean`, `movie_analysis`, `cleaning_log.csv` | ~1 phút |
 | `10_extract_magnetdb_overview` | Mọi torrent + mẫu 1% bảng files (cho notebook 04) | `mdb_torrents_all`, `mdb_files_sample`, `mdb_files_per_torrent` | ~7 phút |
 
-\**Đo trên máy chạy dự án (Windows, ổ SSD); máy khác có thể nhanh/chậm hơn.
+\*Đo trên máy chạy dự án (Windows, ổ SSD); máy khác có thể nhanh/chậm hơn.
 
 **Lớp 2 — phân tích & trực quan (`notebooks/`).** Mở và chạy bất kỳ notebook nào (chỉ đọc Parquet trong `data_clean/`,
 ~vài chục giây/notebook). Notebook được dựng từ mã nguồn trong `notebooks/_src/`
