@@ -61,35 +61,125 @@ Tính không đồng nhất (nội dung báo cáo): **cấu trúc** (SQLite / TS
 phim → ghép thực thể), **ngữ nghĩa thời gian** (năm sản xuất / ngày phát hành theo nước / thời điểm crawler phát hiện /
 ảnh chụp hiện tại 2026), **chất lượng** (lỗi ghép, lỗi mã hóa tên, torrent giả, crawler ngừng 122 ngày).
 
-## Cách chạy
+## Chỉ muốn xem kết quả?
 
-```bash
-pip install duckdb pyarrow pandas numpy matplotlib squarify geopandas statsmodels \
-            guessit rapidfuzz python-dotenv requests nbformat nbclient ipykernel
+Không cần tải dữ liệu:
+- **Dashboard + slide (online):** https://lekhanh2k5-dotcom.github.io/phim-va-phim-lau-bittorrent/
+- **Notebook đã chạy sẵn** (có đủ biểu đồ và nhận xét): mở các file trong `notebooks/` ngay trên GitHub.
+- **Ảnh biểu đồ:** thư mục `plots/`.
 
-# Dữ liệu thô: giải nén MagnetDB (tar của Windows 11 hỗ trợ zstd) vào data_raw/magnetdb/;
-# IMDb .tsv.gz vào data_raw/imdb/; TMDb key trong .env (TMDB_API_KEY)
-tar -xf magnetdb_public.sqlite3.tar.zst -C data_raw/magnetdb
+Dữ liệu thô và dữ liệu đã xử lý **không có trong repo** (MagnetDB ~117 GB, dữ liệu đã xử lý ~2,7 GB, và điều khoản IMDb
+không cho phân phối lại). Để chạy lại toàn bộ, làm theo hai mục dưới đây.
+
+## Tải và lưu dữ liệu
+
+### Chuẩn bị
+
+- **Dung lượng ổ đĩa trống: ≥ 160 GB** (MagnetDB nén 27,7 GB + giải nén 117 GB; xóa file nén sau khi giải nén để lấy lại
+  ~28 GB). Nên dùng ổ SSD.
+- **RAM:** không cần nhiều — DuckDB đọc SQLite theo luồng, không nạp cả 117 GB vào RAM.
+- **Python 3.12** và các thư viện: `pip install -r requirements.txt`
+- **Phần mềm torrent** để tải MagnetDB (vd. qBittorrent) và công cụ giải nén `.tar.zst`
+  (Windows 10/11: lệnh `tar` có sẵn; macOS/Linux: `tar` + `zstd`).
+
+### Cấu trúc thư mục dữ liệu cần tạo
+
+Các script tìm dữ liệu theo **đúng đường dẫn** dưới đây (tính từ thư mục gốc của repo):
+
+```
+phim-va-phim-lau-bittorrent/
+├── .env                                   ← khóa TMDb (bước 3)
+└── data_raw/
+    ├── magnetdb/
+    │   ├── magnetdb_public.sqlite3        ← ~117 GB, giải nén từ .tar.zst (bước 1)
+    │   └── matchedVideos_sample.csv       ← ~563 MB, đi kèm trong torrent (bước 1)
+    ├── imdb/
+    │   ├── title.basics.tsv.gz            ← bước 2 (giữ nguyên dạng .gz, KHÔNG cần giải nén)
+    │   ├── title.ratings.tsv.gz
+    │   └── title.akas.tsv.gz
+    ├── tmdb_cache/                        ← tự tạo khi chạy src/06_fetch_tmdb.py (bước 3)
+    └── geo/
+        └── ne_110m_admin_0_countries.geojson   ← bước 4 (chỉ cho bản đồ)
 ```
 
-**Lớp 1 — xử lý dữ liệu (`src/`, chạy một lần, theo thứ tự):**
+`data_clean/` được các script tự tạo — không cần chuẩn bị.
 
-| Script | Việc | Đầu ra (`data_clean/`) |
-|---|---|---|
-| `01_matched_files_to_parquet` | CSV file-khớp-IMDb của MagnetDB → Parquet | `matched_files` |
-| `02_extract_torrent_times` | Thời điểm phát hiện + tên torrent từ SQLite | `magnetdb_matched_slice` |
-| `03_imdb_catalog` | Danh mục IMDb, chỉ mục tên (gồm akas), mọi phim | `imdb_catalog`, `imdb_title_index`, `imdb_movies_all` |
-| `04_match_torrent_names` | **Tự ghép** tên torrent → phim (tên + năm, SQL) | `name_matches` |
-| `05_build_movie_list` | Danh sách phim từ hai nguồn ghép | `movies` |
-| `06_fetch_tmdb` | Gọi TMDb (`--catalog-min-votes 1000` để lấy cả phim không có trên torrent) | `data_raw/tmdb_cache/*.json` |
-| `07_tmdb_to_table` | JSON → bảng | `tmdb_movies`, `tmdb_release_dates`, `tmdb_watch_providers` |
-| `08_match_eval` | Pipeline guessit + rapidfuzz, đánh giá vs MagnetDB | `match_eval` |
-| `09_build_tables` | Làm sạch (A–J) + gộp hai nguồn | `torrents_clean`, `movie_analysis`, `cleaning_log.csv` |
-| `10_extract_magnetdb_overview` | Mọi torrent + mẫu 1% bảng files (cho chương 1.4) | `mdb_torrents_all`, `mdb_files_sample`, `mdb_files_per_torrent` |
+### Bước 1 — MagnetDB (Seidenberger và cộng sự, 2025; CC-BY 4.0)
 
-**Lớp 2 — phân tích & trực quan (`notebooks/`)**: mở và chạy bất kỳ notebook nào (chỉ đọc Parquet, ~vài chục giây/notebook).
-Notebook được dựng từ mã nguồn trong `notebooks/_src/` (`python notebooks/_src/make_0X.py` dựng lại và chạy notebook X);
-nếu sửa trực tiếp trong `.ipynb` thì không chạy lại `make_0X` để tránh ghi đè.
+1. Vào trang OSF của bộ dữ liệu: **https://osf.io/9eh47/** → tải file **`MagnetDB_2024.torrent`**.
+2. Mở file `.torrent` bằng qBittorrent, chọn thư mục lưu là **`data_raw/magnetdb/`**. Torrent gồm:
+   - `magnetdb_public.sqlite3.tar.zst` (**27,67 GB**) — cơ sở dữ liệu chính, **bắt buộc**;
+   - `matchedVideos_sample.csv` (563 MB) — **bắt buộc** (dùng ở `src/01`);
+   - `README_MagnetDB_Metadata.pdf`, `files_sample.csv`, `torrents_sample.csv` — tài liệu và mẫu, không bắt buộc.
+
+   qBittorrent có thể tạo thêm thư mục con `MagnetDB_2024/` — hãy chuyển các file ra thẳng `data_raw/magnetdb/`
+   (hoặc giải nén vào đó ở bước sau).
+3. Giải nén (mất ~10–30 phút):
+   ```bash
+   tar -xf data_raw/magnetdb/magnetdb_public.sqlite3.tar.zst -C data_raw/magnetdb
+   ```
+   Kết quả: `data_raw/magnetdb/magnetdb_public.sqlite3` (~117 GB). Sau đó có thể xóa file `.tar.zst`.
+
+### Bước 2 — IMDb Non-Commercial Datasets
+
+Tải 3 file từ **https://datasets.imdbws.com/** vào `data_raw/imdb/`:
+`title.basics.tsv.gz` (~230 MB), `title.ratings.tsv.gz` (~9 MB), `title.akas.tsv.gz` (~520 MB).
+
+```bash
+mkdir -p data_raw/imdb && cd data_raw/imdb
+curl -O https://datasets.imdbws.com/title.basics.tsv.gz
+curl -O https://datasets.imdbws.com/title.ratings.tsv.gz
+curl -O https://datasets.imdbws.com/title.akas.tsv.gz
+```
+
+IMDb cập nhật các file này hằng ngày, nên số liệu khi chạy lại có thể lệch nhẹ so với kết quả trong repo
+(bản dùng trong dự án: tải ngày 05/10/2026). Dữ liệu IMDb chỉ dùng cho mục đích cá nhân, phi thương mại.
+
+### Bước 3 — Khóa TMDb API
+
+1. Tạo tài khoản miễn phí tại https://www.themoviedb.org/ → **Settings → API** → đăng ký API (loại *Developer*,
+   mục đích học tập) → sao chép **API Key**.
+2. Sao chép `.env.example` thành `.env` ở thư mục gốc repo và điền khóa: `TMDB_API_KEY=...`.
+   File `.env` đã nằm trong `.gitignore` — **không bao giờ commit khóa lên GitHub**.
+3. Dữ liệu TMDb được tải tự động khi chạy `src/06_fetch_tmdb.py` (lưu từng phim thành một file JSON trong
+   `data_raw/tmdb_cache/`). ~142 nghìn phim × 2 lượt gọi API, **mất ~4–5 giờ**; dừng giữa chừng thì chạy lại sẽ tiếp tục
+   từ chỗ dừng. Ở một số nhà mạng Việt Nam, DNS chặn `api.themoviedb.org` — script tự chuyển sang DNS-over-HTTPS
+   (1.1.1.1); nếu vẫn lỗi, đổi DNS máy sang 1.1.1.1 hoặc 8.8.8.8.
+
+### Bước 4 — Ranh giới quốc gia (chỉ để vẽ bản đồ, notebook 03)
+
+```bash
+mkdir -p data_raw/geo
+curl -L -o data_raw/geo/ne_110m_admin_0_countries.geojson \
+  https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson
+```
+
+## Chạy lại toàn bộ
+
+**Lớp 1 — xử lý dữ liệu (`src/`, chạy một lần, theo thứ tự).** Chạy từ thư mục gốc repo, vd. `python src/01_matched_files_to_parquet.py`.
+
+| Script | Việc | Đầu ra (`data_clean/`) | Thời gian* |
+|---|---|---|---|
+| `01_matched_files_to_parquet` | CSV file-khớp-IMDb của MagnetDB → Parquet | `matched_files` | ~5 giây |
+| `02_extract_torrent_times` | Thời điểm phát hiện + tên torrent từ SQLite (`--test` để thử trước) | `magnetdb_matched_slice` | ~1 phút |
+| `03_imdb_catalog` | Danh mục IMDb, chỉ mục tên (gồm akas), mọi phim | `imdb_catalog`, `imdb_title_index`, `imdb_movies_all` | ~20 giây |
+| `04_match_torrent_names` | **Tự ghép** tên torrent → phim (tên + năm, SQL) | `name_matches` | ~2 phút |
+| `05_build_movie_list` | Danh sách phim từ hai nguồn ghép | `movies` | vài giây |
+| `06_fetch_tmdb --catalog-min-votes 1000` | Gọi TMDb (cả phim IMDb ≥ 1.000 vote không có trên torrent) | `data_raw/tmdb_cache/*.json` | ~4–5 giờ |
+| `07_tmdb_to_table` | JSON → bảng | `tmdb_movies`, `tmdb_release_dates`, `tmdb_watch_providers` | ~1 phút |
+| `08_match_eval` | Pipeline guessit + rapidfuzz, đánh giá vs MagnetDB (cho notebook 06) | `match_eval` | ~3 phút |
+| `09_build_tables` | Làm sạch (A–J) + gộp hai nguồn | `torrents_clean`, `movie_analysis`, `cleaning_log.csv` | ~1 phút |
+| `10_extract_magnetdb_overview` | Mọi torrent + mẫu 1% bảng files (cho notebook 04) | `mdb_torrents_all`, `mdb_files_sample`, `mdb_files_per_torrent` | ~7 phút |
+
+\**Đo trên máy chạy dự án (Windows, ổ SSD); máy khác có thể nhanh/chậm hơn.
+
+**Lớp 2 — phân tích & trực quan (`notebooks/`).** Mở và chạy bất kỳ notebook nào (chỉ đọc Parquet trong `data_clean/`,
+~vài chục giây/notebook). Notebook được dựng từ mã nguồn trong `notebooks/_src/`
+(`python notebooks/_src/make_0X.py` dựng lại và chạy notebook X); nếu sửa trực tiếp trong `.ipynb` thì không chạy lại
+`make_0X` để tránh ghi đè.
+
+**Dashboard & slide:** `python report/phim_15_phut/build.py` tạo lại `report/phim_15_phut/dashboard.html` và `slides.html`
+từ các Parquet (xem `report/phim_15_phut/README.md`).
 
 ## Lưu ý phương pháp & giới hạn
 
@@ -116,11 +206,13 @@ nếu sửa trực tiếp trong `.ipynb` thì không chạy lại `make_0X` đ�
 ## Cấu trúc thư mục
 
 ```
-dulieulon/
+phim-va-phim-lau-bittorrent/
 ├── README.md
-├── .env                 # TMDb key — KHÔNG chia sẻ/commit
-├── data_raw/            # magnetdb/ (SQLite 117 GB), imdb/, tmdb_cache/, geo/
-├── data_clean/          # Parquet trung gian + bảng phân tích, cleaning_log.csv
+├── .env                 # khóa TMDb của bạn — KHÔNG commit (đã gitignore)
+├── data_raw/            # KHÔNG có trong repo — tải theo mục "Tải và lưu dữ liệu"
+├── data_clean/          # KHÔNG có trong repo — các script src/ tự tạo
+├── requirements.txt     # thư viện Python
+├── .env.example         # mẫu file khóa TMDb
 ├── src/                 # 01–10: xử lý dữ liệu; viz_style.py: phong cách biểu đồ dùng chung
 ├── notebooks/           # 01–08: phân tích & trực quan; _src/: mã nguồn dựng notebook
 ├── plots/               # 1_imdb … 8_piracy_ecosystem (54 PNG)
