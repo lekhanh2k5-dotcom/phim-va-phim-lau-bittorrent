@@ -1,0 +1,466 @@
+[
+  {
+    "phase": "Mở đầu",
+    "title": "Phim được biết đến, phát hành và chia sẻ như thế nào?",
+    "subtitle": "Một câu chuyện đi từ danh mục phim đến nguồn chia sẻ trên BitTorrent.",
+    "cards": [
+      [
+        "IMDb",
+        "Phim & sự chú ý"
+      ],
+      [
+        "TMDb / JustWatch",
+        "Phát hành & nơi xem"
+      ],
+      [
+        "MagnetDB",
+        "Bản chia sẻ được phát hiện"
+      ]
+    ],
+    "notes": "Mở đầu bằng câu hỏi: cùng một phim, dữ liệu đánh giá, dữ liệu phát hành và dữ liệu chia sẻ có kể cùng một câu chuyện không? Bài này dùng ba nguồn của dự án gốc, chọn 27 hình và xếp lại theo câu hỏi.",
+    "kind": "hero"
+  },
+  {
+    "phase": "Mở đầu",
+    "title": "Ba nguồn, ba phần thông tin về cùng một bộ phim",
+    "subtitle": "Chúng ta cần biết mỗi nguồn trả lời được điều gì trước khi nối chúng.",
+    "cards": [
+      [
+        "IMDb",
+        "Danh mục phim: tên, năm, thể loại, điểm và số lượt người dùng đánh giá."
+      ],
+      [
+        "TMDb",
+        "Thông tin phát hành. Phần nơi xem hợp pháp trong TMDb do JustWatch cung cấp."
+      ],
+      [
+        "MagnetDB",
+        "Metadata torrent: tên tệp/gói tệp và thời điểm hệ thống thu thập phát hiện."
+      ]
+    ],
+    "notes": "IMDb giống hồ sơ của phim. TMDb thêm thông tin phim được phát hành và phân phối. MagnetDB ghi nhận các bản chia sẻ. Dữ liệu JustWatch được lấy qua TMDb, nên bài tổ chức thành ba nguồn thu thập chính. Không nguồn nào một mình trả lời đủ câu hỏi của bài.",
+    "kind": "concept"
+  },
+  {
+    "phase": "Mở đầu",
+    "kind": "chart",
+    "image": "plots/5_combined/01_integration_diagram.png",
+    "title": "Nối các thông tin về cùng một phim bằng cách nào?",
+    "finding": "IMDb là điểm nối: TMDb có mã tham chiếu, còn tên torrent cần được nhận diện về phim.",
+    "next_question": "Trước khi ghép chi tiết, danh mục phim đang có những đặc điểm gì?",
+    "why": "Một bộ phim có tên trong IMDb, mã tham chiếu trong TMDb và nhiều cách viết trong tên torrent. Giới thiệu đường nối để người nghe biết các hình sau thuộc phần nào của cùng câu chuyện.",
+    "reading": "Theo các mũi tên về mã phim IMDb. Nhánh TMDb có định danh tham chiếu; nhánh MagnetDB cần kiểm tra tên, năm và bí danh. Phần ghép torrent sẽ được giải thích sau.",
+    "limitation": "Có mã tham chiếu hoặc tên gần giống chưa chứng minh mọi cặp ghép đều đúng. Không đồng nhất cấp phim, cấp file và cặp torrent–phim.",
+    "scope": "Sơ đồ phương pháp · ba nguồn",
+    "caution": "Sơ đồ định hướng; phần sau sẽ kiểm tra nhánh ghép torrent."
+  },
+  {
+    "phase": "Mở đầu",
+    "title": "Theo một trình tự: hiểu phim rồi mới giải thích chia sẻ",
+    "subtitle": "Mỗi phần để lại một câu hỏi cho phần tiếp theo.",
+    "cards": [
+      [
+        "01 · Phim",
+        "Danh mục, thể loại, điểm và mức được chú ý."
+      ],
+      [
+        "02 · Nơi xem",
+        "Có thể xem hợp pháp ở đâu, bằng cách nào và sau bao lâu?"
+      ],
+      [
+        "03 · Tích hợp",
+        "Hiểu torrent; xác định mỗi bản ghi thuộc phim nào."
+      ],
+      [
+        "04 · Khác biệt",
+        "Độ phổ biến, thể loại và tuổi phim liên hệ với số torrent ra sao?"
+      ],
+      [
+        "05 · Thời điểm",
+        "Các bản chia sẻ xuất hiện quanh mốc phát hành trực tuyến thế nào?"
+      ]
+    ],
+    "notes": "Bài có 32 trang, trong đó 27 trang dùng hình từ dự án gốc. Ngân sách, doanh thu, codec và nhóm phát hành được để ngoài mạch chính. Nhấn mạnh: số lượt đánh giá là chỉ báo mức được chú ý; điểm là mức được người dùng đánh giá cao; số torrent là nguồn chia sẻ quan sát được.",
+    "kind": "concept"
+  },
+  {
+    "phase": "Phim",
+    "kind": "chart",
+    "image": "plots/1_imdb/01_movies_per_year.png",
+    "title": "Danh mục phim thay đổi như thế nào qua các năm?",
+    "finding": "IMDb ghi nhận nhiều phim hơn ở các giai đoạn gần đây; đây là bức tranh của danh mục đang dùng.",
+    "next_question": "Những phim đó thuộc các thể loại nào, và cơ cấu có thay đổi không?",
+    "why": "Bắt đầu từ phim và năm, hai khái niệm quen thuộc. Ta cần biết các giai đoạn có quy mô khác nhau trước khi so cơ cấu.",
+    "reading": "Trục ngang là năm IMDb; trục dọc là số bản ghi phim. Đường cao hơn nghĩa là danh mục có nhiều phim của năm đó hơn.",
+    "limitation": "Độ đầy đủ của IMDb thay đổi theo thời gian. Hình không đủ chứng minh máy quay số hoặc một sự kiện lịch sử gây ra thay đổi; năm IMDb cũng không phải thống kê sản lượng toàn thế giới.",
+    "scope": "IMDb · phim điện ảnh sau lọc người lớn",
+    "caution": "Đếm bản ghi trong IMDb; không coi đây là tổng điều tra sản lượng phim."
+  },
+  {
+    "phase": "Phim",
+    "kind": "chart",
+    "image": "plots/1_imdb/02_genre_share_by_decade.png",
+    "title": "Cơ cấu thể loại có giống nhau ở mọi thập niên?",
+    "finding": "Tỷ trọng các nhãn thay đổi theo thời gian; phải đọc đúng cách chia trọng số trước khi so chính kịch và tài liệu.",
+    "next_question": "Sau cơ cấu thể loại, phim trong danh mục thường được chấm bao nhiêu điểm?",
+    "why": "Hình năm chỉ cho tổng số. Tách thể loại giúp xem thành phần của danh mục và giải quyết thắc mắc về chính kịch/tài liệu.",
+    "reading": "Mỗi cột là cơ cấu chia trọng số. Phim hai nhãn đóng góp 1/2 cho mỗi nhãn, phim ba nhãn đóng góp 1/3. Drama là chính kịch; Documentary là tài liệu.",
+    "limitation": "Tài liệu có tỷ trọng cao hơn trong hình không đồng nghĩa có nhiều phim hơn chính kịch. Muốn trả lời số phim phải đếm trực tiếp từng nhãn. Không suy ra nguyên nhân xã hội chỉ từ cơ cấu này.",
+    "scope": "IMDb · cơ cấu theo thập niên · chia đều theo nhãn",
+    "caution": "Tỷ trọng chia theo nhãn ≠ số phim. Không kết luận tài liệu có nhiều phim hơn chính kịch."
+  },
+  {
+    "phase": "Phim",
+    "kind": "chart",
+    "image": "plots/1_imdb/03_rating_distribution.png",
+    "title": "Các phim trong mẫu thường nhận mức điểm nào?",
+    "finding": "Phần lớn phim trong mẫu có điểm ở khoảng giữa thang đánh giá; điểm cực cao hoặc cực thấp ít hơn.",
+    "next_question": "Sự khác nhau về điểm có tập trung ở một số thể loại không?",
+    "why": "Sau khi biết loại phim, chuyển sang cách người dùng đánh giá. Đây là mốc chung để so các thể loại ở hình tiếp.",
+    "reading": "Trục ngang là điểm IMDb, thang 10. Phần cao của phân bố cho biết mức điểm có nhiều phim. Trung vị là điểm đứng giữa khi xếp các phim theo điểm.",
+    "limitation": "Mẫu có ngưỡng ít nhất 1.000 lượt đánh giá, nên không đại diện cho mọi phim trong IMDb. Điểm của người dùng không phải chất lượng khách quan.",
+    "scope": "IMDb · phim có ≥1.000 lượt đánh giá",
+    "caution": "Điểm người dùng và chất lượng khách quan là hai khái niệm khác nhau."
+  },
+  {
+    "phase": "Phim",
+    "kind": "chart",
+    "image": "plots/1_imdb/04_rating_by_genre.png",
+    "title": "Các thể loại có được đánh giá giống nhau không?",
+    "finding": "Điểm điển hình khác giữa các thể loại; tài liệu và tiểu sử có mức điểm cao hơn một số nhóm khác trong mẫu.",
+    "next_question": "Có điểm khác nhau, vậy sự chú ý của người dùng có phân bố đều giữa các phim?",
+    "why": "Hình trước cho mặt bằng điểm chung. Hình này tách theo thể loại đã giới thiệu để xem mặt bằng đó có che các khác biệt không.",
+    "reading": "Vạch trong hộp là trung vị, hộp chứa nửa số phim ở giữa. So vị trí hộp và phần chồng lấn giữa các thể loại, không chỉ đọc một con số.",
+    "limitation": "Phim nhiều nhãn có mặt ở nhiều nhóm; thành phần khán giả và số lượt đánh giá khác nhau. Hình chưa chứng minh thể loại gây ra điểm cao hoặc thấp.",
+    "scope": "IMDb · điểm theo thể loại trong mẫu đủ lượt đánh giá",
+    "caution": ""
+  },
+  {
+    "phase": "Phim",
+    "kind": "chart",
+    "image": "plots/1_imdb/06_votes_lorenz.png",
+    "title": "Có nhiều phim, nhưng sự chú ý có phân bố đều không?",
+    "finding": "Lượt đánh giá tập trung vào một nhóm nhỏ phim. Số phim nhiều không có nghĩa mỗi phim được chú ý như nhau.",
+    "next_question": "Phim được nhiều người chú ý có đồng thời được chấm điểm cao hơn không?",
+    "why": "Các hình điểm không cho biết có bao nhiêu người tham gia. Thêm số lượt đánh giá để phân biệt mức được chú ý với mức điểm.",
+    "reading": "Đường cong cộng dồn lượt đánh giá khi xếp phim từ ít đến nhiều lượt. Đường càng xa đường chia đều thì mức tập trung càng lớn. Gini chỉ là chỉ số tóm tắt.",
+    "limitation": "Lượt đánh giá trên IMDb không phải số người xem toàn thế giới; các phim ở nhiều giai đoạn có thời gian tích lũy đánh giá khác nhau.",
+    "scope": "IMDb · số lượt đánh giá · phân bố sự chú ý",
+    "caution": "Lượt đánh giá là chỉ báo độ phổ biến trên IMDb, không phải lượt xem."
+  },
+  {
+    "phase": "Phim",
+    "kind": "chart",
+    "image": "plots/1_imdb/08_votes_vs_rating.png",
+    "title": "Được chú ý nhiều có đồng nghĩa được chấm điểm cao?",
+    "finding": "Trong dữ liệu có liên hệ giữa lượt đánh giá và điểm; hai biến vẫn đo hai khía cạnh khác nhau.",
+    "next_question": "Biết và đánh giá một phim rồi, người xem có dễ tìm được nơi xem hợp pháp không?",
+    "why": "Đặt hai biến cạnh nhau sau khi đã giới thiệu riêng. Đây là nền tảng để đọc các hình tích hợp theo độ phổ biến phía sau.",
+    "reading": "Sang phải là nhiều lượt đánh giá hơn; lên trên là điểm cao hơn. Màu đậm là vùng có nhiều phim, đường tóm tắt cho xu hướng nhóm.",
+    "limitation": "Không suy ra lượt đánh giá làm điểm tăng. Các nhóm khác nhau về năm, thể loại, thị trường và người tham gia đánh giá.",
+    "scope": "IMDb · lượt đánh giá và điểm · các trục có thang nén",
+    "caution": ""
+  },
+  {
+    "phase": "Xem hợp pháp",
+    "kind": "chart",
+    "image": "plots/3_tmdb_streaming/01_world_catalog_map.png",
+    "title": "Ở đâu có thể tiếp cận nhiều phim hợp pháp hơn?",
+    "finding": "Số phim có trong các dịch vụ thuê bao/miễn phí khác nhau giữa các quốc gia trong ảnh chụp dữ liệu.",
+    "next_question": "Khác biệt này liên quan thế nào đến độ phủ và quy mô kho phim của các nền tảng?",
+    "why": "Chuyển từ đặc điểm phim sang khả năng tìm nơi xem. Bản đồ cho bối cảnh phân phối trước khi nói tới từng nền tảng.",
+    "reading": "Màu đậm hơn nghĩa là nhiều tựa phim được ghi nhận qua thuê bao hoặc miễn phí. Màu xám là thiếu dữ liệu, không phải không có phim. Thanh màu dùng thang nén.",
+    "limitation": "Đây là dữ liệu dịch vụ xem năm 2026, không phải lịch sử nơi xem trong giai đoạn torrent 2021–2024. Khác biệt còn phụ thuộc độ đầy đủ của nguồn.",
+    "scope": "TMDb / JustWatch · ảnh chụp 2026 · thuê bao/miễn phí",
+    "caution": "Bối cảnh năm 2026; không dùng để suy ra điều kiện xem hợp pháp của năm 2021–2024."
+  },
+  {
+    "phase": "Xem hợp pháp",
+    "kind": "chart",
+    "image": "plots/3_tmdb_streaming/02_brand_reach_vs_depth.png",
+    "title": "Phủ nhiều quốc gia có đồng nghĩa kho phim lớn ở mỗi nơi?",
+    "finding": "Độ phủ quốc gia và độ sâu kho phim là hai cách nhìn khác nhau về một nền tảng.",
+    "next_question": "Những phim có mặt đó được xem bằng thuê bao, miễn phí, thuê hay mua?",
+    "why": "Bản đồ chưa cho biết nền tảng nào tạo ra độ phủ. Hình này phân biệt nhiều nơi phục vụ với nhiều phim tại mỗi nơi.",
+    "reading": "Một trục đo số quốc gia, trục còn lại đo quy mô kho phim theo định nghĩa ghi trong hình. Vị trí xa ở một trục chưa chắc xa ở trục còn lại.",
+    "limitation": "Quy mô kho phim không đo số thuê bao, thị phần hoặc lịch sử mở rộng. Các chỉ số lấy từ ảnh chụp dịch vụ năm 2026.",
+    "scope": "TMDb / JustWatch · độ phủ và độ sâu nền tảng",
+    "caution": ""
+  },
+  {
+    "phase": "Xem hợp pháp",
+    "kind": "chart",
+    "image": "plots/3_tmdb_streaming/03_access_mode_by_country.png",
+    "title": "“Có nơi xem” cụ thể là xem bằng cách nào?",
+    "finding": "Tỷ trọng thuê bao, miễn phí, thuê và mua khác nhau theo thị trường; có mặt chưa đồng nghĩa được xem trong gói thuê bao.",
+    "next_question": "Nhiều dịch vụ như vậy có cung cấp cùng phim, hay kho phim bị phân mảnh?",
+    "why": "Hình nền tảng chỉ nói đến có mặt. Hình thức tiếp cận giúp đọc cụ thể điều kiện xem trước khi xét kho phim trùng nhau.",
+    "reading": "So các phần màu theo chú giải để phân biệt thuê bao/miễn phí với thuê hoặc mua lẻ. Đọc đơn vị trên trục vì một phim có thể có nhiều nơi và cách xem.",
+    "limitation": "Không có giá thuê bao, chi phí thực trả hoặc hành vi người xem trong phép so này. Không tự suy ra thuê/mua nhiều dẫn tới chia sẻ torrent nhiều.",
+    "scope": "TMDb / JustWatch · hình thức tiếp cận · ảnh chụp 2026",
+    "caution": ""
+  },
+  {
+    "phase": "Xem hợp pháp",
+    "kind": "chart",
+    "image": "plots/3_tmdb_streaming/04_us_catalog_upset.png",
+    "title": "Một dịch vụ có đủ phim, hay cần tìm ở nhiều dịch vụ?",
+    "finding": "Kho phim ở các dịch vụ trong mẫu Mỹ ít trùng nhau; độ phân mảnh là một đặc điểm cần biết khi nói về khả năng tiếp cận.",
+    "next_question": "Sự phân mảnh đó có khiến phim ít nổi tiếng khó tìm nơi xem hơn không?",
+    "why": "Nhiều hình thức xem chưa cho biết mức trùng tựa phim. Hình giao tập giúp kiểm tra người xem có gặp cùng phim ở nhiều nền tảng không.",
+    "reading": "Các chấm nối phía dưới chỉ tổ hợp nền tảng; cột phía trên đếm phim thuộc đúng tổ hợp đó. Một chấm nghĩa là chỉ có ở một nền tảng trong danh sách đang xét.",
+    "limitation": "Chỉ xét các dịch vụ và hình thức được chọn tại Mỹ. Không suy rộng thành mọi cách xem hợp pháp, mọi quốc gia hoặc toàn bộ lịch sử phân phối.",
+    "scope": "TMDb / JustWatch · Mỹ · các dịch vụ được chọn",
+    "caution": ""
+  },
+  {
+    "phase": "Xem hợp pháp",
+    "kind": "chart",
+    "image": "plots/5_combined/06_availability_heatmap.png",
+    "title": "Phim được chú ý nhiều hoặc chấm cao có dễ tìm nơi xem hơn?",
+    "finding": "Trong mẫu, nhóm nhiều lượt đánh giá có độ phủ xem hợp pháp rộng hơn; điểm cần được đọc cùng mức độ phổ biến.",
+    "next_question": "Ngoài việc xem ở đâu, người xem còn phải chờ bao lâu sau khi phim ra rạp?",
+    "why": "Nối lại hai biến đã giới thiệu ở IMDb với thông tin nơi xem của TMDb/JustWatch. Đây là câu hỏi không một nguồn đơn lẻ trả lời đủ.",
+    "reading": "Mỗi ô kết hợp nhóm lượt đánh giá và nhóm điểm. So các hàng trong cùng cột hoặc các cột trong cùng hàng; số/màu thể hiện độ phủ theo định nghĩa trong hình.",
+    "limitation": "Lượt đánh giá và dịch vụ xem là ảnh chụp hiện tại; chưa chứng minh mức phổ biến tạo ra độ phủ, hoặc độ phủ làm phim phổ biến hơn.",
+    "scope": "IMDb × TMDb / JustWatch · ảnh chụp hiện tại",
+    "caution": "Không đem độ phủ hiện tại giải thích trực tiếp torrent trong các năm trước."
+  },
+  {
+    "phase": "Xem hợp pháp",
+    "kind": "chart",
+    "image": "plots/2_tmdb/04_theatrical_window.png",
+    "title": "Từ ra rạp đến phát hành trực tuyến thường cách nhau bao lâu?",
+    "finding": "Khoảng cách ra rạp–Digital trong mẫu Mỹ thay đổi theo giai đoạn. Đây là mốc thời gian sẽ dùng lại khi phân tích torrent.",
+    "next_question": "Nếu muốn đối chiếu với chia sẻ trên mạng, chúng ta cần đo những bản ghi nào?",
+    "why": "Nơi xem là một ảnh chụp, còn ngày phát hành cung cấp lịch sử. Chuyển sang mốc thời gian để chuẩn bị cho phân tích quanh ngày Digital.",
+    "reading": "Digital là ngày phát hành trực tuyến ghi trong TMDb, có thể gồm thuê/mua, không chỉ thuê bao. So số ngày giữa ra rạp và Digital theo nhóm năm ở Mỹ.",
+    "limitation": "Ngày phát hành có thể thiếu hoặc khác nhau giữa quốc gia. Hình cho thay đổi trong mẫu, chưa đủ kết luận một biến cố làm mô hình phát hành thay đổi vĩnh viễn.",
+    "scope": "TMDb · ngày ra rạp và Digital tại Mỹ",
+    "caution": "Phát hành Digital không đồng nghĩa lên một dịch vụ thuê bao cụ thể."
+  },
+  {
+    "phase": "Tích hợp",
+    "title": "Trước khi đếm: torrent là gì?",
+    "subtitle": "Một phim, nhiều phiên bản chia sẻ; một bản ghi, có thể nhiều phim.",
+    "cards": [
+      [
+        "BitTorrent",
+        "Cách các máy chia sẻ tệp với nhau. Bài chỉ phân tích thông tin mô tả, không tải nội dung phim."
+      ],
+      [
+        "Torrent",
+        "Bản ghi mô tả một tệp hoặc gói tệp. Một phim có thể có bản 720p, 1080p hoặc nhiều ngôn ngữ."
+      ],
+      [
+        "Điều đang đo",
+        "Số torrent được phát hiện và ghép về phim. Dữ liệu không có số người tải hoặc số người xem."
+      ]
+    ],
+    "notes": "Ví dụ minh họa, không phải kết quả đo: A.2022.720p và A.2022.1080p có thể cùng thuộc phim A năm 2022. Ta ghi nhận hai torrent, không phải hai phim hoặc hai người tải. Một torrent bộ sưu tập có thể chứa nhiều phim. Thời điểm thu thập thấy torrent cũng khác thời điểm tạo torrent.",
+    "kind": "concept"
+  },
+  {
+    "phase": "Tích hợp",
+    "kind": "chart",
+    "image": "plots/4_magnetdb/01_content_sunburst.png",
+    "title": "Mạng chia sẻ này có phải chỉ chứa phim?",
+    "finding": "MagnetDB có nhiều loại nội dung. Phải xác định nhóm phim trước khi phân tích, không coi mọi video là phim điện ảnh.",
+    "next_question": "Bên cạnh loại nội dung, hệ thống thu thập có hoạt động đều theo thời gian không?",
+    "why": "Người nghe vừa biết torrent là bản ghi chia sẻ. Hình cơ cấu nội dung cho thấy vì sao cần lọc thay vì đếm toàn bộ nguồn.",
+    "reading": "Đọc các vòng theo nhóm nội dung và chú ý hình dùng dung lượng hay số tệp. Nhóm video bao gồm nhiều nội dung ngoài phim điện ảnh.",
+    "limitation": "Hình tổng quan dùng dữ liệu/mẫu file theo phạm vi của notebook gốc. Tỷ trọng dung lượng không phải tỷ trọng người dùng hay số phim.",
+    "scope": "MagnetDB · cơ cấu file tổng quan",
+    "caution": "Video ≠ phim điện ảnh; dung lượng ≠ số người tải."
+  },
+  {
+    "phase": "Tích hợp",
+    "kind": "chart",
+    "image": "plots/4_magnetdb/03_crawler_coverage.png",
+    "title": "Số bản ghi thay đổi vì chia sẻ, hay vì hệ thống thu thập?",
+    "finding": "Thu thập không đều. Cần giới hạn thời gian và thận trọng với các khoảng gián đoạn trước khi diễn giải xu hướng.",
+    "next_question": "Trong phạm vi đã chọn, làm sao loại các cặp torrent–phim ghép không phù hợp?",
+    "why": "Sau lọc nội dung, kiểm tra chất lượng theo thời gian. Một khoảng không có bản ghi có thể là hệ thống ngừng, không phải cộng đồng ngừng chia sẻ.",
+    "reading": "Đường thể hiện số torrent được phát hiện theo tháng; vùng đánh dấu giải thích các giai đoạn thu thập. Phần phân tích chính dùng từ 04/2021 đến 09/2024.",
+    "limitation": "Cửa sổ được chọn vẫn có gián đoạn, đặc biệt 06/2024. Đây là thời điểm phát hiện, không phải thời điểm đăng. Bản trình bày giữ phạm vi xử lý của bản gốc.",
+    "scope": "MagnetDB · lịch hoạt động thu thập",
+    "caution": "Không diễn giải khoảng trống thu thập thành không có chia sẻ."
+  },
+  {
+    "phase": "Tích hợp",
+    "kind": "chart",
+    "image": "plots/6_integration/01_cleaning_funnel.png",
+    "title": "Vì sao phải làm sạch trước khi đếm torrent của phim?",
+    "finding": "Các bước lọc loại bản ghi không phù hợp về loại nội dung, tên, năm và các điều kiện khác; còn lại là tập để phân tích.",
+    "next_question": "Mã ghép có sẵn đã đủ chưa, hay cần thêm một cách nhận diện?",
+    "why": "Sơ đồ đầu bài chỉ cho đường nối. Phễu này kiểm tra các bản ghi đi qua đường nối đó và cho thấy tích hợp cần xử lý chất lượng.",
+    "reading": "Mỗi bước cho số bản ghi còn lại sau lọc. Phải đọc đúng đơn vị của từng nhánh: file, torrent và cặp torrent–phim không hoàn toàn giống nhau.",
+    "limitation": "Tên/năm phù hợp là bằng chứng metadata, không kiểm tra nội dung tệp. Một số bộ lọc dùng ngày Digital và vì vậy ảnh hưởng phân tích thời điểm ở phần sau.",
+    "scope": "IMDb × TMDb × MagnetDB · quy trình làm sạch",
+    "caution": "Làm sạch bằng metadata; chưa xác nhận nội dung của từng torrent."
+  },
+  {
+    "phase": "Tích hợp",
+    "kind": "chart",
+    "image": "plots/6_integration/02_coverage_by_source.png",
+    "title": "Tự ghép tên bổ sung được bao nhiêu dữ liệu?",
+    "finding": "Tự ghép tên tìm thêm nhiều bản ghi ngoài nhánh mã có sẵn. Lựa chọn cách ghép ảnh hưởng trực tiếp độ phủ của phân tích.",
+    "next_question": "Việc bổ sung đó có thay đổi kết quả của các phim cụ thể không?",
+    "why": "Phễu cho thấy số bản ghi bị loại nhưng chưa cho biết dữ liệu nào được bổ sung. So hai nhánh để thấy giá trị của nhận diện thực thể.",
+    "reading": "Các phần màu biểu thị cặp chỉ tìm thấy ở từng phương pháp và phần giao nhau. So đơn vị cặp ghép, không nhầm với số người chia sẻ.",
+    "limitation": "Phương pháp nhiều bản ghi hơn chưa chắc chính xác hơn. Tự ghép cần tên/năm rõ và có thể bỏ phim trùng tên.",
+    "scope": "IMDb × MagnetDB · so hai phương pháp ghép",
+    "caution": ""
+  },
+  {
+    "phase": "Tích hợp",
+    "kind": "chart",
+    "image": "plots/6_integration/03_top_movies_dumbbell.png",
+    "title": "Một phim có thể “biến mất” chỉ vì cách ghép dữ liệu không?",
+    "finding": "Một số phim có rất ít hoặc không có torrent theo mã sẵn, nhưng có nhiều bản ghi khi tự ghép. Thiếu ghép dễ bị nhầm thành ít chia sẻ.",
+    "next_question": "Độ phủ tăng rồi, chúng ta kiểm tra mức đáng tin của ghép như thế nào?",
+    "why": "Hình trước là tổng số; hình này đưa tên phim cụ thể để người nghe thấy tác động thực tế của phương pháp tới kết quả.",
+    "reading": "Hai đầu đoạn nối là số bản ghi của cùng phim theo hai cách ghép. Đoạn dài nghĩa là cách nhận diện làm thay đổi số lượng mạnh.",
+    "limitation": "Đây là các ví dụ được chọn, không phải mẫu ngẫu nhiên toàn bộ phim. Số 0 trong nhánh mã sẵn chỉ là không tìm thấy theo nhánh đó.",
+    "scope": "IMDb × MagnetDB · ví dụ ảnh hưởng của tích hợp",
+    "caution": ""
+  },
+  {
+    "phase": "Tích hợp",
+    "kind": "chart",
+    "image": "plots/6_integration/04_match_agreement.png",
+    "title": "Hai cách ghép thống nhất với nhau đến mức nào?",
+    "finding": "Mức đồng thuận sau làm sạch cao hơn trước làm sạch. Điều này hỗ trợ kiểm tra phương pháp, chưa phải độ chính xác tuyệt đối.",
+    "next_question": "Sau tích hợp, phim nào có nhiều bản chia sẻ được quan sát nhất?",
+    "why": "Đã thấy tăng độ phủ, giờ cần đánh giá chất lượng. So phương pháp trên các cặp có thể đối chiếu thay vì chỉ báo tổng số lớn.",
+    "reading": "Đọc riêng các phép đối chiếu trong hình. Tỷ lệ thống nhất với mã tham chiếu nói về cùng kết quả ghép, không chứng minh nội dung tệp đúng.",
+    "limitation": "Hai cách có thể cùng sai hoặc cùng bỏ sót. Không gọi mức đồng thuận 99,4% là độ chính xác 99,4%, cũng không suy ra 0,6% là toàn bộ tỷ lệ sai.",
+    "scope": "IMDb × MagnetDB · đối chiếu cách ghép",
+    "caution": "Đồng thuận giữa phương pháp ≠ độ chính xác đã kiểm chứng thủ công."
+  },
+  {
+    "phase": "Khác biệt",
+    "kind": "chart",
+    "image": "plots/7_piracy_movies/01_top20_pirated.png",
+    "title": "Những phim nào có nhiều bản chia sẻ được quan sát nhất?",
+    "finding": "Các tên đứng đầu chủ yếu là phim đại chúng gần đây. Bảng xếp hạng mở ra câu hỏi về vai trò của độ phổ biến.",
+    "next_question": "Có nhiều torrent vì phim được nhiều người chú ý hơn không?",
+    "why": "Bắt đầu kết quả tích hợp bằng tên phim cụ thể. Sau đó cần đi từ ví dụ nổi bật sang quan hệ trên nhiều phim.",
+    "reading": "Thanh dài hơn nghĩa là có nhiều torrent khác nhau được ghép vào phim trong cửa sổ quan sát. Đây là top trong dữ liệu, không phải top lượt tải.",
+    "limitation": "Ghép sai, thiếu ghép và bộ sưu tập có thể ảnh hưởng thứ hạng. Chỉ xét các phim có bản ghi quan sát; không đại diện cho tất cả phim ngoài mẫu.",
+    "scope": "Ba nguồn đã tích hợp · torrent quan sát 04/2021–09/2024",
+    "caution": "Số bản ghi chia sẻ không đo mức tổn thất doanh thu hoặc số người tải."
+  },
+  {
+    "phase": "Khác biệt",
+    "kind": "chart",
+    "image": "plots/7_piracy_movies/02_popularity_vs_piracy.png",
+    "title": "Phim nhiều người đánh giá có thường nhiều torrent hơn?",
+    "finding": "Nhiều lượt đánh giá đi cùng nhiều torrent trong mẫu đã ghép. Quan hệ chung vẫn để lại các phim cao hoặc thấp hơn mốc dự đoán.",
+    "next_question": "Sau khi xét lượt đánh giá, khác biệt giữa thể loại còn lại như thế nào?",
+    "why": "Top phim gợi ý độ phổ biến. Kiểm tra quan hệ trên nhiều phim và dùng mốc chung để đọc khác biệt thể loại phía sau.",
+    "reading": "Sang phải là nhiều lượt đánh giá, lên trên là nhiều torrent. Trục nén để thấy cả nhỏ và lớn. Điểm xa đường mô hình có thể là ngoại lệ hoặc sai số ghép.",
+    "limitation": "Bản gốc chủ yếu phân tích phim đã quan sát được torrent. Vote là ảnh chụp hiện tại; không đại diện mức phổ biến tại thời điểm torrent xuất hiện và không chứng minh nhân quả.",
+    "scope": "IMDb × MagnetDB · mẫu phim có torrent",
+    "caution": "Kết quả trên mẫu đã ghép; chưa bao gồm đầy đủ phim không quan sát thấy torrent."
+  },
+  {
+    "phase": "Khác biệt",
+    "kind": "chart",
+    "image": "plots/7_piracy_movies/03_genre_piracy_ratio.png",
+    "title": "Khác biệt thể loại có chỉ đến từ mức độ phổ biến?",
+    "finding": "Trong phép so với mốc theo lượt đánh giá, một số thể loại có nhiều torrent hơn mốc và một số ít hơn.",
+    "next_question": "Nguồn chia sẻ này chỉ thuộc phim mới, hay còn nhiều phim cũ?",
+    "why": "Các thể loại vốn khác nhau về điểm và sự chú ý ở phần đầu. So phần còn lại sau mốc dự đoán để tránh chỉ đọc số tổng.",
+    "reading": "Mốc ×1 là phù hợp mô hình độ phổ biến. Trên ×1 là nhiều hơn mốc, dưới ×1 là ít hơn. Đây là phần chênh lệch mô tả, không phải tác động riêng do thể loại.",
+    "limitation": "Phim nhiều nhãn chồng lấn giữa nhóm. Mô hình bản gốc chưa giữ cố định mọi khác biệt về năm, thị trường và cơ hội quan sát; phần còn lại có cả sai số ghép.",
+    "scope": "IMDb × MagnetDB · thể loại so với mốc độ phổ biến",
+    "caution": "Khác biệt còn lại chưa phải bằng chứng thể loại gây ra chia sẻ."
+  },
+  {
+    "phase": "Khác biệt",
+    "kind": "chart",
+    "image": "plots/7_piracy_movies/05_film_age_of_uploads.png",
+    "title": "Bản chia sẻ mới được phát hiện có phải luôn là phim mới?",
+    "finding": "Nguồn chia sẻ quan sát được có cả phim cũ. Mới được phát hiện và mới được phát hành là hai điều khác nhau.",
+    "next_question": "Với phim có lịch phát hành, torrent thay đổi thế nào quanh ngày ra bản trực tuyến?",
+    "why": "Độ phổ biến và thể loại chưa nói đến tuổi phim. Tách nhóm năm để phân biệt tuổi nội dung với thời điểm quan sát bản ghi.",
+    "reading": "Các phần màu là nhóm năm của phim; so tỷ trọng trong từng giai đoạn. Phim trước 2010 vẫn đóng góp đáng kể theo hình.",
+    "limitation": "Tỷ trọng không đo xác suất một phim của thập niên đó được chia sẻ. Nhiều torrent có thể là các phiên bản/gói khác nhau; chưa xác nhận chúng là remaster hoặc bản lồng tiếng mới.",
+    "scope": "IMDb × MagnetDB · năm phim và thời điểm phát hiện",
+    "caution": ""
+  },
+  {
+    "phase": "Thời điểm",
+    "kind": "chart",
+    "image": "plots/7_piracy_movies/06_event_study_digital.png",
+    "title": "Các bản chia sẻ thay đổi thế nào quanh ngày phát hành Digital?",
+    "finding": "Hình gốc cho thấy tăng mạnh quanh mốc Digital; cách lọc trước Digital ảnh hưởng trực tiếp hình dạng này.",
+    "next_question": "Khi lấy ngày Digital tại Mỹ làm mốc, bản WEB đầu tiên được phát hiện sau bao lâu?",
+    "why": "Đưa ngày phát hành TMDb vào để mở rộng từ phim nào sang khi nào. Đây là phần ba nguồn cùng tham gia câu hỏi thời gian.",
+    "reading": "Tuần 0 là ngày Digital sớm nhất ghi trong nguồn. So bản WEB với các bản khác ở hai phía của mốc. Trục dọc là số bản ghi trung bình trên phim trong mẫu.",
+    "limitation": "Bộ lọc bản gốc đã loại WEB bị cho là xuất hiện quá sớm. Vì vậy sự thiếu WEB trước Digital một phần do chính quy tắc lọc; hệ số tăng trong hình không phải bằng chứng độc lập về tác động của phát hành.",
+    "scope": "Ba nguồn · Digital sớm nhất · phim đạt điều kiện sự kiện",
+    "caution": "Bộ lọc đã loại WEB trước Digital: hình này chưa độc lập chứng minh tác động của phát hành."
+  },
+  {
+    "phase": "Thời điểm",
+    "kind": "chart",
+    "image": "plots/7_piracy_movies/07_web_lag.png",
+    "title": "Bản WEB đầu tiên được phát hiện cách ngày Digital ở Mỹ bao lâu?",
+    "finding": "Nhiều phim có bản WEB được phát hiện gần mốc Digital tại Mỹ. Giá trị âm cần xét lịch phát hành ở quốc gia khác.",
+    "next_question": "Xuất hiện sớm hơn có đồng nghĩa tổng số bản chia sẻ năm đầu lớn hơn không?",
+    "why": "Hình tuần tổng hợp chưa cho biết độ trễ từng phim. Chuyển sang số ngày và làm rõ mốc Mỹ khác mốc Digital sớm nhất của hình trước.",
+    "reading": "Ngày 0 là Digital ở Mỹ; số âm là phát hiện trước mốc Mỹ, số dương là sau. Hai cột ngoài cùng gom các độ trễ vượt giới hạn hiển thị.",
+    "limitation": "Đây là ngày hệ thống phát hiện, không phải thời điểm tạo torrent. Chênh lệch quốc gia, thiếu ngày và bộ lọc trước Digital đều ảnh hưởng phân bố.",
+    "scope": "Ba nguồn · mốc Digital Mỹ · phim 04/2021–09/2023",
+    "caution": "Đổi mốc: hình trước là Digital sớm nhất; hình này dùng Digital tại Mỹ."
+  },
+  {
+    "phase": "Thời điểm",
+    "kind": "chart",
+    "image": "plots/7_piracy_movies/08_release_strategy_effect.png",
+    "title": "Đổi thời điểm phát hành có đi cùng đổi tổng lượng chia sẻ?",
+    "finding": "Mô hình của bản gốc chưa cho thấy khác biệt rõ giữa các nhóm phát hành. Chưa có bằng chứng khác biệt không có nghĩa các nhóm tương đương.",
+    "next_question": "Tên bản WEB cung cấp thêm dấu hiệu gì về dịch vụ nguồn?",
+    "why": "Sau độ trễ, kiểm tra tổng số trong cửa sổ năm đầu để tránh nhầm xuất hiện sớm với xuất hiện nhiều. Hình giữ các điều kiện của mô hình gốc.",
+    "reading": "Nhóm chiếu rạp trước 4–45 ngày là mốc ×1. Chấm là tỷ lệ theo mô hình; vạch ngang là khoảng ước lượng. Khoảng đi qua ×1 chưa tách rõ khỏi mốc.",
+    "limitation": "Đây là mô hình quan sát, không phải thử nghiệm chiến lược phát hành. Biến năm đầu của mã gốc còn đếm các bản ghi từ 60 ngày trước mốc đầu, nên không nên gọi là phép đo riêng sau phát hành.",
+    "scope": "Ba nguồn · lịch phát hành Mỹ · mô hình quan sát",
+    "caution": "Chưa thấy khác biệt rõ ≠ đã chứng minh không khác. Cửa sổ gốc có cả 60 ngày trước mốc đầu."
+  },
+  {
+    "phase": "Thời điểm",
+    "kind": "chart",
+    "image": "plots/8_piracy_ecosystem/05_streaming_rip_sources.png",
+    "title": "Tên bản WEB thường ghi những dịch vụ nguồn nào?",
+    "finding": "Amazon và Netflix xuất hiện nhiều trong nhóm WEB có ghi tên dịch vụ; chỉ một phần bản WEB có thông tin này.",
+    "next_question": "Ba nguồn đã giúp trả lời gì, và những điều nào vẫn chưa thể kết luận?",
+    "why": "Quay lại các nền tảng đã giới thiệu ở phần xem hợp pháp. Tên torrent là một dấu hiệu bổ sung, không xác nhận nguồn nội dung.",
+    "reading": "Các phần màu đếm bản WEB có nhãn dịch vụ trong tên. Không đọc chúng thành thị phần toàn bộ torrent. Năm 2021 và 2024 trong hình không đủ 12 tháng.",
+    "limitation": "Nhãn do tên torrent tự khai, có thể sai. Nhóm không ghi nguồn bị loại khỏi hình; không suy ra nền tảng kho lớn gây ra nhiều chia sẻ hoặc đa số mọi WEB đến từ các nền tảng này.",
+    "scope": "MagnetDB · tên dịch vụ tự khai trong bản WEB",
+    "caution": "Chỉ nhóm WEB có ghi dịch vụ; không đại diện toàn bộ bản WEB."
+  },
+  {
+    "phase": "Kết luận",
+    "title": "Ba nguồn giúp nhìn một phim theo ba chiều",
+    "subtitle": "Danh mục và sự chú ý → khả năng tiếp cận → nguồn chia sẻ và thời điểm.",
+    "cards": [
+      [
+        "Điều thấy được",
+        "Mức chú ý, thể loại và tuổi phim đi cùng các khác biệt về số torrent quan sát được."
+      ],
+      [
+        "Giá trị tích hợp",
+        "Ghép cùng phim để nối lượt đánh giá, ngày phát hành và thời điểm phát hiện; kiểm tra cách ghép làm thay đổi kết quả."
+      ],
+      [
+        "Phạm vi kết luận",
+        "Chưa đo lượt tải, người xem, thất thu hoặc nguyên nhân. Phần thời gian cần đọc cùng bộ lọc và các mốc quốc gia."
+      ]
+    ],
+    "notes": "Chốt ba ý: nguồn IMDb giúp hiểu phim; TMDb/JustWatch giúp hiểu phát hành và tiếp cận; MagnetDB cho một góc nhìn chia sẻ. Tích hợp có giá trị khi nối đúng đối tượng và giữ đúng ngữ nghĩa thời gian. Nếu tiếp tục nghiên cứu, nên kiểm tra thủ công cặp ghép, giữ phim chưa quan sát torrent và đánh giá độ nhạy khi thay bộ lọc Digital.",
+    "kind": "ending"
+  }
+]

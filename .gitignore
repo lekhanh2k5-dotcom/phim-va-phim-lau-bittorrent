@@ -1,0 +1,15 @@
+# Bí mật — KHÔNG bao giờ đưa lên
+.env
+
+# Dữ liệu lớn (tải/tái tạo theo README)
+data_raw/
+data_clean/
+*.db
+*.sqlite3
+*.tar.zst
+
+# Tạm / cache
+__pycache__/
+.ipynb_checkpoints/
+report/**/.cache/
+report/**/*.zip

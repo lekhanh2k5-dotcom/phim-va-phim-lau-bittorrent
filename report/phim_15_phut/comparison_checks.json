@@ -1,0 +1,23 @@
+[
+  {
+    "n": 1054,
+    "votes": 4261.5,
+    "torrents": 41.0,
+    "observed": 0.9165085388994307,
+    "genre": "Action"
+  },
+  {
+    "n": 359,
+    "votes": 2100.0,
+    "torrents": 9.0,
+    "observed": 0.8969359331476323,
+    "genre": "Documentary"
+  },
+  {
+    "n": 2670,
+    "votes": 3301.5,
+    "torrents": 21.0,
+    "observed": 0.8906367041198502,
+    "genre": "Drama"
+  }
+]

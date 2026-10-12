@@ -1,0 +1,97 @@
+[
+  {
+    "check": "32 pages; 27 original embedded figures",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All 27 figures decode",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Opening shows only page 1",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Next button and progress work",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Speaker notes open with current context",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Notes change when moving to chart",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Zoom opens original image",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Table of contents has all pages",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Table of contents jumps to legal-viewing map",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "End key reaches conclusion",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Home key returns to introduction",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Chapter navigation jumps to torrent definition",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Event-study filtering caveat is visible",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All desktop pages fit at 1440×900",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "All laptop pages fit at 1366×768",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "All pages avoid horizontal overflow on phone",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "Direct link opens page 28",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "No external assets requested",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "No JavaScript exceptions",
+    "passed": true,
+    "detail": []
+  }
+]

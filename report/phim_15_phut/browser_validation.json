@@ -1,0 +1,264 @@
+[
+  {
+    "check": "Data agrees with independent SQL: default",
+    "passed": true,
+    "detail": {
+      "movies": 4981,
+      "pairs": 225770,
+      "observed": 4416,
+      "tmdb": 4821
+    }
+  },
+  {
+    "check": "Direct genre comparison agrees with SQL",
+    "passed": true,
+    "detail": [
+      {
+        "n": 1054,
+        "votes": 4261.5,
+        "torrents": 41,
+        "observed": 0.9165085388994307,
+        "genre": "Action"
+      },
+      {
+        "n": 359,
+        "votes": 2100,
+        "torrents": 9,
+        "observed": 0.8969359331476323,
+        "genre": "Documentary"
+      }
+    ]
+  },
+  {
+    "check": "Comparison genre selector updates data",
+    "passed": true,
+    "detail": {
+      "genre": "Drama",
+      "label": "Chính kịch",
+      "n": 2670,
+      "votes": 3301.5,
+      "torrents": 21,
+      "observed": 0.8906367041198502
+    }
+  },
+  {
+    "check": "Genre chart switches from median to movie count",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Comparison uses its own genre choices and common filters",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All eligible movies retained once",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Five linked charts render",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Data agrees with independent SQL: action",
+    "passed": true,
+    "detail": {
+      "movies": 1054,
+      "pairs": 94208,
+      "observed": 966,
+      "tmdb": 1018
+    }
+  },
+  {
+    "check": "Data agrees with independent SQL: documentary",
+    "passed": true,
+    "detail": {
+      "movies": 359,
+      "pairs": 4444,
+      "observed": 322,
+      "tmdb": 357
+    }
+  },
+  {
+    "check": "Data agrees with independent SQL: unknown",
+    "passed": true,
+    "detail": {
+      "movies": 160,
+      "pairs": 212,
+      "observed": 29,
+      "tmdb": 0
+    }
+  },
+  {
+    "check": "Data agrees with independent SQL: unobserved",
+    "passed": true,
+    "detail": {
+      "movies": 565,
+      "pairs": 0,
+      "observed": 0,
+      "tmdb": 434
+    }
+  },
+  {
+    "check": "Data agrees with independent SQL: popular",
+    "passed": true,
+    "detail": {
+      "movies": 195,
+      "pairs": 63803,
+      "observed": 194,
+      "tmdb": 195
+    }
+  },
+  {
+    "check": "Data agrees with independent SQL: full",
+    "passed": true,
+    "detail": {
+      "movies": 47089,
+      "pairs": 702745,
+      "observed": 40366,
+      "tmdb": 46814
+    }
+  },
+  {
+    "check": "All points render for full cohort",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Invalid year range explains error",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Empty selection handles all charts and table",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Search filters all charts to same film",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Movie detail joins three sources",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Table pagination works",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Table sort resets pagination",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "CSV downloads filtered rows",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Demo starts with documented default cohort",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Source overview is separate from filters",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All gallery images load offline",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Source figures can be enlarged",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Method states window and missing-data semantics",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Dashboard has no horizontal overflow on laptop",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Main charts fit first laptop screen",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Dashboard has no horizontal overflow on phone",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Source overview fits phone width",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Method view fits phone width",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "15 slides, 11 figures, 760 seconds",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All slide images load",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Speaker notes explain current chart",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Dashboard is part of presentation flow",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All slides fit desktop",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "All slides fit laptop",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "All slides fit phone width",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "PDF exports exactly 15 pages",
+    "passed": true,
+    "detail": 15
+  },
+  {
+    "check": "No external assets or data requested",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "No JavaScript exceptions",
+    "passed": true,
+    "detail": []
+  }
+]

@@ -1,0 +1,244 @@
+[
+  {
+    "title": "Một bộ phim. Ba góc nhìn.",
+    "subtitle": "Sự quan tâm của khán giả, khả năng tiếp cận và các bản chia sẻ trên BitTorrent liên hệ thế nào?",
+    "cards": [
+      [
+        "IMDb",
+        "Phim & sự quan tâm"
+      ],
+      [
+        "TMDb / JustWatch",
+        "Phát hành & nơi xem"
+      ],
+      [
+        "MagnetDB",
+        "Các bản chia sẻ được ghi nhận"
+      ]
+    ],
+    "notes": "Trong bài này, chúng tôi theo dõi một bộ phim qua ba góc nhìn: người dùng quan tâm ra sao, phim được phát hành khi nào và hệ thống ghi nhận những bản chia sẻ nào. Chúng tôi sẽ phân tích riêng từng nguồn, sau đó nối chúng để trả lời ba câu hỏi chung.",
+    "seconds": 40,
+    "kind": "hero",
+    "phase": "Mở đầu"
+  },
+  {
+    "title": "Hiểu nguồn trước khi đọc kết quả",
+    "subtitle": "Ba nguồn thu thập chính; mỗi nguồn trả lời một phần câu hỏi.",
+    "cards": [
+      [
+        "IMDb",
+        "Hồ sơ phim: tên, năm, thể loại, điểm và lượt bình chọn. Lượt bình chọn là chỉ báo sự quan tâm."
+      ],
+      [
+        "TMDb / JustWatch",
+        "Ngày phát hành và nơi xem hợp pháp. Thông tin nơi xem trong TMDb do JustWatch cung cấp."
+      ],
+      [
+        "MagnetDB",
+        "Metadata các gói tệp chia sẻ qua BitTorrent. Đếm bản chia sẻ, không đếm người tải hoặc người xem."
+      ]
+    ],
+    "notes": "IMDb giống một danh mục phim có đánh giá của người dùng. TMDb bổ sung lịch phát hành và nơi xem. BitTorrent là cách chia sẻ tệp giữa nhiều máy tính; MagnetDB ghi nhận metadata các bản chia sẻ đó. Mốc năm phim, ngày phát hành và ngày hệ thống phát hiện có ý nghĩa khác nhau.",
+    "seconds": 45,
+    "kind": "concept",
+    "phase": "Mở đầu"
+  },
+  {
+    "phase": "IMDb",
+    "kind": "chart",
+    "image": "plots/1_imdb/01_movies_per_year.png",
+    "title": "Kho phim thay đổi thế nào theo thời gian?",
+    "finding": "Quy mô danh mục khác nhau giữa các năm; cần hiểu nền dữ liệu trước khi so sánh.",
+    "next_question": "Nhiều phim như vậy, sự chú ý có phân bố đều không?",
+    "why": "Trước tiên, chúng tôi nhìn riêng vào IMDb. Hình này đếm các bản ghi phim theo năm. Quy mô danh mục tăng ở nhiều giai đoạn gần đây, nhưng cần nhớ IMDb không phải một cuộc tổng điều tra sản lượng phim toàn cầu. Điều quan trọng ở đây là các năm có quy mô khác nhau, nên khi đối chiếu các nhóm phim, ta cần giữ khoảng năm rõ ràng. Với một danh mục lớn như vậy, câu hỏi tiếp theo là: sự chú ý của người dùng có phân bố đều giữa các phim không?",
+    "reading": "Trục ngang là năm phim trên IMDb; trục dọc là số bản ghi phim. Chỉ nhấn mạnh hình dạng xu hướng, không đọc từng năm.",
+    "limitation": "Độ đầy đủ của IMDb thay đổi theo thời gian. Hình không đủ chứng minh máy quay số hoặc một sự kiện lịch sử gây ra thay đổi; năm IMDb cũng không phải thống kê sản lượng toàn thế giới.",
+    "scope": "IMDb · phim điện ảnh sau lọc người lớn",
+    "caution": "Số bản ghi IMDb chịu ảnh hưởng của độ đầy đủ dữ liệu; không phải tổng điều tra sản lượng phim.",
+    "seconds": 50
+  },
+  {
+    "phase": "IMDb",
+    "kind": "chart",
+    "image": "plots/1_imdb/06_votes_lorenz.png",
+    "title": "Sự chú ý tập trung vào một nhóm phim nhỏ",
+    "finding": "Trong nhóm phim có đánh giá, 1% phim nhiều bình chọn nhất chiếm khoảng 69% tổng lượt bình chọn.",
+    "next_question": "Khán giả có thể tiếp cận những bộ phim đó ở đâu?",
+    "why": "Hình thứ hai trả lời câu hỏi về sự chú ý. Chúng tôi xếp phim từ ít đến nhiều lượt bình chọn. Nếu mọi phim nhận số bình chọn như nhau thì kết quả nằm trên đường chéo. Đường thực tế cong mạnh: trong nhóm có đánh giá, khoảng một phần trăm phim nhiều bình chọn nhất chiếm sáu mươi chín phần trăm tổng lượt bình chọn. Vì vậy, bình chọn là một góc nhìn hữu ích về mức độ quan tâm, dù không phải lượt xem. Nhưng được quan tâm chưa cho biết phim có thể được xem ở đâu.",
+    "reading": "Phim được xếp từ ít đến nhiều bình chọn. Nếu phân bố đều, đường xanh trùng đường chéo; đường thực tế cong mạnh cho thấy sự tập trung.",
+    "limitation": "Lượt đánh giá trên IMDb không phải số người xem toàn thế giới; các phim ở nhiều giai đoạn có thời gian tích lũy đánh giá khác nhau.",
+    "scope": "IMDb · số lượt đánh giá · phân bố sự chú ý",
+    "caution": "Bình chọn là chỉ báo mức độ quan tâm; không phải lượt xem. Không cần giải thích công thức Gini.",
+    "seconds": 55
+  },
+  {
+    "phase": "TMDb",
+    "kind": "chart",
+    "image": "plots/3_tmdb_streaming/01_world_catalog_map.png",
+    "title": "Nơi xem phim khác nhau giữa các quốc gia",
+    "finding": "Danh mục phim có nơi xem được ghi nhận khác nhau giữa các quốc gia.",
+    "next_question": "Ngoài nơi xem, thời điểm tiếp cận có khác nhau không?",
+    "why": "Chuyển sang TMDb, chúng tôi xem riêng khả năng tiếp cận phim hợp pháp. Bản đồ cho thấy số phim có nơi xem được ghi nhận khác nhau giữa các quốc gia. Chỉ cần đối chiếu vài vùng theo chú giải để thấy danh mục không đồng nhất. Đây là dữ liệu nơi xem do JustWatch cung cấp qua TMDb, tại thời điểm thu thập năm hai nghìn không trăm hai mươi sáu. Nó chưa phản ánh danh mục của từng quốc gia trong quá khứ. Ngoài khác biệt về địa điểm, khán giả còn có thể tiếp cận một phim ở những thời điểm khác nhau.",
+    "reading": "Đọc chú giải màu để so sánh số phim trong danh mục được ghi nhận. Chỉ chọn hai hoặc ba vùng để minh họa.",
+    "limitation": "Đây là dữ liệu dịch vụ xem năm 2026, không phải lịch sử nơi xem trong giai đoạn torrent 2021–2024. Khác biệt còn phụ thuộc độ đầy đủ của nguồn.",
+    "scope": "TMDb / JustWatch · ảnh chụp 2026 · thuê bao/miễn phí",
+    "caution": "Nơi xem là ảnh chụp tại thời điểm thu thập năm 2026, không phải danh mục lịch sử 2021–2024.",
+    "seconds": 45
+  },
+  {
+    "phase": "TMDb",
+    "kind": "chart",
+    "image": "plots/2_tmdb/04_theatrical_window.png",
+    "title": "Từ chiếu rạp đến phát hành số mất bao lâu?",
+    "finding": "Ngày chiếu rạp và ngày phát hành Digital là hai mốc khác nhau của cùng một phim.",
+    "next_question": "Một hình thức phân phối khác được ghi nhận trong MagnetDB là gì?",
+    "why": "Biểu đồ tiếp theo cho thấy khoảng cách giữa chiếu rạp và phát hành Digital. Hai mốc này thuộc cùng một phim nhưng có thể cách nhau nhiều ngày. Digital là hình thức phát hành số, có thể gồm thuê hoặc mua phim, nên không đồng nghĩa chỉ xem theo thuê bao. Đây cũng là lý do ta không dùng năm phim trên IMDb thay cho ngày phát hành TMDb. Như vậy, TMDb cung cấp hai góc nhìn: nơi xem và lịch phát hành. Tiếp theo là nguồn ghi nhận một hình thức phân phối khác, các bản chia sẻ qua BitTorrent.",
+    "reading": "Đọc khoảng cách ngày giữa hai mốc phát hành trong hình. Digital có thể gồm thuê hoặc mua phim, không chỉ xem theo thuê bao.",
+    "limitation": "Ngày phát hành có thể thiếu hoặc khác nhau giữa quốc gia. Hình cho thay đổi trong mẫu, chưa đủ kết luận một biến cố làm mô hình phát hành thay đổi vĩnh viễn.",
+    "scope": "TMDb · ngày ra rạp và Digital tại Mỹ",
+    "caution": "IMDb có năm phim; TMDb có ngày phát hành theo hình thức và quốc gia. Không dùng hai trường này thay thế nhau.",
+    "seconds": 50
+  },
+  {
+    "phase": "MagnetDB",
+    "kind": "chart",
+    "image": "plots/4_magnetdb/01_content_sunburst.png",
+    "title": "Trong kho chia sẻ có những loại nội dung nào?",
+    "finding": "MagnetDB chứa nhiều loại nội dung; nghiên cứu này chọn phần liên quan đến phim.",
+    "next_question": "Việc thu thập có đều qua thời gian không?",
+    "why": "MagnetDB chứa metadata của các torrent, tức các gói tệp được chia sẻ qua BitTorrent. Kho này không chỉ chứa phim. Sơ đồ cho thấy các nhánh nội dung khác nhau, vì vậy bước đầu là chọn phần liên quan đến phim và nhận diện nó về đúng hồ sơ phim. Chúng tôi đếm các bản chia sẻ được ghi nhận, không đếm số người tải hay người xem. Một câu hỏi cần kiểm tra trước khi phân tích xu hướng là: hệ thống thu thập có hoạt động đều qua thời gian không?",
+    "reading": "Đọc từ vòng trong ra ngoài để thấy cơ cấu nội dung. Chỉ chỉ vào nhánh video/phim, không giải thích mọi nhánh.",
+    "limitation": "Hình tổng quan dùng dữ liệu/mẫu file theo phạm vi của notebook gốc. Tỷ trọng dung lượng không phải tỷ trọng người dùng hay số phim.",
+    "scope": "MagnetDB · cơ cấu file tổng quan",
+    "caution": "Đây là metadata được thu thập; tên và nhãn không xác nhận nội dung thực tế của từng tệp.",
+    "seconds": 45
+  },
+  {
+    "phase": "MagnetDB",
+    "kind": "chart",
+    "image": "plots/4_magnetdb/03_crawler_coverage.png",
+    "title": "Chọn thời gian quan sát trước khi so sánh",
+    "finding": "Thu thập không đều; các phân tích chính giới hạn vào cửa sổ quan sát của dự án.",
+    "next_question": "Làm sao biết các bản ghi ở ba nguồn thuộc cùng một phim?",
+    "why": "Số bản ghi theo tháng thay đổi theo hoạt động của hệ thống thu thập. Một tháng ít dữ liệu chưa chắc cộng đồng chia sẻ ít hơn. Vì vậy, bài giữ cửa sổ quan sát của pipeline gốc từ ngày một tháng tư năm hai nghìn không trăm hai mươi mốt đến trước ngày hai mươi chín tháng chín năm hai nghìn không trăm hai mươi bốn. Cửa sổ này vẫn có gián đoạn. Đến đây ta đã hiểu riêng ba nguồn; bước tiếp theo là nối chúng về cùng một bộ phim.",
+    "reading": "Các điểm là số torrent được hệ thống phát hiện theo tháng. Khoảng giảm mạnh có thể liên quan đến hoạt động thu thập.",
+    "limitation": "Cửa sổ được chọn vẫn có gián đoạn, đặc biệt 06/2024. Đây là thời điểm phát hiện, không phải thời điểm đăng. Bản trình bày giữ phạm vi xử lý của bản gốc.",
+    "scope": "MagnetDB · lịch hoạt động thu thập",
+    "caution": "Ngày phát hiện không phải ngày đăng. Cửa sổ gốc: 01/04/2021 ≤ ngày phát hiện < 29/09/2024; vẫn có gián đoạn.",
+    "seconds": 35
+  },
+  {
+    "phase": "Tích hợp",
+    "kind": "chart",
+    "image": "plots/5_combined/01_integration_diagram.png",
+    "title": "Nối ba nguồn về cùng một bộ phim",
+    "finding": "Mã IMDb là điểm nối; nhánh MagnetDB cần nhận diện tên phim và năm.",
+    "next_question": "Cách ghép bổ sung được bao nhiêu dữ liệu?",
+    "why": "Sơ đồ này là phần cốt lõi của tích hợp. IMDb có mã phim tconst; TMDb có mã tham chiếu imdb_id, nên có thể nối bằng mã. Nhánh MagnetDB khó hơn vì torrent không luôn có mã phim chuẩn. Dự án phải chuẩn hóa tên, đối chiếu năm và bí danh, rồi kiểm tra các cặp không phù hợp. Khi nối được, một dòng phim có thông tin bình chọn, lịch phát hành và số torrent. Cách ghép bổ sung thêm được bao nhiêu dữ liệu so với liên kết có sẵn?",
+    "reading": "Theo hai đường nối: TMDb có imdb_id; torrent cần chuẩn hóa tên, đối chiếu tên/năm/bí danh và loại các cặp không phù hợp.",
+    "limitation": "Có mã tham chiếu hoặc tên gần giống chưa chứng minh mọi cặp ghép đều đúng. Không đồng nhất cấp phim, cấp file và cặp torrent–phim.",
+    "scope": "Sơ đồ phương pháp · ba nguồn",
+    "caution": "Cùng tên chưa đủ xác nhận cùng phim. Tích hợp cần làm sạch và kiểm tra các cặp ghép.",
+    "seconds": 45
+  },
+  {
+    "phase": "Tích hợp",
+    "kind": "chart",
+    "image": "plots/6_integration/02_coverage_by_source.png",
+    "title": "Tự ghép tên bổ sung độ phủ của dữ liệu",
+    "finding": "Nhánh tự ghép bổ sung nhiều cặp torrent–phim ngoài các liên kết có sẵn.",
+    "next_question": "Sau tích hợp, phim được quan tâm nhiều có nhiều bản chia sẻ hơn không?",
+    "why": "Biểu đồ tách các cặp được tìm thấy bằng liên kết có sẵn, bằng tự ghép tên, và bằng cả hai. Phần tự ghép bổ sung nhiều dữ liệu, cho thấy nhận diện thực thể ảnh hưởng trực tiếp tới độ phủ của nghiên cứu. Tuy nhiên, nhiều cặp hơn chưa chứng minh các cặp chính xác hơn; độ chính xác cần được kiểm tra riêng. Sau khi có tập dữ liệu chung, chúng tôi quay lại câu hỏi từ phần IMDb: phim được nhiều người quan tâm có nhiều bản chia sẻ được ghi nhận hơn không?",
+    "reading": "Màu biểu thị phần chỉ có ở mỗi phương pháp và phần giao nhau. So độ phủ theo thời gian, không đọc thành số người dùng.",
+    "limitation": "Phương pháp nhiều bản ghi hơn chưa chắc chính xác hơn. Tự ghép cần tên/năm rõ và có thể bỏ phim trùng tên.",
+    "scope": "IMDb × MagnetDB · so hai phương pháp ghép",
+    "caution": "Độ phủ tăng không chứng minh độ chính xác tăng. Tổng qua các phim là số cặp torrent–phim.",
+    "seconds": 45
+  },
+  {
+    "phase": "Phân tích chung",
+    "kind": "chart",
+    "image": "plots/7_piracy_movies/02_popularity_vs_piracy.png",
+    "title": "Sự quan tâm liên hệ thế nào với số bản chia sẻ?",
+    "finding": "Trong mẫu phim đã ghép, lượt bình chọn cao thường đi cùng nhiều torrent được ghi nhận hơn.",
+    "next_question": "Mức độ quan tâm đã giải thích hết khác biệt giữa các phim chưa?",
+    "why": "Mỗi chấm trên hình là một phim trong mẫu đã ghép, ra năm hai nghìn không trăm hai mươi mốt đến hai nghìn không trăm hai mươi ba và có ít nhất một nghìn lượt bình chọn. Khi lượt bình chọn tăng, số torrent thường cũng tăng. Đường cam mô tả xu hướng này trong thang log. Các chấm lệch khỏi đường nhắc rằng mức độ quan tâm chưa giải thích hết mọi khác biệt; độ phủ ghép cũng có thể làm một phim bị đếm thiếu. Đây là mối liên hệ quan sát, chưa phải nguyên nhân. Chúng tôi tiếp tục xem liệu các thể loại có khác nhau sau khi xét mức độ quan tâm hay không.",
+    "reading": "Mỗi chấm là một phim. Trục ngang là lượt bình chọn IMDb; trục dọc là số torrent + 1. Hai trục theo thang log. Khoảng cách tới đường mô hình cho thấy ngoại lệ.",
+    "limitation": "Bản gốc chủ yếu phân tích phim đã quan sát được torrent. Vote là ảnh chụp hiện tại; không đại diện mức phổ biến tại thời điểm torrent xuất hiện và không chứng minh nhân quả.",
+    "scope": "IMDb × MagnetDB · mẫu phim có torrent",
+    "caution": "Hình gốc dùng phim 2021–2023 ≥ 1.000 bình chọn trong nhóm đã ghép; dashboard còn giữ phim chưa ghi nhận torrent.",
+    "seconds": 75
+  },
+  {
+    "phase": "Phân tích chung",
+    "kind": "chart",
+    "image": "plots/7_piracy_movies/03_genre_piracy_ratio.png",
+    "title": "Thể loại còn khác nhau sau khi xét sự quan tâm?",
+    "finding": "Một số thể loại có số bản chia sẻ cao hoặc thấp hơn mức mô hình dự đoán từ lượt bình chọn.",
+    "next_question": "Ngoài đặc điểm phim, thời điểm phát hành có cung cấp thêm thông tin không?",
+    "why": "Hình này dùng kết quả mô hình ở hình trước. Đường cam bằng một là số torrent mô hình dự đoán từ bình chọn. Trung vị của nhóm Hành động nằm về bên phải, còn Tài liệu nằm về bên trái: trong mẫu, hai nhóm có mức ghi nhận khác nhau so với dự đoán. Hình không đếm số phim của mỗi thể loại, nên không trả lời Chính kịch hay Tài liệu có nhiều phim hơn. Một phim có thể thuộc nhiều thể loại. Ngoài sự quan tâm và thể loại, chúng tôi bổ sung lịch phát hành để xem các bản chia sẻ được phát hiện vào thời điểm nào.",
+    "reading": "Đường cam ×1 là mức dự đoán. Vạch giữa hộp là trung vị: bên phải ×1 cao hơn dự đoán, bên trái thấp hơn. Chọn Hành động và Tài liệu làm hai ví dụ.",
+    "limitation": "Phim nhiều nhãn chồng lấn giữa nhóm. Mô hình bản gốc chưa giữ cố định mọi khác biệt về năm, thị trường và cơ hội quan sát; phần còn lại có cả sai số ghép.",
+    "scope": "IMDb × MagnetDB · thể loại so với mốc độ phổ biến",
+    "caution": "Đây là so sánh với mô hình, không phải số phim mỗi thể loại. Một phim có thể thuộc nhiều thể loại; chưa chứng minh nguyên nhân.",
+    "seconds": 70
+  },
+  {
+    "phase": "Phân tích chung",
+    "kind": "chart",
+    "image": "plots/7_piracy_movies/07_web_lag.png",
+    "title": "Bản WEB được ghi nhận gần mốc Digital đến đâu?",
+    "finding": "Các bản WEB thường được ghi nhận gần ngày phát hành Digital tại Mỹ trong mẫu đang xét.",
+    "next_question": "Có thể tự kiểm tra những khác biệt này theo nhóm phim không?",
+    "why": "Ngày không trên hình là ngày Digital tại Mỹ. Cột dương là WEB đầu tiên được ghi nhận sau mốc đó; cột âm là trước mốc đó. Phân bố tập trung gần mốc Digital trong mẫu đang xét. Cần nhớ một phim có thể đã phát hành Digital ở nước khác trước Mỹ, và hệ thống có thể phát hiện muộn hơn ngày đăng. Bộ lọc metadata cũng ảnh hưởng phân bố. Vì vậy, ta chỉ kết luận về thời điểm ghi nhận trong dữ liệu, không khẳng định Digital gây ra chia sẻ. Cuối cùng, dashboard giúp người xem tự chọn nhóm phim để kiểm tra thêm.",
+    "reading": "Ngày 0 là Digital tại Mỹ; âm là được phát hiện trước mốc đó, dương là sau. Hai cột ngoài cùng gom độ trễ ngoài giới hạn.",
+    "limitation": "Đây là ngày hệ thống phát hiện, không phải thời điểm tạo torrent. Chênh lệch quốc gia, thiếu ngày và bộ lọc trước Digital đều ảnh hưởng phân bố.",
+    "scope": "Ba nguồn · mốc Digital Mỹ · phim 04/2021–09/2023",
+    "caution": "Mốc Mỹ có thể muộn hơn nước khác; bộ lọc và thời điểm phát hiện ảnh hưởng phân bố. Không suy ra tác động nhân quả.",
+    "seconds": 65
+  },
+  {
+    "title": "Từ kết quả chung đến câu hỏi của người xem",
+    "subtitle": "Mở dashboard và thực hiện một ví dụ trong 60 giây.",
+    "cards": [
+      [
+        "01 · Giữ cùng nhóm",
+        "Bắt đầu ở phim 2021–2023, có ít nhất 1.000 lượt bình chọn."
+      ],
+      [
+        "02 · So sánh trực tiếp",
+        "Đặt Hành động và Tài liệu cạnh nhau: số phim, bình chọn, torrent và tỷ lệ ghi nhận."
+      ],
+      [
+        "03 · Xem một phim",
+        "Mở hồ sơ phim để đối chiếu bình chọn, nơi xem và các mốc phát hành."
+      ]
+    ],
+    "notes": "Mở dashboard bằng nút trên thanh công cụ, rồi nhấn Ví dụ thuyết trình. Nhóm mặc định dùng năm 2021–2023 và tối thiểu 1.000 lượt bình chọn. Phần so sánh đặt Hành động và Tài liệu cạnh nhau bằng hai màu: đọc số phim, bình chọn trung vị, torrent trung vị và tỷ lệ ghi nhận. Không đọc chênh lệch thô thành ảnh hưởng riêng của thể loại. Mở một phim ở bảng để thấy ba nguồn được nối lại. Đặt lại bộ lọc và quay về kết luận.",
+    "seconds": 60,
+    "kind": "concept",
+    "phase": "Dashboard"
+  },
+  {
+    "title": "Tích hợp để hiểu thêm về cùng một bộ phim",
+    "subtitle": "Ba kết quả liên kết: sự quan tâm → khác biệt thể loại → thời điểm phát hành.",
+    "cards": [
+      [
+        "Sự quan tâm",
+        "Lượt bình chọn và số bản chia sẻ có liên hệ trong mẫu quan sát."
+      ],
+      [
+        "Sự khác biệt",
+        "Thể loại bổ sung một góc nhìn ngoài mức độ quan tâm."
+      ],
+      [
+        "Giá trị tích hợp",
+        "Nối hồ sơ phim, lịch phát hành và bản chia sẻ để đặt các kết quả trong cùng bối cảnh."
+      ]
+    ],
+    "notes": "Chốt rằng giá trị của bài là nối đúng đối tượng và đọc đúng đơn vị, thời gian. Chúng tôi quan sát các mối liên hệ, chưa đo lượt tải, thất thu hay quan hệ nhân quả. Cảm ơn và mời câu hỏi.",
+    "seconds": 35,
+    "kind": "ending",
+    "phase": "Kết luận"
+  }
+]

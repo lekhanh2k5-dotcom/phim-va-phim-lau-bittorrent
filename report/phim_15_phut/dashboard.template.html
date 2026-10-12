@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Phim qua ba góc nhìn · Dashboard</title>
+<meta name="color-scheme" content="light">
+<style><!-- DASHBOARD_STYLE --></style>
+</head>
+<body>
+<header class="app-header">
+ <div class="app-name">Phim &amp; chia sẻ<small>IMDb · TMDb / JustWatch · MagnetDB</small></div>
+ <nav role="tablist" aria-label="Các phần dashboard">
+  <button id="tab-explore" role="tab" aria-controls="explore" aria-selected="true" data-tab="explore">Phân tích</button>
+  <button id="tab-sources" role="tab" aria-controls="sources" aria-selected="false" data-tab="sources">Nguồn dữ liệu</button>
+  <button id="tab-method" role="tab" aria-controls="method" aria-selected="false" data-tab="method">Phương pháp</button>
+ </nav>
+ <a class="slide-link" href="slides.html">Mở slide ↗</a>
+</header>
+<main class="main">
+<!-- EXPLORE_MARKUP -->
+ <section id="sources" role="tabpanel" aria-labelledby="tab-sources" hidden>
+  <header class="intro"><div><h1>Hiểu từng nguồn trước khi nối.</h1><p>Những biểu đồ tổng quan của bài thuyết trình. Phần này dùng toàn bộ phạm vi của từng hình gốc và không chịu bộ lọc ở trang Khám phá.</p></div></header>
+  <div class="source-grid">
+   <article class="source-card"><span class="number">01 · Hồ sơ phim</span><h2>IMDb</h2><p>Tên, năm phim, thể loại và đánh giá của người dùng.</p><div id="source-imdb" class="count"></div><p class="source-count-note">Phim sau khi loại cờ is_adult trong danh mục gốc.</p><p class="fields">Điểm trung bình và lượt bình chọn có ý nghĩa khác nhau: mức đánh giá và mức độ quan tâm.</p></article>
+   <article class="source-card"><span class="number">02 · Phát hành & phân phối</span><h2>TMDb / JustWatch</h2><p>Ngày phát hành theo hình thức, quốc gia và nơi xem phim.</p><div id="source-tmdb" class="count"></div><p class="source-count-note">Hồ sơ tìm thấy trên TMDb trong tập được truy vấn của dự án.</p><p class="fields">Ngày phát hành có lịch sử; nơi xem là ảnh chụp lúc thu thập. Tập TMDb không phải toàn bộ kho IMDb.</p></article>
+   <article class="source-card"><span class="number">03 · Bản chia sẻ</span><h2>MagnetDB</h2><p>Metadata torrent và thời điểm hệ thống thu thập phát hiện.</p><div id="source-torrent" class="count"></div><p class="source-count-note">Torrent riêng biệt sau làm sạch trong cửa sổ gốc; gồm mọi cặp được pipeline giữ lại.</p><p class="fields">Một torrent có thể ghép với nhiều phim. Số torrent riêng biệt khác tổng số cặp torrent–phim.</p></article>
+  </div>
+  <div class="gallery">
+   <figure><h3>IMDb · Quy mô danh mục theo năm</h3><img src="assets/1_imdb_01_movies_per_year.png" alt="Số bản ghi phim IMDb theo năm" tabindex="0"><figcaption>Độ đầy đủ dữ liệu có thể khác nhau giữa các giai đoạn; không coi là tổng điều tra sản lượng phim.</figcaption></figure>
+   <figure><h3>IMDb · Sự tập trung lượt bình chọn</h3><img src="assets/1_imdb_06_votes_lorenz.png" alt="Đường Lorenz lượt bình chọn IMDb" tabindex="0"><figcaption>Đường cong cho thấy lượt bình chọn tập trung vào một nhóm phim nhỏ. Bình chọn không phải lượt xem.</figcaption></figure>
+   <figure><h3>TMDb · Nơi xem theo quốc gia</h3><img src="assets/3_tmdb_streaming_01_world_catalog_map.png" alt="Bản đồ danh mục phim có nơi xem" tabindex="0"><figcaption>Thông tin nơi xem do JustWatch cung cấp qua TMDb, tại thời điểm thu thập năm 2026.</figcaption></figure>
+   <figure><h3>TMDb · Từ rạp đến phát hành số</h3><img src="assets/2_tmdb_04_theatrical_window.png" alt="Khoảng cách giữa phát hành rạp và Digital" tabindex="0"><figcaption>Digital có thể gồm thuê hoặc mua phim. Năm phim IMDb không thay thế ngày phát hành TMDb.</figcaption></figure>
+   <figure><h3>MagnetDB · Cơ cấu nội dung</h3><img src="assets/4_magnetdb_01_content_sunburst.png" alt="Cơ cấu loại nội dung MagnetDB" tabindex="0"><figcaption>Giới thiệu kho dữ liệu trước khi chọn nội dung liên quan đến phim. Phân loại dựa trên metadata.</figcaption></figure>
+   <figure><h3>MagnetDB · Hoạt động thu thập</h3><img src="assets/4_magnetdb_03_crawler_coverage.png" alt="Độ phủ thu thập torrent theo tháng" tabindex="0"><figcaption>Sự thay đổi lượng bản ghi có thể do hoạt động thu thập. Không diễn giải khoảng trống thành không có chia sẻ.</figcaption></figure>
+  </div>
+ </section>
+ <section id="method" role="tabpanel" aria-labelledby="tab-method" hidden>
+  <header class="intro"><div><h1>Nối đúng phim. Đọc đúng thời gian.</h1><p>Đơn vị, phạm vi và những điều cần biết khi diễn giải dashboard.</p></div></header>
+  <div class="method-flow"><span>IMDb · tconst</span><i>←</i><span>TMDb · imdb_id</span><i>+</i><span>MagnetDB · tên / năm / bí danh</span><i>→</i><span>Hồ sơ chung theo phim</span></div>
+  <div class="methods">
+   <article><h2>Phạm vi dashboard</h2><p id="scope-text"></p><p>Bắt đầu từ IMDb rồi ghép trái với dữ liệu TMDb và kết quả ghép torrent. Phim chưa ghi nhận torrent được giữ với giá trị 0; thiếu hồ sơ TMDb được giữ thành trạng thái riêng.</p><p>Thông tin nơi xem trên trang Khám phá dùng Mỹ làm phạm vi nhất quán. Phần tổng quan nguồn có bản đồ các quốc gia.</p></article>
+   <article><h2>Ba loại thời gian</h2><ul><li><b>Năm phim IMDb:</b> dùng để chia nhóm phim, không phải ngày torrent xuất hiện.</li><li><b>Ngày phát hành TMDb:</b> gắn với hình thức và quốc gia. Dashboard dùng Digital tại Mỹ.</li><li><b>Ngày phát hiện MagnetDB:</b> lúc hệ thống ghi nhận torrent, có thể muộn hơn ngày đăng.</li></ul><p>Bình chọn và nơi xem là ảnh chụp năm 2026 theo tài liệu dự án; không mô tả trạng thái lịch sử vào từng ngày phát hiện torrent.</p></article>
+   <article><h2>Đếm gì và không đếm gì?</h2><p><b>Theo phim:</b> số torrent riêng biệt gắn với phim đó. <b>Tổng qua phim:</b> số cặp torrent–phim; một torrent có thể được tính cho nhiều phim trong một gói.</p><p><b>Chưa ghi nhận:</b> không có trong dữ liệu đã ghép, lọc và cửa sổ quan sát. Giá trị 0 không chứng minh phim không được chia sẻ.</p><p>Không có số lượt tải, người xem hoặc thiệt hại doanh thu. Metadata chưa xác nhận nội dung hoặc quyền phân phối của từng tệp.</p></article>
+   <article><h2>Biểu đồ slide và dashboard</h2><p>Slide giữ các hình gốc và điều kiện mẫu gốc. Dashboard tính trực tiếp từ nhóm phim đang chọn và giữ cả phim chưa ghi nhận torrent.</p><p>Biểu đồ thể loại trên slide so với mô hình dự đoán từ bình chọn. Biểu đồ thể loại trên dashboard là trung vị thô; hai hình trả lời hai câu hỏi khác nhau.</p><p>Độ trễ trên dashboard dùng WEB đầu tiên được ghi nhận trong cửa sổ gốc. Phim thiếu ngày không tham gia hình độ trễ; biên cửa sổ và bộ lọc trước Digital có thể ảnh hưởng kết quả.</p></article>
+  </div>
+  <div class="gallery" style="margin-top:18px"><figure><h3>Sơ đồ nối các nguồn</h3><img src="assets/5_combined_01_integration_diagram.png" alt="Sơ đồ tích hợp IMDb TMDb MagnetDB" tabindex="0"><figcaption>TMDb có mã tham chiếu IMDb; MagnetDB cần nhận diện thực thể từ metadata.</figcaption></figure><figure><h3>Giá trị bổ sung của nhánh tự ghép</h3><img src="assets/6_integration_02_coverage_by_source.png" alt="Độ phủ ghép phim theo phương pháp" tabindex="0"><figcaption>Độ phủ lớn hơn không phải bằng chứng về độ chính xác. Cần kiểm tra các cặp ghép.</figcaption></figure></div>
+ </section>
+ <footer class="footer"><span>IMDb · TMDb / JustWatch · MagnetDB — dữ liệu và hình từ dự án hiện tại.</span><a href="kich_ban.md">Kịch bản thuyết trình ↗</a></footer>
+</main>
+<noscript><p class="empty">Bật JavaScript để lọc dữ liệu và mở hồ sơ phim.</p></noscript>
+<div id="tooltip" class="tooltip" hidden></div>
+<dialog id="movie-dialog" aria-labelledby="movie-title"><header class="dialog-head"><h2 id="movie-title"></h2><button id="movie-close">Đóng · Esc</button></header><div id="movie-detail" class="dialog-content"></div></dialog>
+<dialog id="image-dialog" class="image-dialog" aria-labelledby="image-title"><header class="dialog-head"><h2 id="image-title"></h2><button id="image-close">Đóng · Esc</button></header><img id="image-preview" alt=""></dialog>
+<script type="application/json" id="dataset"><!-- EMBEDDED_DATA --></script>
+<script>
+'use strict';
+const payload=JSON.parse(document.getElementById('dataset').textContent);
+const movies=payload.rows.map(r=>Object.fromEntries(payload.columns.map((k,i)=>[k,r[i]])));
+for(const m of movies)m.genreList=(m.genres||'').split(',').filter(Boolean);
+const $=id=>document.getElementById(id);
+const fmt=new Intl.NumberFormat('vi-VN');
+const nf=n=>fmt.format(n);
+const pct=n=>(100*n).toLocaleString('vi-VN',{maximumFractionDigits:1})+'%';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const genreNames={Action:'Hành động',Adventure:'Phiêu lưu',Animation:'Hoạt hình',Biography:'Tiểu sử',Comedy:'Hài',Crime:'Hình sự',Documentary:'Tài liệu',Drama:'Chính kịch',Family:'Gia đình',Fantasy:'Kỳ ảo',History:'Lịch sử',Horror:'Kinh dị',Music:'Âm nhạc',Musical:'Nhạc kịch',Mystery:'Bí ẩn',Romance:'Lãng mạn','Sci-Fi':'Viễn tưởng',Sport:'Thể thao',Thriller:'Giật gân',War:'Chiến tranh',Western:'Miền Tây',News:'Tin tức','Film-Noir':'Phim noir'};
+let currentRows=[],tableRows=[],page=0,sortKey='torrents',sortDir=-1,points=[];
+const PAGE_SIZE=12;
+let activeTab='explore';
+const median=values=>{if(!values.length)return null;const a=[...values].sort((x,y)=>x-y);return a.length%2?a[(a.length-1)/2]:(a[a.length/2-1]+a[a.length/2])/2};
+const nice=n=>Number(n).toLocaleString('vi-VN',{maximumFractionDigits:1});
+const setOptions=[...new Set(movies.flatMap(m=>m.genreList))].filter(g=>g!=='Adult').sort((a,b)=>(genreNames[a]||a).localeCompare(genreNames[b]||b,'vi'));
+for(const g of setOptions){const o=document.createElement('option');o.value=g;o.textContent=genreNames[g]||g;$('genre').append(o)}
+function getFilters(){return {min:Number($('year-min').value),max:Number($('year-max').value),genre:$('genre').value,votes:Number($('votes').value),observed:$('observed').value,availability:$('availability').value,q:$('search').value.trim().toLocaleLowerCase()}}
+function matches(m,f){return m.year>=f.min&&m.year<=f.max&&m.votes>=f.votes&&(!f.genre||m.genreList.includes(f.genre))&&(f.observed==='all'||(f.observed==='yes'?m.torrents>0:m.torrents===0))&&(f.availability==='all'||(f.availability==='unknown'?!m.tmdb:f.availability==='yes'?m.tmdb&&m.streaming===true:m.tmdb&&m.streaming!==true))&&(!f.q||(m.title||'').toLocaleLowerCase().includes(f.q)||m.id.toLowerCase().includes(f.q))}
+function update(){
+ const f=getFilters();
+ const bad=!Number.isInteger(f.min)||!Number.isInteger(f.max)||f.min<1920||f.max>2024||f.min>f.max;
+ $('filter-error').hidden=!bad;$('filter-error').textContent=bad?'Chọn khoảng năm hợp lệ từ 1920 đến 2024, năm đầu không lớn hơn năm cuối.':'';
+ currentRows=bad?[]:movies.filter(m=>matches(m,f));
+ page=0;renderMetrics();renderCharts();sortRows();renderTable();
+ $('filter-summary').textContent=`${nf(currentRows.length)} phim phù hợp · ${f.min}–${f.max}.`;
+}
+function renderMetrics(){
+ const n=currentRows.length,obs=currentRows.filter(m=>m.torrents>0).length,tmdb=currentRows.filter(m=>m.tmdb).length;
+ $('k-movies').textContent=nf(n);$('k-pairs').textContent=nf(currentRows.reduce((s,m)=>s+m.torrents,0));$('k-observed').textContent=n?pct(obs/n):'—';$('k-observed-note').textContent=`${nf(obs)} có ghi nhận / ${nf(n-obs)} chưa ghi nhận`;
+ $('k-tmdb').textContent=n?pct(tmdb/n):'—';$('k-tmdb-note').textContent=`${nf(tmdb)} có hồ sơ / ${nf(n-tmdb)} thiếu dữ liệu`;
+ const md=median(currentRows.map(m=>m.torrents));
+ $('insight').innerHTML=n?`Trong nhóm <b>${nf(n)} phim</b>, số torrent trung vị là <b>${nice(md)}</b>; <b>${pct(obs/n)}</b> phim có torrent được ghi nhận. Các con số mô tả nhóm đã chọn, chưa tách riêng ảnh hưởng của thể loại, năm và mức độ quan tâm.`:'Không có phim phù hợp. Hãy mở rộng khoảng năm hoặc đặt lại bộ lọc.';
+}
+function fit(data){if(data.length<3)return null;const a=data.map(m=>[Math.log10(m.votes),Math.log10(m.torrents+1)]);const mx=a.reduce((s,r)=>s+r[0],0)/a.length,my=a.reduce((s,r)=>s+r[1],0)/a.length;let xx=0,xy=0,yy=0;for(const [x,y] of a){xx+=(x-mx)**2;xy+=(x-mx)*(y-my);yy+=(y-my)**2}return xx>0&&yy>0?{b:xy/xx,a:my-xy/xx*mx,r2:xy**2/(xx*yy)}:null}
+function scatter(){
+ const canvas=$('scatter'),box=canvas.parentElement.getBoundingClientRect();if(!box.width)return;
+ const dpr=window.devicePixelRatio||1,W=Math.round(box.width),H=Math.round(box.height);canvas.width=W*dpr;canvas.height=H*dpr;
+ const c=canvas.getContext('2d');c.scale(dpr,dpr);c.clearRect(0,0,W,H);c.font="13px 'Segoe UI',sans-serif";c.textBaseline='middle';
+ const L=58,R=22,T=26,B=48, pw=W-L-R,ph=H-T-B;
+ const xmin=3,xmax=Math.max(4,...currentRows.map(m=>Math.log10(m.votes))),ymax=Math.max(1,...currentRows.map(m=>Math.log10(m.torrents+1)));
+ const x=v=>L+(Math.log10(v)-xmin)/(xmax-xmin)*pw,y=v=>T+ph-Math.log10(v+1)/ymax*ph;
+ c.strokeStyle='#e4e9f0';c.fillStyle='#596778';c.lineWidth=1;c.textAlign='right';
+ for(let t=0;t<=Math.ceil(ymax);t++){if(t>ymax)continue;const yy=T+ph-t/ymax*ph;c.beginPath();c.moveTo(L,yy);c.lineTo(W-R,yy);c.stroke();c.fillText(nf(Math.max(0,Math.round(10**t-1))),L-8,yy)}
+ c.textAlign='center';for(let t=3;t<=Math.ceil(xmax);t++){if(t>xmax)continue;const xx=L+(t-xmin)/(xmax-xmin)*pw;c.beginPath();c.moveTo(xx,T);c.lineTo(xx,H-B);c.stroke();c.fillText(nf(10**t),xx,H-B+17)}
+ c.fillText('Lượt bình chọn IMDb',L+pw/2,H-5);c.textAlign='left';c.fillText('Torrent / phim',L,T-12);
+ points=currentRows.map(m=>({x:x(m.votes),y:y(m.torrents),m}));
+ c.fillStyle='#2670bc4d';for(const p of points){c.beginPath();c.arc(p.x,p.y,2.35,0,Math.PI*2);c.fill()}
+ const model=fit(currentRows);if(model){c.save();c.beginPath();c.rect(L,T,pw,ph);c.clip();c.strokeStyle='#e58a36';c.lineWidth=2;c.beginPath();c.moveTo(x(10**xmin),T+ph-(model.a+model.b*xmin)/ymax*ph);c.lineTo(x(10**xmax),T+ph-(model.a+model.b*xmax)/ymax*ph);c.stroke();c.restore()}
+ if(!currentRows.length){c.fillStyle='#627273';c.textAlign='center';c.fillText('Không có phim phù hợp',W/2,H/2)}
+ $('scatter-note').textContent=`Hiển thị ${nf(currentRows.length)} phim, gồm cả nhóm chưa ghi nhận (0). ${model?'R² mô tả trong thang log = '+nice(model.r2)+'. ':''}Không suy ra nhân quả.`;
+}
+<!-- CHART_CODE -->
+function availabilityLabel(m){return !m.tmdb?'Thiếu TMDb':m.streaming===true?'Có ghi nhận':'Chưa ghi nhận'}
+function sortRows(){tableRows=[...currentRows].sort((a,b)=>{const aa=a[sortKey],bb=b[sortKey];if(aa===null&&bb===null)return a.id.localeCompare(b.id);if(aa===null)return 1;if(bb===null)return -1;return (typeof aa==='string'?aa.localeCompare(bb):aa-bb)*sortDir||a.id.localeCompare(b.id)})}
+function renderTable(){const pages=Math.max(1,Math.ceil(tableRows.length/PAGE_SIZE));page=Math.max(0,Math.min(page,pages-1));const start=page*PAGE_SIZE,shown=tableRows.slice(start,start+PAGE_SIZE);
+ $('movie-table').innerHTML=shown.length?shown.map(m=>`<tr><td><button class="movie-btn" data-movie="${esc(m.id)}">${esc(m.title)}</button><div class="movie-id">${esc(m.id)} · ${esc(m.genreList.map(g=>genreNames[g]||g).join(', '))}</div></td><td class="year">${m.year}</td><td class="num">${nf(m.votes)}</td><td class="num">${m.rating===null?'—':nice(m.rating)}</td><td class="num">${nf(m.torrents)}</td><td><span class="badge ${!m.tmdb||!m.streaming?'unknown':''}">${availabilityLabel(m)}</span></td></tr>`).join(''):'<tr><td colspan="6" class="empty">Không có phim phù hợp với bộ lọc.</td></tr>';
+ for(const b of document.querySelectorAll('[data-movie]'))b.onclick=()=>openMovie(b.dataset.movie);
+ $('table-count').textContent=shown.length?`Hiển thị ${nf(start+1)}–${nf(start+shown.length)} / ${nf(tableRows.length)} phim`:'0 phim';$('page-counter').textContent=`${page+1} / ${pages}`;$('page-prev').disabled=page===0;$('page-next').disabled=page===pages-1;$('export').disabled=!tableRows.length;
+ document.querySelectorAll('[data-sort]').forEach(b=>{const active=b.dataset.sort===sortKey;b.parentElement.setAttribute('aria-sort',active?(sortDir===1?'ascending':'descending'):'none')});
+}
+function dateText(s){if(!s)return 'Chưa có dữ liệu';const [y,m,d]=s.split('-');return `${d}/${m}/${y}`}
+function openMovie(id){const m=movies.find(x=>x.id===id);if(!m)return;$('movie-title').textContent=m.title+' ('+m.year+')';
+ const fields=[['IMDb',m.id],['Thể loại',m.genreList.map(g=>genreNames[g]||g).join(', ')],['Lượt bình chọn',nf(m.votes)],['Điểm IMDb',m.rating===null?'Chưa có':nice(m.rating)],['Torrent trong cửa sổ',nf(m.torrents)],['Streaming tại Mỹ · 2026',availabilityLabel(m)]];
+ $('movie-detail').innerHTML=`<p>Hồ sơ đối chiếu ba nguồn cho cùng mã IMDb.</p><dl class="detail-grid">${fields.map(([k,v])=>`<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl><h3>Nơi xem được ghi nhận</h3><p>${m.tmdb?esc(m.providers||'Chưa ghi nhận dịch vụ streaming tại Mỹ.'): 'Thiếu hồ sơ TMDb để đối chiếu.'}</p><h3>Các mốc thời gian</h3><div class="timeline"><div><span>TMDb · Chiếu rạp tại Mỹ</span>${dateText(m.theatrical)}</div><div><span>TMDb · Digital tại Mỹ</span>${dateText(m.digital)}</div><div><span>MagnetDB · WEB đầu tiên được phát hiện trong cửa sổ</span>${dateText(m.web)}</div></div><p>Chênh lệch WEB − Digital Mỹ: <b>${m.lag===null?'Chưa đủ dữ liệu':nice(m.lag)+' ngày'}</b>. ${m.lag!==null&&m.lag<0?'Giá trị âm không tự chứng minh rò rỉ: mốc Digital ở nước khác có thể sớm hơn.':''}</p><p>Không ghi nhận torrent không đồng nghĩa không được chia sẻ. Thời điểm phát hiện, độ phủ ghép và bộ lọc đều có thể ảnh hưởng kết quả.</p>`;$('movie-dialog').showModal();
+}
+function exportCSV(){const columns=['imdb_id','title','imdb_year','genres','imdb_rating','imdb_votes','torrent_movie_pairs','tmdb_found','us_streaming_snapshot_2026','us_providers','us_theatrical','us_digital','first_web_observed_in_window','web_minus_us_digital_days'];const safe=v=>{let s=String(v??'');if(/^[=+@]/.test(s)||(/^-/ .test(s)&&!Number.isFinite(Number(s))))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'};const lines=[columns,...tableRows.map(m=>[m.id,m.title,m.year,m.genres,m.rating,m.votes,m.torrents,m.tmdb,m.streaming,m.providers,m.theatrical,m.digital,m.web,m.lag])];const blob=new Blob(['\ufeff'+lines.map(r=>r.map(safe).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='nhom_phim_dang_chon.csv';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function reset(){ $('year-min').value=2021;$('year-max').value=2023;$('genre').value='';$('votes').value='1000';$('observed').value='all';$('availability').value='all';$('search').value='';$('compare-a').value='Action';$('compare-b').value='Documentary';$('genre-measure').value='torrents';$('demo-note').hidden=true;update() }
+function switchTab(name,hash=true){if(!['explore','sources','method'].includes(name))name='explore';activeTab=name;for(const n of ['explore','sources','method']){$(n).hidden=n!==name;$('tab-'+n).setAttribute('aria-selected',String(n===name));$('tab-'+n).tabIndex=n===name?0:-1}if(hash)history.replaceState(null,'','#'+name);if(name==='explore')requestAnimationFrame(renderCharts);window.scrollTo(0,0)}
+for(const b of document.querySelectorAll('[data-tab]')){b.onclick=()=>switchTab(b.dataset.tab);b.onkeydown=e=>{if(!['ArrowRight','ArrowLeft','Home','End'].includes(e.key))return;e.preventDefault();const ns=['explore','sources','method'],i=ns.indexOf(b.dataset.tab);const j=e.key==='Home'?0:e.key==='End'?2:(i+(e.key==='ArrowRight'?1:2))%3;switchTab(ns[j]);$('tab-'+ns[j]).focus()}}
+let debounce;for(const id of ['year-min','year-max','genre','votes','observed','availability','search'])$(id).addEventListener(id==='search'||id.startsWith('year')?'input':'change',()=>{clearTimeout(debounce);debounce=setTimeout(update,100)});
+document.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>{if(sortKey===b.dataset.sort)sortDir*=-1;else{sortKey=b.dataset.sort;sortDir=sortKey==='title'?1:-1}sortRows();page=0;renderTable()});
+$('page-prev').onclick=()=>{page--;renderTable()};$('page-next').onclick=()=>{page++;renderTable()};$('export').onclick=exportCSV;$('reset').onclick=reset;$('demo').onclick=()=>{reset();$('demo-note').hidden=false;$('comparison').scrollIntoView({behavior:'smooth',block:'start'})};$('movie-close').onclick=()=>$('movie-dialog').close();$('image-close').onclick=()=>$('image-dialog').close();
+for(const image of document.querySelectorAll('.gallery img')){const open=()=>{$('image-title').textContent=image.alt;$('image-preview').src=image.src;$('image-preview').alt=image.alt;$('image-dialog').showModal()};image.onclick=open;image.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open()}}}
+$('scatter').addEventListener('pointermove',e=>{const r=e.currentTarget.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;let found=null,best=70;for(const p of points){const d=(p.x-x)**2+(p.y-y)**2;if(d<best){found=p.m;best=d}}if(!found){$('tooltip').hidden=true;return}$('tooltip').innerHTML=`${esc(found.title)} (${found.year})<small>${nf(found.votes)} bình chọn · ${nf(found.torrents)} torrent</small>`;$('tooltip').hidden=false;$('tooltip').style.left=Math.min(innerWidth-310,Math.max(5,e.clientX+15))+'px';$('tooltip').style.top=Math.max(5,e.clientY-65)+'px'});
+$('scatter').addEventListener('pointerleave',()=>{$('tooltip').hidden=true});
+let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(activeTab==='explore')renderCharts()},100)});
+$('source-imdb').textContent=nf(payload.stats.catalog)+' phim';$('source-tmdb').textContent=nf(payload.stats.tmdb_found)+' hồ sơ';$('source-torrent').textContent=nf(payload.stats.distinct_torrents)+' torrent';
+$('scope-text').textContent=`${nf(movies.length)} phim IMDb không gắn cờ is_adult, có năm 1920–2024 và ít nhất 1.000 lượt bình chọn. Cửa sổ torrent theo pipeline gốc: 01/04/2021 ≤ ngày phát hiện < 29/09/2024 (không bao gồm ngày 29/09).`;
+
+for(const id of ['compare-a','compare-b']){for(const g of setOptions){const o=document.createElement('option');o.value=g;o.textContent=genreNames[g]||g;$(id).append(o)}$(id).onchange=renderComparison}
+$('compare-a').value='Action';$('compare-b').value='Documentary';$('genre-measure').onchange=renderCharts;
+window.addEventListener('hashchange',()=>switchTab(location.hash.slice(1),false));update();switchTab(location.hash.slice(1)||'explore',false);
+</script>
+</body>
+</html>

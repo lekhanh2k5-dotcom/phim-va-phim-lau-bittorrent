@@ -1,0 +1,44 @@
+{
+  "default": {
+    "movies": 4981,
+    "pairs": 225770,
+    "observed": 4416,
+    "tmdb": 4821
+  },
+  "action": {
+    "movies": 1054,
+    "pairs": 94208,
+    "observed": 966,
+    "tmdb": 1018
+  },
+  "documentary": {
+    "movies": 359,
+    "pairs": 4444,
+    "observed": 322,
+    "tmdb": 357
+  },
+  "unknown": {
+    "movies": 160,
+    "pairs": 212,
+    "observed": 29,
+    "tmdb": 0
+  },
+  "unobserved": {
+    "movies": 565,
+    "pairs": 0,
+    "observed": 0,
+    "tmdb": 434
+  },
+  "full": {
+    "movies": 47089,
+    "pairs": 702745,
+    "observed": 40366,
+    "tmdb": 46814
+  },
+  "popular": {
+    "movies": 195,
+    "pairs": 63803,
+    "observed": 194,
+    "tmdb": 195
+  }
+}

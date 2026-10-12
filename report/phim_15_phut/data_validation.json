@@ -1,0 +1,9 @@
+{
+  "eligible_movies": 47089,
+  "default_movies": 4981,
+  "default_pairs": 225770,
+  "default_unobserved": 565,
+  "default_tmdb": 4821,
+  "unique_ids": true,
+  "default_votes": 87871391
+}
