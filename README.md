@@ -74,7 +74,31 @@ Không cần tải dữ liệu:
 - **Ảnh biểu đồ:** thư mục `plots/`.
 
 Dữ liệu thô và dữ liệu đã xử lý **không có trong repo** (MagnetDB ~117 GB, dữ liệu đã xử lý ~2,7 GB, và điều khoản IMDb
-không cho phân phối lại). Để chạy lại toàn bộ, làm theo hai mục dưới đây.
+không cho phân phối lại). Có hai cách chạy lại: dùng **gói dữ liệu đã xử lý** (mục ngay dưới, ~500 MB) hoặc
+**tải dữ liệu thô** và chạy từ đầu (mục *Tải và lưu dữ liệu*, ≥ 160 GB).
+
+## Chạy lại không cần dữ liệu thô (thành viên nhóm)
+
+Notebook, slide và dashboard **chỉ đọc file Parquet đã xử lý** trong `data_clean/`, không đọc dữ liệu thô 117 GB.
+Nhóm chia sẻ riêng gói **`data_clean_nhe.zip` (~514 MB)** qua Google Drive (hỏi trưởng nhóm để lấy link —
+gói này **không được đưa lên GitHub** vì chứa dữ liệu IMDb).
+
+1. `git clone https://github.com/lekhanh2k5-dotcom/phim-va-phim-lau-bittorrent.git`
+2. Giải nén `data_clean_nhe.zip` vào **thư mục gốc repo** (zip đã có sẵn thư mục `data_clean/` bên trong).
+3. `pip install -r requirements.txt` (Python 3.12).
+4. Chạy lại phần muốn sửa:
+   - Slide + dashboard: `python report/phim_15_phut/build.py`
+   - Notebook X: `python notebooks/_src/make_0X.py` (hoặc mở `.ipynb` và chạy trực tiếp)
+
+Gói gồm 11 file: `imdb_movies_all`, `tmdb_movies`, `tmdb_release_dates`, `tmdb_watch_providers`, `movie_analysis`,
+`torrents_clean`, `name_matches`, `matched_files`, `match_eval`, `magnetdb_clean_pairs` (.parquet) và `cleaning_log.csv`.
+
+| Chạy được với gói này | Cần thêm file (lấy từ máy có đủ dữ liệu) |
+|---|---|
+| Slide, dashboard, notebook 01, 02, 03, 05, 06, 07, 08 | Notebook **04**: `mdb_torrents_all` (1,8 GB), `mdb_files_sample`, `mdb_files_per_torrent` |
+| | Notebook **00**: `mdb_torrents_all` + `movies`, `imdb_title_index`, `imdb_catalog`, `magnetdb_matched_slice` |
+
+Không chạy được `src/01–10` (cần dữ liệu thô) — nhưng cũng không cần, vì kết quả của chúng chính là gói này.
 
 ## Tải và lưu dữ liệu
 
