@@ -11,7 +11,8 @@ Dự án tích hợp **3 nguồn dữ liệu** — **IMDb**, **TMDb** (gồm d�
 (28,6 triệu torrent thu thập từ mạng BitTorrent DHT) — để (1) phân tích ngành điện ảnh như một dự án phân tích phim thông
 thường, rồi (2) mở rộng sang một góc nhìn hiếm có: **phim lậu được chia sẻ thế nào, khi nào, bởi ai**.
 
-Kết quả gồm **8 notebook, 54 biểu đồ** (≈ 30 loại hình khác nhau) trong `notebooks/`, ảnh PNG trong `plots/`.
+Kết quả gồm **1 notebook quy trình xử lý** (`00`) và **8 notebook phân tích, 54 biểu đồ** (≈ 30 loại hình khác nhau)
+trong `notebooks/`, ảnh PNG trong `plots/`, cùng **dashboard và slide** trong `report/phim_15_phut/`.
 
 Dự án chỉ dùng **metadata** (tên, dung lượng, thời gian), không tải nội dung có bản quyền.
 
@@ -19,6 +20,7 @@ Dự án chỉ dùng **metadata** (tên, dung lượng, thời gian), không t�
 
 | Chương | Notebook | Biểu đồ | Nội dung |
 |---|---|---|---|
+| **0. Quy trình** | `00_quy_trinh_xu_ly` | — | Từng bước từ dữ liệu thô → ghép → làm sạch (A–J), có bảng ví dụ trước/sau và số lượng còn lại |
 | **1. Từng nguồn** | `01_imdb` | 8 | Ngành điện ảnh: số phim/năm, thể loại, điểm, thời lượng, sự chú ý (Lorenz), thể loại đi cùng nhau |
 | | `02_tmdb` | 7 | Kinh doanh & phát hành: ngân sách vs doanh thu, ROI theo thể loại, mùa phát hành (polar), cửa sổ chiếu rạp, nước sản xuất (treemap), nhượng quyền, hãng |
 | | `03_tmdb_streaming` | 6 | Streaming (JustWatch qua TMDb): bản đồ thế giới, độ phủ vs độ sâu nền tảng, hình thức xem, kho phim trùng nhau (UpSet), thể loại × nền tảng, Netflix theo nước |
@@ -64,7 +66,7 @@ phim → ghép thực thể), **ngữ nghĩa thời gian** (năm sản xuất / 
 ## Chỉ muốn xem kết quả?
 
 Không cần tải dữ liệu:
-- **Dashboard + slide (online):** https://lekhanh2k5-dotcom.github.io/phim-va-phim-lau-bittorrent/
+- **Dashboard (online):** https://lekhanh2k5-dotcom.github.io/phim-va-phim-lau-bittorrent/
 - **Quy trình xử lý từng bước** (dữ liệu thô → ghép → làm sạch, có bảng ví dụ trước/sau và số lượng còn lại sau mỗi bộ lọc):
   [`notebooks/00_quy_trinh_xu_ly.ipynb`](notebooks/00_quy_trinh_xu_ly.ipynb)
 - **Slide thuyết trình:** https://lekhanh2k5-dotcom.github.io/phim-va-phim-lau-bittorrent/report/phim_15_phut/slides.html
@@ -217,7 +219,10 @@ phim-va-phim-lau-bittorrent/
 ├── requirements.txt     # thư viện Python
 ├── .env.example         # mẫu file khóa TMDb
 ├── src/                 # 01–10: xử lý dữ liệu; viz_style.py: phong cách biểu đồ dùng chung
-├── notebooks/           # 01–08: phân tích & trực quan; _src/: mã nguồn dựng notebook
+├── notebooks/           # 00: quy trình xử lý; 01–08: phân tích & trực quan; _src/: mã nguồn dựng notebook
 ├── plots/               # 1_imdb … 8_piracy_ecosystem (54 PNG)
-└── report/              # báo cáo
+├── report/
+│   ├── phim_15_phut/        # dashboard.html, slides.html/.pdf, kich_ban.md, build.py
+│   └── thuyet_trinh_ba_nguon/  # template giao diện slide
+└── index.html           # trang GitHub Pages, chuyển tới dashboard
 ```
