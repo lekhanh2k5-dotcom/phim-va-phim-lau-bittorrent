@@ -1,23 +1,21 @@
-# Phim qua ba góc nhìn — Slide và dashboard 15 phút
+# Phim qua ba góc nhìn — Slide và dashboard
 
 Mở `slides.html` để thuyết trình; mở `dashboard.html` để khám phá dữ liệu. Dùng Chrome hoặc Edge. Hai trang hoạt động ngoại tuyến, không cần cài đặt hay chạy máy chủ. Dashboard có phần tổng quan nguồn dùng ảnh trong `assets/`; giữ nguyên thư mục này khi sao chép. Bản ZIP chứa đủ các tệp cần dùng.
 
 ## Bộ slide
 
-15 slide: 2 slide mở đầu, 6 biểu đồ giới thiệu từng nguồn, 1 sơ đồ tích hợp, 1 biểu đồ độ phủ ghép, 3 biểu đồ phân tích chung, 1 slide hướng dẫn demo dashboard và 1 slide kết luận. Có 10 biểu đồ dữ liệu và 1 sơ đồ. Lời nói dự kiến 12 phút 40 giây, dành 2 phút 20 giây dự phòng.
+13 slide: 2 slide mở đầu (slide 2 gồm ba nguồn dữ liệu và 5 bước tiền xử lý), 6 biểu đồ giới thiệu từng nguồn, 1 sơ đồ tích hợp, 1 biểu đồ độ phủ ghép, 3 biểu đồ phân tích chung. Có 10 biểu đồ dữ liệu và 1 sơ đồ. Slide biểu đồ chỉ gồm tiêu đề và hình; lời dẫn, điều rút ra và lưu ý nằm trong ghi chú (phím N) và `kich_ban.md`. Lời nói dự kiến 11 phút 25 giây.
 
 | Phần | Slide | Thời gian |
 |---|---|---|
-| Mở đầu và giải thích nguồn | 1–2 | 1 phút 25 giây |
+| Mở đầu, ba nguồn và tiền xử lý | 1–2 | 1 phút 45 giây |
 | IMDb | 3–4 | 1 phút 45 giây |
 | TMDb / JustWatch | 5–6 | 1 phút 35 giây |
 | MagnetDB | 7–8 | 1 phút 20 giây |
 | Tích hợp | 9–10 | 1 phút 30 giây |
 | Phân tích chung | 11–13 | 3 phút 30 giây |
-| Demo dashboard | 14 | 1 phút |
-| Kết luận | 15 | 35 giây |
 
-Dùng ←/→ hoặc Space để chuyển; N mở lời dẫn; Z phóng to biểu đồ; F toàn màn hình; M mở mục lục. Nút Dashboard mở dashboard ở một tab riêng. Có bản `slides.pdf` 15 trang để chia sẻ hoặc trình bày khi cần. Lời dẫn và cách chuyển phần nằm trong `kich_ban.md` và bảng Lời dẫn của slide.
+Dùng ←/→ hoặc Space để chuyển; N mở lời dẫn; Z phóng to biểu đồ; F toàn màn hình; M mở mục lục. Nút Dashboard mở dashboard ở một tab riêng. Có bản `slides.pdf` 13 trang để chia sẻ hoặc trình bày khi cần. Lời dẫn và cách chuyển phần nằm trong `kich_ban.md` và bảng Lời dẫn của slide.
 
 Các biểu đồ slide lấy từ dự án ba nguồn gốc; lời dẫn được viết lại theo mạch 15 phút. Các kết luận được giới hạn ở mối liên hệ quan sát. Không dùng biểu đồ “tăng 22 lần” vì bộ lọc trước Digital ảnh hưởng phân bố đó.
 
@@ -58,6 +56,6 @@ Không có lượt tải, người xem hoặc thất thu trong dữ liệu này.
 - `build.py`, `dashboard.template.html`, `dashboard.css`, `dashboard.explore.html`, `dashboard.charts.js`: nguồn tạo hai trang từ các parquet gốc. Chạy từ dự án: `python report/phim_15_phut/build.py`. Cần Python và DuckDB đã có trong môi trường dự án. Script chỉ đọc dữ liệu gốc, ghi vào thư mục này.
 - `data_validation.json`, `reference_checks.json`, `browser_validation.json`: kiểm tra dữ liệu và giao diện. Reference được đối chiếu độc lập từ các parquet gốc. `verify.cjs` dùng Node và Chrome có sẵn để kiểm tra, chụp ảnh và xuất PDF.
 
-Đã đối chiếu bảy nhóm lọc với SQL độc lập; kiểm tra các biểu đồ, trạng thái rỗng, khoảng năm sai, hồ sơ phim, sắp xếp, phân trang, xuất CSV, hiển thị trên laptop/điện thoại, giải mã ảnh và PDF đủ 15 trang. Không phát sinh yêu cầu mạng bên ngoài hay lỗi JavaScript trong kiểm tra.
+Đã đối chiếu bảy nhóm lọc với SQL độc lập; kiểm tra các biểu đồ, trạng thái rỗng, khoảng năm sai, hồ sơ phim, sắp xếp, phân trang, xuất CSV, hiển thị trên laptop/điện thoại, giải mã ảnh và PDF đủ 13 trang. Không phát sinh yêu cầu mạng bên ngoài hay lỗi JavaScript trong kiểm tra.
 
 Nguồn: IMDb Non-Commercial Datasets; TMDb API (watch providers do JustWatch cung cấp); MagnetDB và pipeline của dự án hiện tại. Tham khảo README ở gốc dự án để biết nguồn vào và điều kiện sử dụng.

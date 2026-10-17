@@ -19,11 +19,13 @@
     "notes": "Trong bài này, chúng tôi theo dõi một bộ phim qua ba góc nhìn: người dùng quan tâm ra sao, phim được phát hành khi nào và hệ thống ghi nhận những bản chia sẻ nào. Chúng tôi sẽ phân tích riêng từng nguồn, sau đó nối chúng để trả lời ba câu hỏi chung.",
     "seconds": 40,
     "kind": "hero",
-    "phase": "Mở đầu"
+    "phase": "Mở đầu",
+    "steps": [],
+    "result": null
   },
   {
-    "title": "Hiểu nguồn trước khi đọc kết quả",
-    "subtitle": "Ba nguồn thu thập chính; mỗi nguồn trả lời một phần câu hỏi.",
+    "title": "Ba nguồn dữ liệu và bước tiền xử lý",
+    "subtitle": "Mỗi nguồn trả lời một phần câu hỏi; tiền xử lý đưa ba nguồn về cùng một bộ phim.",
     "cards": [
       [
         "IMDb",
@@ -38,10 +40,33 @@
         "Metadata các gói tệp chia sẻ qua BitTorrent. Đếm bản chia sẻ, không đếm người tải hoặc người xem."
       ]
     ],
-    "notes": "IMDb giống một danh mục phim có đánh giá của người dùng. TMDb bổ sung lịch phát hành và nơi xem. BitTorrent là cách chia sẻ tệp giữa nhiều máy tính; MagnetDB ghi nhận metadata các bản chia sẻ đó. Mốc năm phim, ngày phát hành và ngày hệ thống phát hiện có ý nghĩa khác nhau.",
-    "seconds": 45,
+    "notes": "IMDb giống một danh mục phim có đánh giá của người dùng. TMDb bổ sung lịch phát hành và nơi xem. BitTorrent là cách chia sẻ tệp giữa nhiều máy tính; MagnetDB ghi nhận metadata các bản chia sẻ đó. Trước khi phân tích, dữ liệu đi qua năm bước tiền xử lý. Một, chỉ giữ phim lẻ, bỏ phim người lớn và tập phim bộ. Hai, chuẩn hóa tên phim: bỏ dấu, chữ thường, thêm tên phim theo từng nước. Ba, ghép thực thể: tách tên và năm từ tên torrent rồi đối chiếu với IMDb; TMDb nối qua mã IMDb. Bốn, làm sạch: bỏ tệp nhỏ, năm lệch, ca trùng tên và torrent giả. Năm, chỉ giữ giai đoạn thu thập ổn định từ tháng tư năm hai nghìn không trăm hai mươi mốt đến tháng chín năm hai nghìn không trăm hai mươi bốn.",
+    "seconds": 65,
     "kind": "concept",
-    "phase": "Mở đầu"
+    "phase": "Mở đầu",
+    "steps": [
+      [
+        "Lọc phim",
+        "Chỉ phim lẻ; bỏ phim người lớn, tập phim bộ, sự kiện thể thao"
+      ],
+      [
+        "Chuẩn hóa tên",
+        "Bỏ dấu, chữ thường, thêm tên theo từng nước (akas)"
+      ],
+      [
+        "Ghép thực thể",
+        "Tên + năm từ tên torrent ↔ IMDb; TMDb nối qua imdb_id"
+      ],
+      [
+        "Làm sạch",
+        "Bỏ tệp < 100 MB, năm lệch, ca trùng tên, torrent giả"
+      ],
+      [
+        "Cửa sổ thời gian",
+        "Chỉ giữ giai đoạn thu thập ổn định 04/2021 – 09/2024"
+      ]
+    ],
+    "result": "Kết quả: ~2,07 triệu cặp torrent–phim cho ~126 nghìn phim"
   },
   {
     "phase": "IMDb",
@@ -189,56 +214,12 @@
     "image": "plots/7_piracy_movies/07_web_lag.png",
     "title": "Bản WEB được ghi nhận gần mốc Digital đến đâu?",
     "finding": "Các bản WEB thường được ghi nhận gần ngày phát hành Digital tại Mỹ trong mẫu đang xét.",
-    "next_question": "Có thể tự kiểm tra những khác biệt này theo nhóm phim không?",
-    "why": "Ngày không trên hình là ngày Digital tại Mỹ. Cột dương là WEB đầu tiên được ghi nhận sau mốc đó; cột âm là trước mốc đó. Phân bố tập trung gần mốc Digital trong mẫu đang xét. Cần nhớ một phim có thể đã phát hành Digital ở nước khác trước Mỹ, và hệ thống có thể phát hiện muộn hơn ngày đăng. Bộ lọc metadata cũng ảnh hưởng phân bố. Vì vậy, ta chỉ kết luận về thời điểm ghi nhận trong dữ liệu, không khẳng định Digital gây ra chia sẻ. Cuối cùng, dashboard giúp người xem tự chọn nhóm phim để kiểm tra thêm.",
+    "next_question": "Kết thúc: cảm ơn và mời câu hỏi.",
+    "why": "Ngày không trên hình là ngày Digital tại Mỹ. Cột dương là WEB đầu tiên được ghi nhận sau mốc đó; cột âm là trước mốc đó. Phân bố tập trung gần mốc Digital trong mẫu đang xét. Cần nhớ một phim có thể đã phát hành Digital ở nước khác trước Mỹ, và hệ thống có thể phát hiện muộn hơn ngày đăng. Bộ lọc metadata cũng ảnh hưởng phân bố. Vì vậy, ta chỉ kết luận về thời điểm ghi nhận trong dữ liệu, không khẳng định Digital gây ra chia sẻ. Đây cũng là điểm kết của bài: tích hợp ba nguồn giúp đặt sự quan tâm, thể loại và thời điểm phát hành của cùng một bộ phim vào chung một bối cảnh. Cảm ơn thầy cô và các bạn đã lắng nghe.",
     "reading": "Ngày 0 là Digital tại Mỹ; âm là được phát hiện trước mốc đó, dương là sau. Hai cột ngoài cùng gom độ trễ ngoài giới hạn.",
     "limitation": "Đây là ngày hệ thống phát hiện, không phải thời điểm tạo torrent. Chênh lệch quốc gia, thiếu ngày và bộ lọc trước Digital đều ảnh hưởng phân bố.",
     "scope": "Ba nguồn · mốc Digital Mỹ · phim 04/2021–09/2023",
     "caution": "Mốc Mỹ có thể muộn hơn nước khác; bộ lọc và thời điểm phát hiện ảnh hưởng phân bố. Không suy ra tác động nhân quả.",
     "seconds": 65
-  },
-  {
-    "title": "Từ kết quả chung đến câu hỏi của người xem",
-    "subtitle": "Mở dashboard và thực hiện một ví dụ trong 60 giây.",
-    "cards": [
-      [
-        "01 · Giữ cùng nhóm",
-        "Bắt đầu ở phim 2021–2023, có ít nhất 1.000 lượt bình chọn."
-      ],
-      [
-        "02 · So sánh trực tiếp",
-        "Đặt Hành động và Tài liệu cạnh nhau: số phim, bình chọn, torrent và tỷ lệ ghi nhận."
-      ],
-      [
-        "03 · Xem một phim",
-        "Mở hồ sơ phim để đối chiếu bình chọn, nơi xem và các mốc phát hành."
-      ]
-    ],
-    "notes": "Mở dashboard bằng nút trên thanh công cụ, rồi nhấn Ví dụ thuyết trình. Nhóm mặc định dùng năm 2021–2023 và tối thiểu 1.000 lượt bình chọn. Phần so sánh đặt Hành động và Tài liệu cạnh nhau bằng hai màu: đọc số phim, bình chọn trung vị, torrent trung vị và tỷ lệ ghi nhận. Không đọc chênh lệch thô thành ảnh hưởng riêng của thể loại. Mở một phim ở bảng để thấy ba nguồn được nối lại. Đặt lại bộ lọc và quay về kết luận.",
-    "seconds": 60,
-    "kind": "concept",
-    "phase": "Dashboard"
-  },
-  {
-    "title": "Tích hợp để hiểu thêm về cùng một bộ phim",
-    "subtitle": "Ba kết quả liên kết: sự quan tâm → khác biệt thể loại → thời điểm phát hành.",
-    "cards": [
-      [
-        "Sự quan tâm",
-        "Lượt bình chọn và số bản chia sẻ có liên hệ trong mẫu quan sát."
-      ],
-      [
-        "Sự khác biệt",
-        "Thể loại bổ sung một góc nhìn ngoài mức độ quan tâm."
-      ],
-      [
-        "Giá trị tích hợp",
-        "Nối hồ sơ phim, lịch phát hành và bản chia sẻ để đặt các kết quả trong cùng bối cảnh."
-      ]
-    ],
-    "notes": "Chốt rằng giá trị của bài là nối đúng đối tượng và đọc đúng đơn vị, thời gian. Chúng tôi quan sát các mối liên hệ, chưa đo lượt tải, thất thu hay quan hệ nhân quả. Cảm ơn và mời câu hỏi.",
-    "seconds": 35,
-    "kind": "ending",
-    "phase": "Kết luận"
   }
 ]

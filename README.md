@@ -65,7 +65,10 @@ phim → ghép thực thể), **ngữ nghĩa thời gian** (năm sản xuất / 
 
 Không cần tải dữ liệu:
 - **Dashboard + slide (online):** https://lekhanh2k5-dotcom.github.io/phim-va-phim-lau-bittorrent/
-- **Notebook đã chạy sẵn** (có đủ biểu đồ và nhận xét): mở các file trong `notebooks/` ngay trên GitHub.
+- **Quy trình xử lý từng bước** (dữ liệu thô → ghép → làm sạch, có bảng ví dụ trước/sau và số lượng còn lại sau mỗi bộ lọc):
+  [`notebooks/00_quy_trinh_xu_ly.ipynb`](notebooks/00_quy_trinh_xu_ly.ipynb)
+- **Slide thuyết trình:** https://lekhanh2k5-dotcom.github.io/phim-va-phim-lau-bittorrent/report/phim_15_phut/slides.html
+- **Notebook phân tích đã chạy sẵn** (01–08, có đủ biểu đồ và nhận xét): mở các file trong `notebooks/` ngay trên GitHub.
 - **Ảnh biểu đồ:** thư mục `plots/`.
 
 Dữ liệu thô và dữ liệu đã xử lý **không có trong repo** (MagnetDB ~117 GB, dữ liệu đã xử lý ~2,7 GB, và điều khoản IMDb

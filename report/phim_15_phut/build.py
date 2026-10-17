@@ -78,10 +78,11 @@ def build_slides():
       '6_integration/02_coverage_by_source': 'Biểu đồ tách các cặp được tìm thấy bằng liên kết có sẵn, bằng tự ghép tên, và bằng cả hai. Phần tự ghép bổ sung nhiều dữ liệu, cho thấy nhận diện thực thể ảnh hưởng trực tiếp tới độ phủ của nghiên cứu. Tuy nhiên, nhiều cặp hơn chưa chứng minh các cặp chính xác hơn; độ chính xác cần được kiểm tra riêng. Sau khi có tập dữ liệu chung, chúng tôi quay lại câu hỏi từ phần IMDb: phim được nhiều người quan tâm có nhiều bản chia sẻ được ghi nhận hơn không?',
       '7_piracy_movies/02_popularity_vs_piracy': 'Mỗi chấm trên hình là một phim trong mẫu đã ghép, ra năm hai nghìn không trăm hai mươi mốt đến hai nghìn không trăm hai mươi ba và có ít nhất một nghìn lượt bình chọn. Khi lượt bình chọn tăng, số torrent thường cũng tăng. Đường cam mô tả xu hướng này trong thang log. Các chấm lệch khỏi đường nhắc rằng mức độ quan tâm chưa giải thích hết mọi khác biệt; độ phủ ghép cũng có thể làm một phim bị đếm thiếu. Đây là mối liên hệ quan sát, chưa phải nguyên nhân. Chúng tôi tiếp tục xem liệu các thể loại có khác nhau sau khi xét mức độ quan tâm hay không.',
       '7_piracy_movies/03_genre_piracy_ratio': 'Hình này dùng kết quả mô hình ở hình trước. Đường cam bằng một là số torrent mô hình dự đoán từ bình chọn. Trung vị của nhóm Hành động nằm về bên phải, còn Tài liệu nằm về bên trái: trong mẫu, hai nhóm có mức ghi nhận khác nhau so với dự đoán. Hình không đếm số phim của mỗi thể loại, nên không trả lời Chính kịch hay Tài liệu có nhiều phim hơn. Một phim có thể thuộc nhiều thể loại. Ngoài sự quan tâm và thể loại, chúng tôi bổ sung lịch phát hành để xem các bản chia sẻ được phát hiện vào thời điểm nào.',
-      '7_piracy_movies/07_web_lag': 'Ngày không trên hình là ngày Digital tại Mỹ. Cột dương là WEB đầu tiên được ghi nhận sau mốc đó; cột âm là trước mốc đó. Phân bố tập trung gần mốc Digital trong mẫu đang xét. Cần nhớ một phim có thể đã phát hành Digital ở nước khác trước Mỹ, và hệ thống có thể phát hiện muộn hơn ngày đăng. Bộ lọc metadata cũng ảnh hưởng phân bố. Vì vậy, ta chỉ kết luận về thời điểm ghi nhận trong dữ liệu, không khẳng định Digital gây ra chia sẻ. Cuối cùng, dashboard giúp người xem tự chọn nhóm phim để kiểm tra thêm.'
+      '7_piracy_movies/07_web_lag': 'Ngày không trên hình là ngày Digital tại Mỹ. Cột dương là WEB đầu tiên được ghi nhận sau mốc đó; cột âm là trước mốc đó. Phân bố tập trung gần mốc Digital trong mẫu đang xét. Cần nhớ một phim có thể đã phát hành Digital ở nước khác trước Mỹ, và hệ thống có thể phát hiện muộn hơn ngày đăng. Bộ lọc metadata cũng ảnh hưởng phân bố. Vì vậy, ta chỉ kết luận về thời điểm ghi nhận trong dữ liệu, không khẳng định Digital gây ra chia sẻ. Đây cũng là điểm kết của bài: tích hợp ba nguồn giúp đặt sự quan tâm, thể loại và thời điểm phát hành của cùng một bộ phim vào chung một bối cảnh. Cảm ơn thầy cô và các bạn đã lắng nghe.'
     }
-    def concept(title,subtitle,cards,notes,seconds,kind='concept',phase='Mở đầu'):
-        slides.append(dict(title=title,subtitle=subtitle,cards=cards,notes=notes,seconds=seconds,kind=kind,phase=phase))
+    def concept(title,subtitle,cards,notes,seconds,kind='concept',phase='Mở đầu',steps=None,result=None):
+        slides.append(dict(title=title,subtitle=subtitle,cards=cards,notes=notes,seconds=seconds,kind=kind,phase=phase,
+                           steps=steps or [],result=result))
     def chart(image,phase,title,finding,next_question,reading,seconds,caution):
         s=by_image['plots/'+image+'.png'].copy()
         s.update(phase=phase,title=title,finding=finding,next_question=next_question,reading=reading,
@@ -91,12 +92,21 @@ def build_slides():
         'Sự quan tâm của khán giả, khả năng tiếp cận và các bản chia sẻ trên BitTorrent liên hệ thế nào?',
         [('IMDb','Phim & sự quan tâm'),('TMDb / JustWatch','Phát hành & nơi xem'),('MagnetDB','Các bản chia sẻ được ghi nhận')],
         'Trong bài này, chúng tôi theo dõi một bộ phim qua ba góc nhìn: người dùng quan tâm ra sao, phim được phát hành khi nào và hệ thống ghi nhận những bản chia sẻ nào. Chúng tôi sẽ phân tích riêng từng nguồn, sau đó nối chúng để trả lời ba câu hỏi chung.',40,'hero')
-    concept('Hiểu nguồn trước khi đọc kết quả',
-        'Ba nguồn thu thập chính; mỗi nguồn trả lời một phần câu hỏi.',
+    concept('Ba nguồn dữ liệu và bước tiền xử lý',
+        'Mỗi nguồn trả lời một phần câu hỏi; tiền xử lý đưa ba nguồn về cùng một bộ phim.',
         [('IMDb','Hồ sơ phim: tên, năm, thể loại, điểm và lượt bình chọn. Lượt bình chọn là chỉ báo sự quan tâm.'),
          ('TMDb / JustWatch','Ngày phát hành và nơi xem hợp pháp. Thông tin nơi xem trong TMDb do JustWatch cung cấp.'),
          ('MagnetDB','Metadata các gói tệp chia sẻ qua BitTorrent. Đếm bản chia sẻ, không đếm người tải hoặc người xem.')],
-        'IMDb giống một danh mục phim có đánh giá của người dùng. TMDb bổ sung lịch phát hành và nơi xem. BitTorrent là cách chia sẻ tệp giữa nhiều máy tính; MagnetDB ghi nhận metadata các bản chia sẻ đó. Mốc năm phim, ngày phát hành và ngày hệ thống phát hiện có ý nghĩa khác nhau.',45)
+        'IMDb giống một danh mục phim có đánh giá của người dùng. TMDb bổ sung lịch phát hành và nơi xem. BitTorrent là cách chia sẻ tệp giữa nhiều máy tính; MagnetDB ghi nhận metadata các bản chia sẻ đó. '
+        'Trước khi phân tích, dữ liệu đi qua năm bước tiền xử lý. Một, chỉ giữ phim lẻ, bỏ phim người lớn và tập phim bộ. Hai, chuẩn hóa tên phim: bỏ dấu, chữ thường, thêm tên phim theo từng nước. '
+        'Ba, ghép thực thể: tách tên và năm từ tên torrent rồi đối chiếu với IMDb; TMDb nối qua mã IMDb. Bốn, làm sạch: bỏ tệp nhỏ, năm lệch, ca trùng tên và torrent giả. '
+        'Năm, chỉ giữ giai đoạn thu thập ổn định từ tháng tư năm hai nghìn không trăm hai mươi mốt đến tháng chín năm hai nghìn không trăm hai mươi bốn.',65,
+        steps=[('Lọc phim','Chỉ phim lẻ; bỏ phim người lớn, tập phim bộ, sự kiện thể thao'),
+               ('Chuẩn hóa tên','Bỏ dấu, chữ thường, thêm tên theo từng nước (akas)'),
+               ('Ghép thực thể','Tên + năm từ tên torrent ↔ IMDb; TMDb nối qua imdb_id'),
+               ('Làm sạch','Bỏ tệp < 100 MB, năm lệch, ca trùng tên, torrent giả'),
+               ('Cửa sổ thời gian','Chỉ giữ giai đoạn thu thập ổn định 04/2021 – 09/2024')],
+        result='Kết quả: ~2,07 triệu cặp torrent–phim cho ~126 nghìn phim')
     chart('1_imdb/01_movies_per_year','IMDb','Kho phim thay đổi thế nào theo thời gian?',
         'Quy mô danh mục khác nhau giữa các năm; cần hiểu nền dữ liệu trước khi so sánh.',
         'Nhiều phim như vậy, sự chú ý có phân bố đều không?',
@@ -149,45 +159,52 @@ def build_slides():
         'Đây là so sánh với mô hình, không phải số phim mỗi thể loại. Một phim có thể thuộc nhiều thể loại; chưa chứng minh nguyên nhân.')
     chart('7_piracy_movies/07_web_lag','Phân tích chung','Bản WEB được ghi nhận gần mốc Digital đến đâu?',
         'Các bản WEB thường được ghi nhận gần ngày phát hành Digital tại Mỹ trong mẫu đang xét.',
-        'Có thể tự kiểm tra những khác biệt này theo nhóm phim không?',
+        'Kết thúc: cảm ơn và mời câu hỏi.',
         'Ngày 0 là Digital tại Mỹ; âm là được phát hiện trước mốc đó, dương là sau. Hai cột ngoài cùng gom độ trễ ngoài giới hạn.',65,
         'Mốc Mỹ có thể muộn hơn nước khác; bộ lọc và thời điểm phát hiện ảnh hưởng phân bố. Không suy ra tác động nhân quả.')
-    concept('Từ kết quả chung đến câu hỏi của người xem',
-        'Mở dashboard và thực hiện một ví dụ trong 60 giây.',
-        [('01 · Giữ cùng nhóm','Bắt đầu ở phim 2021–2023, có ít nhất 1.000 lượt bình chọn.'),
-         ('02 · So sánh trực tiếp','Đặt Hành động và Tài liệu cạnh nhau: số phim, bình chọn, torrent và tỷ lệ ghi nhận.'),
-         ('03 · Xem một phim','Mở hồ sơ phim để đối chiếu bình chọn, nơi xem và các mốc phát hành.')],
-        'Mở dashboard bằng nút trên thanh công cụ, rồi nhấn Ví dụ thuyết trình. Nhóm mặc định dùng năm 2021–2023 và tối thiểu 1.000 lượt bình chọn. Phần so sánh đặt Hành động và Tài liệu cạnh nhau bằng hai màu: đọc số phim, bình chọn trung vị, torrent trung vị và tỷ lệ ghi nhận. Không đọc chênh lệch thô thành ảnh hưởng riêng của thể loại. Mở một phim ở bảng để thấy ba nguồn được nối lại. Đặt lại bộ lọc và quay về kết luận.',60,phase='Dashboard')
-    concept('Tích hợp để hiểu thêm về cùng một bộ phim',
-        'Ba kết quả liên kết: sự quan tâm → khác biệt thể loại → thời điểm phát hành.',
-        [('Sự quan tâm','Lượt bình chọn và số bản chia sẻ có liên hệ trong mẫu quan sát.'),
-         ('Sự khác biệt','Thể loại bổ sung một góc nhìn ngoài mức độ quan tâm.'),
-         ('Giá trị tích hợp','Nối hồ sơ phim, lịch phát hành và bản chia sẻ để đặt các kết quả trong cùng bối cảnh.')],
-        'Chốt rằng giá trị của bài là nối đúng đối tượng và đọc đúng đơn vị, thời gian. Chúng tôi quan sát các mối liên hệ, chưa đo lượt tải, thất thu hay quan hệ nhân quả. Cảm ơn và mời câu hỏi.',35,'ending','Kết luận')
-    assert len(slides)==15
+    N=len(slides)
+    total=sum(s['seconds'] for s in slides)
+    mmss=lambda sec:f"{sec//60} phút {sec%60} giây" if sec%60 else f"{sec//60} phút"
     esc=lambda x:html.escape(str(x),quote=True)
     rendered=[]
     for n,s in enumerate(slides):
-        head=f"<div class='slide-heading'><p class='eyebrow'>{esc(s['phase'])} <span>• {n+1:02d} / 15 · {s['seconds']} giây</span></p><h2>{esc(s['title'])}</h2></div>"
+        head=f"<div class='slide-heading'><p class='eyebrow'>{esc(s['phase'])} <span>• {n+1:02d} / {N} · {s['seconds']} giây</span></p><h2>{esc(s['title'])}</h2></div>"
         if s['kind']=='chart':
             image=ROOT/s['image']
             asset=image.parent.name+'_'+image.name
             shutil.copyfile(image,ASSETS/asset)
             uri='data:image/png;base64,'+base64.b64encode(image.read_bytes()).decode()
-            body=f"<p class='scope'>{esc(s['scope'])}</p><button class='figure-frame' data-zoom aria-label='Phóng to: {esc(s['title'])}'><img src='{uri}' alt='{esc(s['title'])}'></button>"
-            body+=f"<div class='takeaways'><div><span class='label'>Điều rút ra</span><p>{esc(s['finding'])}</p></div><div class='next-question'><span class='label'>Câu hỏi tiếp</span><p>{esc(s['next_question'])}</p></div></div><p class='caution'>{esc(s['caution'])}</p>"
+            # Slide biểu đồ chỉ gồm tiêu đề + hình; lời dẫn, điều rút ra, lưu ý nằm trong ghi chú (phím N) và kich_ban.md
+            body=f"<button class='figure-frame' data-zoom aria-label='Phóng to: {esc(s['title'])}'><img src='{uri}' alt='{esc(s['title'])}'></button>"
         else:
             body=f"<p class='subtitle'>{esc(s['subtitle'])}</p><div class='concept-cards'>"+''.join(f"<div><span class='card-number'>{j+1:02d}</span><h3>{esc(t)}</h3><p>{esc(d)}</p></div>" for j,(t,d) in enumerate(s['cards']))+'</div>'
-            if s['kind']=='hero':body+="<p class='hero-footer'>Tích hợp và Phân tích dữ liệu lớn <span>15 slide · 12 phút 40 giây + 2 phút 20 giây dự phòng</span></p>"
-        rendered.append(f"<section class='slide {s['kind']} {'active' if n==0 else ''}' aria-label='Trang {n+1}'>{head}{body}</section>")
+            if s.get('steps'):
+                body+="<div class='prep'><p class='prep-label'>Tiền xử lý</p><ol class='prep-steps'>"+''.join(
+                    f"<li><span class='prep-n'>{j+1}</span><h4>{esc(t)}</h4><p>{esc(d)}</p></li>" for j,(t,d) in enumerate(s['steps']))+"</ol>"
+                if s.get('result'):body+=f"<p class='prep-result'>{esc(s['result'])}</p>"
+                body+="</div>"
+            if s['kind']=='hero':body+=f"<p class='hero-footer'>Tích hợp và Phân tích dữ liệu lớn <span>{N} slide · {mmss(total)}</span></p>"
+        extra=' with-prep' if s.get('steps') else ''
+        rendered.append(f"<section class='slide {s['kind']}{extra} {'active' if n==0 else ''}' aria-label='Trang {n+1}'>{head}{body}</section>")
     template=(ROOT/'report/thuyet_trinh_ba_nguon/template.html').read_text(encoding='utf8')
-    template=template.replace('Mạch thuyết trình · 32 trang','Mạch thuyết trình · 15 slide')
+    template=template.replace('Mạch thuyết trình · 32 trang',f'Mạch thuyết trình · {N} slide')
     template=template.replace('<div class="tools">','<div class="tools"><a class="dashboard-link" href="dashboard.html" target="_blank" rel="noopener">Dashboard ↗</a>')
-    template=template.replace('</style>', '.dashboard-link{font-size:13px;color:var(--teal);padding:7px 10px;text-decoration:none;border:1px solid var(--teal);border-radius:7px;background:var(--tint)}@media print{.dashboard-link{display:none}}\n</style>')
+    template=template.replace('</style>', '.dashboard-link{font-size:13px;color:var(--teal);padding:7px 10px;text-decoration:none;border:1px solid var(--teal);border-radius:7px;background:var(--tint)}@media print{.dashboard-link{display:none}}\n'
+        # slide biểu đồ không còn khối chữ bên dưới -> hình chiếm hết chiều cao còn lại
+        '.slide.chart .figure-frame{flex:1;min-height:0}\n'
+        # dải "Tiền xử lý" trên slide 2
+        '.slide.with-prep .concept-cards{flex:0;margin-top:22px}.slide.with-prep .concept-cards>div{padding:16px 22px}.prep{margin-top:26px}.prep-label{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);margin:0 0 8px;font-weight:600}'
+        '.prep-steps{list-style:none;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin:0;padding:0}'
+        '.prep-steps li{background:var(--tint);border-radius:10px;padding:16px 16px;position:relative}'
+        '.prep-steps li:not(:last-child)::after{content:"→";position:absolute;right:-10px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px}'
+        '.prep-n{display:inline-block;width:20px;height:20px;border-radius:50%;background:var(--teal);color:white;font-size:12px;text-align:center;line-height:20px;margin-right:6px}'
+        '.prep-steps h4{display:inline;font-size:18px;margin:0}.prep-steps p{font-size:16px;line-height:1.45;color:var(--muted);margin:8px 0 0}'
+        '.prep-result{font-size:17px;margin:16px 0 0;color:var(--ink,inherit)}'
+        '@media (max-width:900px){.prep-steps{grid-template-columns:1fr}.prep-steps li::after{display:none}}\n</style>')
     result=template.replace('<!-- SLIDES -->','\n'.join(rendered)).replace('<!-- DATA -->',json_text(slides))
     (HERE/'slides.html').write_text(result,encoding='utf8')
     (HERE/'slides.json').write_text(json.dumps(slides,ensure_ascii=False,indent=2),encoding='utf8')
-    outline=['# Kịch bản 15 phút','15 slide; thời lượng lời nói dự kiến 12 phút 40 giây, dự phòng 2 phút 20 giây. Phân tích từng nguồn trước, tích hợp sau. Slide 14 dành 60 giây mở dashboard.']
+    outline=['# Kịch bản thuyết trình',f'{N} slide; thời lượng lời nói dự kiến {mmss(total)}. Phân tích từng nguồn trước, tích hợp sau.']
     for n,s in enumerate(slides,1):
         outline.append(f"## {n:02d}. {s['title']} — {s['seconds']} giây")
         if s['kind']=='chart':

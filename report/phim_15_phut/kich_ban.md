@@ -1,14 +1,14 @@
-# Kịch bản 15 phút
+# Kịch bản thuyết trình
 
-15 slide; thời lượng lời nói dự kiến 12 phút 40 giây, dự phòng 2 phút 20 giây. Phân tích từng nguồn trước, tích hợp sau. Slide 14 dành 60 giây mở dashboard.
+13 slide; thời lượng lời nói dự kiến 11 phút 25 giây. Phân tích từng nguồn trước, tích hợp sau.
 
 ## 01. Một bộ phim. Ba góc nhìn. — 40 giây
 
 Trong bài này, chúng tôi theo dõi một bộ phim qua ba góc nhìn: người dùng quan tâm ra sao, phim được phát hành khi nào và hệ thống ghi nhận những bản chia sẻ nào. Chúng tôi sẽ phân tích riêng từng nguồn, sau đó nối chúng để trả lời ba câu hỏi chung.
 
-## 02. Hiểu nguồn trước khi đọc kết quả — 45 giây
+## 02. Ba nguồn dữ liệu và bước tiền xử lý — 65 giây
 
-IMDb giống một danh mục phim có đánh giá của người dùng. TMDb bổ sung lịch phát hành và nơi xem. BitTorrent là cách chia sẻ tệp giữa nhiều máy tính; MagnetDB ghi nhận metadata các bản chia sẻ đó. Mốc năm phim, ngày phát hành và ngày hệ thống phát hiện có ý nghĩa khác nhau.
+IMDb giống một danh mục phim có đánh giá của người dùng. TMDb bổ sung lịch phát hành và nơi xem. BitTorrent là cách chia sẻ tệp giữa nhiều máy tính; MagnetDB ghi nhận metadata các bản chia sẻ đó. Trước khi phân tích, dữ liệu đi qua năm bước tiền xử lý. Một, chỉ giữ phim lẻ, bỏ phim người lớn và tập phim bộ. Hai, chuẩn hóa tên phim: bỏ dấu, chữ thường, thêm tên phim theo từng nước. Ba, ghép thực thể: tách tên và năm từ tên torrent rồi đối chiếu với IMDb; TMDb nối qua mã IMDb. Bốn, làm sạch: bỏ tệp nhỏ, năm lệch, ca trùng tên và torrent giả. Năm, chỉ giữ giai đoạn thu thập ổn định từ tháng tư năm hai nghìn không trăm hai mươi mốt đến tháng chín năm hai nghìn không trăm hai mươi bốn.
 
 ## 03. Kho phim thay đổi thế nào theo thời gian? — 50 giây
 
@@ -132,20 +132,12 @@ IMDb giống một danh mục phim có đánh giá của người dùng. TMDb b�
 
 ## 13. Bản WEB được ghi nhận gần mốc Digital đến đâu? — 65 giây
 
-**Lời dẫn:** Ngày không trên hình là ngày Digital tại Mỹ. Cột dương là WEB đầu tiên được ghi nhận sau mốc đó; cột âm là trước mốc đó. Phân bố tập trung gần mốc Digital trong mẫu đang xét. Cần nhớ một phim có thể đã phát hành Digital ở nước khác trước Mỹ, và hệ thống có thể phát hiện muộn hơn ngày đăng. Bộ lọc metadata cũng ảnh hưởng phân bố. Vì vậy, ta chỉ kết luận về thời điểm ghi nhận trong dữ liệu, không khẳng định Digital gây ra chia sẻ. Cuối cùng, dashboard giúp người xem tự chọn nhóm phim để kiểm tra thêm.
+**Lời dẫn:** Ngày không trên hình là ngày Digital tại Mỹ. Cột dương là WEB đầu tiên được ghi nhận sau mốc đó; cột âm là trước mốc đó. Phân bố tập trung gần mốc Digital trong mẫu đang xét. Cần nhớ một phim có thể đã phát hành Digital ở nước khác trước Mỹ, và hệ thống có thể phát hiện muộn hơn ngày đăng. Bộ lọc metadata cũng ảnh hưởng phân bố. Vì vậy, ta chỉ kết luận về thời điểm ghi nhận trong dữ liệu, không khẳng định Digital gây ra chia sẻ. Đây cũng là điểm kết của bài: tích hợp ba nguồn giúp đặt sự quan tâm, thể loại và thời điểm phát hành của cùng một bộ phim vào chung một bối cảnh. Cảm ơn thầy cô và các bạn đã lắng nghe.
 
 **Cách đọc:** Ngày 0 là Digital tại Mỹ; âm là được phát hiện trước mốc đó, dương là sau. Hai cột ngoài cùng gom độ trễ ngoài giới hạn.
 
 **Chốt:** Các bản WEB thường được ghi nhận gần ngày phát hành Digital tại Mỹ trong mẫu đang xét.
 
-**Chuyển:** Có thể tự kiểm tra những khác biệt này theo nhóm phim không?
+**Chuyển:** Kết thúc: cảm ơn và mời câu hỏi.
 
 **Lưu ý:** Mốc Mỹ có thể muộn hơn nước khác; bộ lọc và thời điểm phát hiện ảnh hưởng phân bố. Không suy ra tác động nhân quả.
-
-## 14. Từ kết quả chung đến câu hỏi của người xem — 60 giây
-
-Mở dashboard bằng nút trên thanh công cụ, rồi nhấn Ví dụ thuyết trình. Nhóm mặc định dùng năm 2021–2023 và tối thiểu 1.000 lượt bình chọn. Phần so sánh đặt Hành động và Tài liệu cạnh nhau bằng hai màu: đọc số phim, bình chọn trung vị, torrent trung vị và tỷ lệ ghi nhận. Không đọc chênh lệch thô thành ảnh hưởng riêng của thể loại. Mở một phim ở bảng để thấy ba nguồn được nối lại. Đặt lại bộ lọc và quay về kết luận.
-
-## 15. Tích hợp để hiểu thêm về cùng một bộ phim — 35 giây
-
-Chốt rằng giá trị của bài là nối đúng đối tượng và đọc đúng đơn vị, thời gian. Chúng tôi quan sát các mối liên hệ, chưa đo lượt tải, thất thu hay quan hệ nhân quả. Cảm ơn và mời câu hỏi.
