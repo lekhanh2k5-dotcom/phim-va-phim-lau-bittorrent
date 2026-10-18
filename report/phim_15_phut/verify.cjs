@@ -182,8 +182,8 @@ async function main(){
  await js("$('search').value='tt1630029';update();$('export').click()");
  const csv=path.join(cache,'nhom_phim_dang_chon.csv');for(let i=0;i<40&&!fs.existsSync(csv);i++)await sleep(100);
  check('CSV downloads filtered rows',fs.existsSync(csv)&&fs.readFileSync(csv,'utf8').includes('Avatar: The Way of Water')&&fs.readFileSync(csv,'utf8').split('\r\n').length===2);
- await js("reset();$('demo').click()");
- check('Demo starts with documented default cohort',await js("currentRows.length===4981 && !$('demo-note').hidden && $('genre').value===''") );
+ await js("reset()");
+ check('Reset restores documented default cohort without demo button',await js("currentRows.length===4981 && !document.getElementById('demo') && $('genre').value===''") );
  await js("switchTab('sources')");
  check('Source overview is separate from filters',await js("$('explore').hidden && !$('sources').hidden && $('tab-sources').getAttribute('aria-selected')==='true'"));
  check('All gallery images load offline',await js("Promise.all([...document.querySelectorAll('.gallery img')].map(im=>im.decode().then(()=>im.naturalWidth>0))).then(xs=>xs.every(Boolean))"));

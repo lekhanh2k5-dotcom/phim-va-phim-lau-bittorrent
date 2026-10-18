@@ -33,7 +33,7 @@ function switchView(name,hash=true){
  }
  $('release-controls').hidden=name!=='releases';
  document.querySelectorAll('[data-torrent-filter]').forEach(el=>el.hidden=name!=='torrents');
- $('demo-note').hidden=true;$('tooltip').hidden=true;
+ $('tooltip').hidden=true;
  if(changed){sortKey=name==='torrents'?'torrents':'votes';sortDir=-1}
  if(hash)history.replaceState(null,'','#'+phaseHash());
  update();

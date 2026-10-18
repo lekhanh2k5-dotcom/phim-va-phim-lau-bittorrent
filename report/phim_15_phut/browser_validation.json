@@ -600,7 +600,7 @@
     "detail": ""
   },
   {
-    "check": "Demo starts with documented default cohort",
+    "check": "Reset restores documented default cohort without demo button",
     "passed": true,
     "detail": ""
   },
