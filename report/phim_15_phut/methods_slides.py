@@ -139,21 +139,7 @@ def build_method_slides(root):
         'Theo bốn bước từ trái sang phải, đọc ví dụ Parasite và phân biệt nhánh tra chính xác với phép đối chiếu gần đúng.',
         'Ghép tên có ràng buộc năm và cơ chế từ chối; không nhận mọi tên giống nhau thành cùng một phim.',
         'Nhãn MagnetDB có lỗi. Precision/recall là kết quả đối chiếu trên mẫu 20.000 file, không phải kiểm định thủ công toàn tập.',
-        'Khi đã nhận diện được phim, TMDb bổ sung thông tin bằng khóa nào?',[13,14,20])
-
-    add('tmdb','Bổ sung TMDb bằng mã IMDb, rồi tách thành 3 bảng',
-        'Bước 05–07 · Hợp danh sách phim → tìm TMDb theo imdb_id → lưu đệm JSON → xuất Parquet.',
-        f'''<div class="method-keyflow"><code>IMDb · tconst</code><span>→</span><code>TMDb · /find</code><span>→</span><span>JSON lưu đệm</span><span>→</span><strong>3 bảng theo mức chi tiết</strong></div>
-        <div class="method-columns method-three">
-        <article class="method-card"><span class="method-label">1 dòng / phim</span><h3><code>tmdb_movies</code></h3><p>Ngân sách, doanh thu, ngôn ngữ và các mốc phát hành tóm tắt.</p><div class="method-data-example"><b>{esc(topgun['tmdb_title'])}</b><span>{esc(topgun['imdb_id'])}</span><span>Ngân sách: {money_label(topgun['budget'])}</span><span>Doanh thu: khoảng {money_label(topgun['revenue'])}</span></div></article>
-        <article class="method-card"><span class="method-label">Nhiều dòng / phim</span><h3><code>tmdb_release_dates</code></h3><p>Ngày phát hành theo quốc gia và hình thức: Premiere, rạp, Digital, đĩa, TV.</p><div class="method-data-example"><b>Cùng phim · thị trường Mỹ</b><span><code>country = US</code> · <code>type = 1</code></span><span>Premiere: {date_text(premiere['ngay'])}</span><span>Mỗi hình thức có mốc riêng.</span></div></article>
-        <article class="method-card"><span class="method-label">Phim × nước × hình thức × dịch vụ</span><h3><code>tmdb_watch_providers</code></h3><p>Nơi xem theo quốc gia; phân biệt thuê bao, miễn phí, quảng cáo, thuê và mua.</p><div class="method-data-example"><b>Cùng phim · nơi xem tại Mỹ</b><span>{esc(topgun['us_streaming_providers'].split(',')[0])} và các dịch vụ khác.</span><span>Ảnh chụp năm 2026.</span><span>Không phải danh mục lúc phim ra mắt.</span></div></article></div>
-        <p class="method-audit"><b>Khi gộp về một phim:</b> tổng hợp ngày và nơi xem trước khi nối; không nhân số phim theo số dòng phát hành. Digital có thể gồm thuê/mua, không đồng nghĩa thuê bao.</p>''',
-        'Sau khi có mã IMDb, nhóm hợp danh sách phim rồi tìm mã TMDb qua endpoint find. Phản hồi JSON được lưu đệm để có thể chạy tiếp mà không tải lại. Bước bảy tách thành ba bảng có mức chi tiết khác nhau: một dòng thông tin phim, nhiều mốc phát hành theo nước và loại, và nơi xem theo nước cùng dịch vụ. Ví dụ Top Gun có mốc Premiere tại Mỹ khác các mốc ra rạp hoặc Digital. Khi tạo bảng phân tích theo phim, phải tổng hợp các bảng nhiều dòng trước khi nối. Nơi xem là ảnh chụp năm 2026, không phải lịch sử danh mục.',
-        'Theo đường mã IMDb tới ba bảng. Đọc dòng mô tả mức chi tiết trên mỗi bảng và ví dụ Top Gun.',
-        'Nối bằng mã phim; giữ riêng ngày phát hành lịch sử và nơi xem tại thời điểm thu thập.',
-        'Các số liệu tiền chỉ minh họa hồ sơ Top Gun trong notebook; nơi xem có thể khác thời điểm ra mắt.',
-        'Ghép được chưa đủ: những bản ghi nào còn cần bị loại hoặc gắn cờ?',[16,17])
+        'Ghép được chưa đủ: những bản ghi nào còn cần bị loại hoặc gắn cờ?',[13,14,20])
 
     add('cleaning','Bộ lọc A–J xử lý những lỗi nào?',
         'Bước 09 · Kiểm tra nội dung, danh tính phim, sự nhất quán giữa nguồn và các mốc thời gian.',

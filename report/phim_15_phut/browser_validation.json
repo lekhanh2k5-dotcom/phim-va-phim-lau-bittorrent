@@ -417,7 +417,7 @@
     "detail": ""
   },
   {
-    "check": "19 slides, 12 figures, no speaking-duration annotations",
+    "check": "18 slides, 12 figures, no speaking-duration annotations",
     "passed": true,
     "detail": ""
   },
@@ -447,7 +447,7 @@
     "detail": ""
   },
   {
-    "check": "Five method slides follow slide 3 in the intended order",
+    "check": "Four method slides follow slide 3 in the intended order",
     "passed": true,
     "detail": ""
   },
@@ -462,11 +462,6 @@
     "detail": ""
   },
   {
-    "check": "TMDb slide distinguishes grains, release type and snapshot",
-    "passed": true,
-    "detail": ""
-  },
-  {
     "check": "Cleaning slide shows actual rejected examples and flags",
     "passed": true,
     "detail": ""
@@ -477,12 +472,12 @@
     "detail": ""
   },
   {
-    "check": "Method speaker notes explain the reference labels",
+    "check": "Notes tab is removed from slides",
     "passed": true,
     "detail": ""
   },
   {
-    "check": "Speaker notes explain current chart",
+    "check": "N key does not open notes",
     "passed": true,
     "detail": ""
   },
@@ -507,9 +502,9 @@
     "detail": []
   },
   {
-    "check": "PDF exports exactly 19 pages",
+    "check": "PDF exports exactly 18 pages",
     "passed": true,
-    "detail": 19
+    "detail": 18
   },
   {
     "check": "No external assets or data requested",

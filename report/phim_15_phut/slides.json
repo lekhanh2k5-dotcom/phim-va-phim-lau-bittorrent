@@ -73,7 +73,7 @@
     "title": "Dữ liệu còn lại sau từng bước làm sạch",
     "finding": "Hai nhánh ghép được làm sạch riêng, sau đó hợp nhất và lọc chung trước khi phân tích.",
     "next_question": "Đi vào từng thao tác: chuẩn hóa dữ liệu trước khi ghép phim.",
-    "why": "Hình này minh họa cụ thể các bước làm sạch vừa giới thiệu. Cụm xanh dương bên trái là nhánh dùng mã IMDb có sẵn trong MagnetDB; nhiều bản ghi bị loại sau khi kiểm tra loại nội dung, dung lượng, tên và năm. Cụm cam ở giữa là nhánh tự ghép tên torrent với IMDb, sau đó bỏ các trường hợp mơ hồ. Cụm xanh lá bên phải là hợp hai nguồn rồi áp dụng các bộ lọc chung. Không cộng trực tiếp hai nhánh vì chúng có phần giao nhau. Mỗi cụm dùng thang riêng, nên đọc nhãn số thay vì so chiều dài thanh giữa các cụm. Đây là phễu làm sạch trên phạm vi dữ liệu gốc, trước khi giới hạn cửa sổ quan sát của dashboard. Tiếp theo, chúng tôi đi vào từng thao tác chuẩn hóa, ghép thực thể, bổ sung TMDb và kiểm tra dữ liệu.",
+    "why": "Hình này minh họa cụ thể các bước làm sạch vừa giới thiệu. Cụm xanh dương bên trái là nhánh dùng mã IMDb có sẵn trong MagnetDB; nhiều bản ghi bị loại sau khi kiểm tra loại nội dung, dung lượng, tên và năm. Cụm cam ở giữa là nhánh tự ghép tên torrent với IMDb, sau đó bỏ các trường hợp mơ hồ. Cụm xanh lá bên phải là hợp hai nguồn rồi áp dụng các bộ lọc chung. Không cộng trực tiếp hai nhánh vì chúng có phần giao nhau. Mỗi cụm dùng thang riêng, nên đọc nhãn số thay vì so chiều dài thanh giữa các cụm. Đây là phễu làm sạch trên phạm vi dữ liệu gốc, trước khi giới hạn cửa sổ quan sát của dashboard. Tiếp theo, chúng tôi đi vào từng thao tác chuẩn hóa, ghép thực thể và kiểm tra dữ liệu.",
     "reading": "Đọc ba cụm từ trái sang phải: mã IMDb có sẵn, tự ghép tên torrent, rồi hợp hai nguồn và lọc chung. Nhãn số cho biết số torrent còn lại sau mỗi bước.",
     "limitation": "Tên/năm phù hợp là bằng chứng metadata, không kiểm tra nội dung tệp. Một số bộ lọc dùng ngày Digital và vì vậy ảnh hưởng phân tích thời điểm ở phần sau.",
     "scope": "IMDb × TMDb × MagnetDB · quy trình làm sạch",
@@ -113,32 +113,12 @@
     "finding": "Ghép tên có ràng buộc năm và cơ chế từ chối; không nhận mọi tên giống nhau thành cùng một phim.",
     "limitation": "Nhãn MagnetDB có lỗi. Precision/recall là kết quả đối chiếu trên mẫu 20.000 file, không phải kiểm định thủ công toàn tập.",
     "caution": "Nhãn MagnetDB có lỗi. Precision/recall là kết quả đối chiếu trên mẫu 20.000 file, không phải kiểm định thủ công toàn tập.",
-    "next_question": "Khi đã nhận diện được phim, TMDb bổ sung thông tin bằng khóa nào?",
+    "next_question": "Ghép được chưa đủ: những bản ghi nào còn cần bị loại hoặc gắn cờ?",
     "scope": "Nguồn: notebooks/00_quy_trinh_xu_ly.ipynb · kết quả đã lưu trong notebook.",
     "source_cells": [
       13,
       14,
       20
-    ]
-  },
-  {
-    "kind": "method",
-    "method_id": "tmdb",
-    "phase": "Tiền xử lý",
-    "title": "Bổ sung TMDb bằng mã IMDb, rồi tách thành 3 bảng",
-    "subtitle": "Bước 05–07 · Hợp danh sách phim → tìm TMDb theo imdb_id → lưu đệm JSON → xuất Parquet.",
-    "body": "<div class=\"method-keyflow\"><code>IMDb · tconst</code><span>→</span><code>TMDb · /find</code><span>→</span><span>JSON lưu đệm</span><span>→</span><strong>3 bảng theo mức chi tiết</strong></div>\n        <div class=\"method-columns method-three\">\n        <article class=\"method-card\"><span class=\"method-label\">1 dòng / phim</span><h3><code>tmdb_movies</code></h3><p>Ngân sách, doanh thu, ngôn ngữ và các mốc phát hành tóm tắt.</p><div class=\"method-data-example\"><b>Top Gun: Maverick</b><span>tt1745960</span><span>Ngân sách: 170 triệu USD</span><span>Doanh thu: khoảng 1,49 tỷ USD</span></div></article>\n        <article class=\"method-card\"><span class=\"method-label\">Nhiều dòng / phim</span><h3><code>tmdb_release_dates</code></h3><p>Ngày phát hành theo quốc gia và hình thức: Premiere, rạp, Digital, đĩa, TV.</p><div class=\"method-data-example\"><b>Cùng phim · thị trường Mỹ</b><span><code>country = US</code> · <code>type = 1</code></span><span>Premiere: 04/05/2022</span><span>Mỗi hình thức có mốc riêng.</span></div></article>\n        <article class=\"method-card\"><span class=\"method-label\">Phim × nước × hình thức × dịch vụ</span><h3><code>tmdb_watch_providers</code></h3><p>Nơi xem theo quốc gia; phân biệt thuê bao, miễn phí, quảng cáo, thuê và mua.</p><div class=\"method-data-example\"><b>Cùng phim · nơi xem tại Mỹ</b><span>Netflix và các dịch vụ khác.</span><span>Ảnh chụp năm 2026.</span><span>Không phải danh mục lúc phim ra mắt.</span></div></article></div>\n        <p class=\"method-audit\"><b>Khi gộp về một phim:</b> tổng hợp ngày và nơi xem trước khi nối; không nhân số phim theo số dòng phát hành. Digital có thể gồm thuê/mua, không đồng nghĩa thuê bao.</p>",
-    "notes": "Sau khi có mã IMDb, nhóm hợp danh sách phim rồi tìm mã TMDb qua endpoint find. Phản hồi JSON được lưu đệm để có thể chạy tiếp mà không tải lại. Bước bảy tách thành ba bảng có mức chi tiết khác nhau: một dòng thông tin phim, nhiều mốc phát hành theo nước và loại, và nơi xem theo nước cùng dịch vụ. Ví dụ Top Gun có mốc Premiere tại Mỹ khác các mốc ra rạp hoặc Digital. Khi tạo bảng phân tích theo phim, phải tổng hợp các bảng nhiều dòng trước khi nối. Nơi xem là ảnh chụp năm 2026, không phải lịch sử danh mục.",
-    "why": "Sau khi có mã IMDb, nhóm hợp danh sách phim rồi tìm mã TMDb qua endpoint find. Phản hồi JSON được lưu đệm để có thể chạy tiếp mà không tải lại. Bước bảy tách thành ba bảng có mức chi tiết khác nhau: một dòng thông tin phim, nhiều mốc phát hành theo nước và loại, và nơi xem theo nước cùng dịch vụ. Ví dụ Top Gun có mốc Premiere tại Mỹ khác các mốc ra rạp hoặc Digital. Khi tạo bảng phân tích theo phim, phải tổng hợp các bảng nhiều dòng trước khi nối. Nơi xem là ảnh chụp năm 2026, không phải lịch sử danh mục.",
-    "reading": "Theo đường mã IMDb tới ba bảng. Đọc dòng mô tả mức chi tiết trên mỗi bảng và ví dụ Top Gun.",
-    "finding": "Nối bằng mã phim; giữ riêng ngày phát hành lịch sử và nơi xem tại thời điểm thu thập.",
-    "limitation": "Các số liệu tiền chỉ minh họa hồ sơ Top Gun trong notebook; nơi xem có thể khác thời điểm ra mắt.",
-    "caution": "Các số liệu tiền chỉ minh họa hồ sơ Top Gun trong notebook; nơi xem có thể khác thời điểm ra mắt.",
-    "next_question": "Ghép được chưa đủ: những bản ghi nào còn cần bị loại hoặc gắn cờ?",
-    "scope": "Nguồn: notebooks/00_quy_trinh_xu_ly.ipynb · kết quả đã lưu trong notebook.",
-    "source_cells": [
-      16,
-      17
     ]
   },
   {
