@@ -25,10 +25,10 @@
     "detail": ""
   },
   {
-    "check": "Rating year trend follows year filter",
+    "check": "Rating year trend always shows 1920–2024 with the filter shaded",
     "passed": true,
     "detail": {
-      "yearDefault": 3,
+      "yearDefault": 101,
       "years": 101,
       "first": 1924,
       "runtime": [

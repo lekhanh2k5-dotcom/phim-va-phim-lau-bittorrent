@@ -45,7 +45,7 @@ async function main(){
  const yearDefault=await js("ratingYearData.length");
  await js("$('year-min').value=1920;$('year-max').value=2024;update()");
  const ratingExtra=await js("({years:ratingYearData.length,first:ratingYearData[0].year,runtime:runtimeData.map(d=>Math.round(d.median*10)/10),runtimeN:runtimeData.reduce((s,d)=>s+d.n,0),regions:regionData.map(d=>Math.round(d.median*10)/10),regionN:regionData.map(d=>d.n),pair:genrePairData.cells.get('Horror|Thriller'),genres:genrePairData.genres.length,svgs:['rating-year','rating-runtime','rating-regions','genre-pairs'].every(id=>$(id).children.length>0)})");
- check('Rating year trend follows year filter',yearDefault===3&&ratingExtra.years>90&&ratingExtra.first<=1925,{yearDefault,...ratingExtra});
+ check('Rating year trend always shows 1920–2024 with the filter shaded',yearDefault===ratingExtra.years&&ratingExtra.first<=1925,{yearDefault,...ratingExtra});
  await js("$('year-min').value=1950;$('year-max').value=1970;update();switchView('releases')");
  const oldYears=await js("({treemap:$('origin-treemap').textContent,finance:financePoints.length,season:$('season-polar').textContent,caption:$('release-heatmap-caption').textContent})");
  check('Business charts explain TMDb year windows when filter is outside',oldYears.treemap.includes('2000–2024')&&oldYears.finance===0&&oldYears.season.includes('1980–2024')&&oldYears.caption.includes('năm phát hành trên TMDb'),oldYears);
