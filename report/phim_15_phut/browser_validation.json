@@ -504,7 +504,6 @@
       "scope": "Ngày ra rạp sớm nhất · mọi thị trường",
       "lagScope": "Digital tại Mỹ",
       "warn": false,
-      "lagWarn": false,
       "paths": 2,
       "market": false,
       "modeShown": true
@@ -525,7 +524,6 @@
       "scope": "Ngày ra rạp sớm nhất · mọi thị trường",
       "lagScope": "Digital tại Mỹ",
       "warn": false,
-      "lagWarn": false,
       "paths": 2,
       "market": false,
       "modeShown": true
@@ -561,7 +559,6 @@
       "scope": "Ngày ra rạp sớm nhất · mọi thị trường",
       "lagScope": "Digital tại Mỹ",
       "warn": false,
-      "lagWarn": false,
       "paths": 2,
       "market": false,
       "modeShown": true

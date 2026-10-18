@@ -59,12 +59,10 @@ function renderTorrentCharts(){
  // Tab Torrent không dùng ô Thị trường (torrent không có thông tin quốc gia); nút riêng chọn mốc Digital tại Mỹ (mặc định, như slide 19) hoặc sớm nhất thế giới.
  const usIndex=payload.releases.countries.indexOf('US'),lagCountry=$('lag-basis').value==='world'?-1:usIndex,lagUS=lagCountry===usIndex,lagPlace=marketPlace(lagCountry);
  const lagValue=m=>{if(lagUS)return m.lag;if(!m.web)return null;const d=releaseDay(m,lagCountry,1);return d===null?null:isoToDay(m.web)-d};
- const lag=currentRows.map(m=>({m,lag:lagValue(m)})).filter(r=>r.lag!==null&&Number.isFinite(r.lag)),withWeb=currentRows.filter(m=>m.web).length;
+ const lag=currentRows.map(m=>({m,lag:lagValue(m)})).filter(r=>r.lag!==null&&Number.isFinite(r.lag));
  const lagBins=[{label:'Trước Digital',test:x=>x<0,color:'#8897ab'},{label:'Ngày 0–1',test:x=>x>=0&&x<=1,color:'#e58a36'},{label:'Ngày 2–7',test:x=>x>=2&&x<=7},{label:'Ngày 8–30',test:x=>x>=8&&x<=30},{label:'Sau 30 ngày',test:x=>x>30}];
  svgBars('lag-bars',lagBins.map(b=>({label:b.label,color:b.color,value:lag.filter(m=>b.test(m.lag)).length})),{format:nf});
  $('lag-scope').textContent=lagCountry<0?'Digital sớm nhất · mọi thị trường':'Digital '+lagPlace;
- $('lag-warning').hidden=!(withWeb&&lag.length/withWeb<.3);
- $('lag-warning').textContent=`Chỉ ${pct(withWeb?lag.length/withWeb:0)} phim có bản WEB có ngày Digital ${lagPlace}; so sánh cần thận trọng.`;
  $('lag-note').textContent=`${nf(lag.length)} phim đủ ngày. Mốc là Digital ${lagPlace}; ngày âm có thể do phim ra Digital ở nước khác trước đó. Bộ lọc và cửa sổ thu thập ảnh hưởng kết quả.`;
  svgBars('availability-bars',[{label:'Có ghi nhận',value:currentRows.filter(m=>m.tmdb&&m.streaming===true).length},{label:'Chưa ghi nhận',value:currentRows.filter(m=>m.tmdb&&m.streaming!==true).length,color:'#a4bedc'},{label:'Thiếu TMDb',value:currentRows.filter(m=>!m.tmdb).length,color:'#aeb7c3'}],{format:nf});
  renderFirstShare();
