@@ -1,0 +1,77 @@
+{
+  "notebook": "notebooks/00_quy_trinh_xu_ly.ipynb",
+  "notebook_sha256": "cdedc003512c8ee8e99dc30bc288a592265a467f79547f6e9cce3173284d7df7",
+  "source_cells": [
+    8,
+    10,
+    11,
+    13,
+    14,
+    16,
+    17,
+    20,
+    22,
+    25,
+    27,
+    32
+  ],
+  "facts": {
+    "imdb_movies": 758524,
+    "indexed_names": 1875336,
+    "matched_rows": 2253337,
+    "ambiguous_rows": 193739,
+    "matched_movies": 122990,
+    "evaluation_files": 20000,
+    "evaluation_precision": 0.879,
+    "evaluation_recall": 0.632,
+    "clean_pairs": 2078927,
+    "clean_torrents": 2066598,
+    "clean_movies": 126081,
+    "stable_pairs": 923998
+  },
+  "examples": {
+    "alias": {
+      "ten_chuan_hoa": "el gran lebowski",
+      "tconst": "tt0118715",
+      "start_year": "1998",
+      "num_votes": "925652"
+    },
+    "match": {
+      "ten_torrent": "Parasite.2019.PLSUBBED.480p.WEB-DL.XViD.AC3-LLA.avi",
+      "ten_tach": "Parasite",
+      "nam": "2019",
+      "phim_IMDb": "Parasite",
+      "start_year": "2019"
+    },
+    "tmdb": {
+      "imdb_id": "tt1745960",
+      "tmdb_title": "Top Gun: Maverick",
+      "ngay_phat_hanh": "2022-05-21",
+      "budget": "170000000.0",
+      "revenue": "1.488733e+09",
+      "ra_rap_som_nhat": "2022-05-21",
+      "ban_online_som_nhat": "2022-08-21",
+      "us_streaming_providers": "Netflix,Netflix Standard with Ads,Paramount Plus Essential,Paramount Plus Premium,Para..."
+    },
+    "premiere": {
+      "imdb_id": "tt1745960",
+      "nuoc": "US",
+      "loai": "1",
+      "ngay": "2022-05-04"
+    },
+    "wrong_year": {
+      "ten_file": "День независимости.Возрождение.2016-1080p-HEVC.mkv",
+      "nam_trong_ten": "2016",
+      "bi_gan_vao": "Independence Day",
+      "nam_phim": "1996",
+      "bi_loai_vi": "D: năm lệch"
+    },
+    "implausible": {
+      "phat_hien": "2022-12-18",
+      "ten_torrent": "Ant-Man and the Wasp Quantumania 2023 BluRay X264",
+      "GB": "0.67",
+      "ra_rap": "2023-02-15",
+      "ban_online": "2023-04-18"
+    }
+  }
+}

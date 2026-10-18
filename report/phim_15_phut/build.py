@@ -8,6 +8,11 @@ from pathlib import Path
 
 import duckdb
 
+try:
+    from .methods_slides import build_method_slides, render_method_slide
+except ImportError:
+    from methods_slides import build_method_slides, render_method_slide
+
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 ASSETS = HERE / 'assets'
@@ -123,8 +128,10 @@ def build_slides():
     original = json.loads((ROOT/'report/thuyet_trinh_ba_nguon/mach_trinh_bay.json').read_text(encoding='utf8'))
     by_image = {s.get('image'):s for s in original if s.get('image')}
     slides = []
+    method_slides, method_reference = build_method_slides(ROOT)
+    (HERE/'methods_reference.json').write_text(json.dumps(method_reference,ensure_ascii=False,indent=2),encoding='utf8')
     narration = {
-      '6_integration/01_cleaning_funnel': 'Hình này minh họa cụ thể các bước làm sạch vừa giới thiệu. Cụm xanh dương bên trái là nhánh dùng mã IMDb có sẵn trong MagnetDB; nhiều bản ghi bị loại sau khi kiểm tra loại nội dung, dung lượng, tên và năm. Cụm cam ở giữa là nhánh tự ghép tên torrent với IMDb, sau đó bỏ các trường hợp mơ hồ. Cụm xanh lá bên phải là hợp hai nguồn rồi áp dụng các bộ lọc chung. Không cộng trực tiếp hai nhánh vì chúng có phần giao nhau. Mỗi cụm dùng thang riêng, nên đọc nhãn số thay vì so chiều dài thanh giữa các cụm. Đây là phễu làm sạch trên phạm vi dữ liệu gốc, trước khi giới hạn cửa sổ quan sát của dashboard. Sau khi hiểu cách hình thành dữ liệu, chúng tôi bắt đầu phân tích riêng từng nguồn, trước hết là danh mục IMDb.',
+      '6_integration/01_cleaning_funnel': 'Hình này minh họa cụ thể các bước làm sạch vừa giới thiệu. Cụm xanh dương bên trái là nhánh dùng mã IMDb có sẵn trong MagnetDB; nhiều bản ghi bị loại sau khi kiểm tra loại nội dung, dung lượng, tên và năm. Cụm cam ở giữa là nhánh tự ghép tên torrent với IMDb, sau đó bỏ các trường hợp mơ hồ. Cụm xanh lá bên phải là hợp hai nguồn rồi áp dụng các bộ lọc chung. Không cộng trực tiếp hai nhánh vì chúng có phần giao nhau. Mỗi cụm dùng thang riêng, nên đọc nhãn số thay vì so chiều dài thanh giữa các cụm. Đây là phễu làm sạch trên phạm vi dữ liệu gốc, trước khi giới hạn cửa sổ quan sát của dashboard. Tiếp theo, chúng tôi đi vào từng thao tác chuẩn hóa, ghép thực thể, bổ sung TMDb và kiểm tra dữ liệu.',
       '1_imdb/01_movies_per_year': 'Trước tiên, chúng tôi nhìn riêng vào IMDb. Hình này đếm các bản ghi phim theo năm. Quy mô danh mục tăng ở nhiều giai đoạn gần đây, nhưng cần nhớ IMDb không phải một cuộc tổng điều tra sản lượng phim toàn cầu. Điều quan trọng ở đây là các năm có quy mô khác nhau, nên khi đối chiếu các nhóm phim, ta cần giữ khoảng năm rõ ràng. Với một danh mục lớn như vậy, câu hỏi tiếp theo là: sự chú ý của người dùng có phân bố đều giữa các phim không?',
       '1_imdb/06_votes_lorenz': 'Hình thứ hai trả lời câu hỏi về sự chú ý. Chúng tôi xếp phim từ ít đến nhiều lượt bình chọn. Nếu mọi phim nhận số bình chọn như nhau thì kết quả nằm trên đường chéo. Đường thực tế cong mạnh: trong nhóm có đánh giá, khoảng một phần trăm phim nhiều bình chọn nhất chiếm sáu mươi chín phần trăm tổng lượt bình chọn. Vì vậy, bình chọn là một góc nhìn hữu ích về mức độ quan tâm, dù không phải lượt xem. Nhưng được quan tâm chưa cho biết phim có thể được xem ở đâu.',
       '3_tmdb_streaming/01_world_catalog_map': 'Chuyển sang TMDb, chúng tôi xem riêng khả năng tiếp cận phim hợp pháp. Bản đồ cho thấy số phim có nơi xem được ghi nhận khác nhau giữa các quốc gia. Chỉ cần đối chiếu vài vùng theo chú giải để thấy danh mục không đồng nhất. Đây là dữ liệu nơi xem do JustWatch cung cấp qua TMDb, tại thời điểm thu thập năm hai nghìn không trăm hai mươi sáu. Nó chưa phản ánh danh mục của từng quốc gia trong quá khứ. Ngoài khác biệt về địa điểm, khán giả còn có thể tiếp cận một phim ở những thời điểm khác nhau.',
@@ -163,12 +170,14 @@ def build_slides():
                ('Ghép thực thể','Tên + năm từ tên torrent ↔ IMDb; TMDb nối qua imdb_id'),
                ('Làm sạch','Bỏ tệp < 100 MB, năm lệch, ca trùng tên, torrent giả'),
                ('Cửa sổ thời gian','Chỉ giữ giai đoạn thu thập ổn định 04/2021 – 09/2024')],
-        result='Kết quả: ~2,07 triệu cặp torrent–phim cho ~126 nghìn phim')
+        result='Kết quả: '+format(method_reference['facts']['clean_pairs'],',').replace(',','.')+
+               ' cặp torrent–phim sạch · '+format(method_reference['facts']['clean_movies'],',').replace(',','.')+' phim')
     chart('6_integration/01_cleaning_funnel','Tiền xử lý','Dữ liệu còn lại sau từng bước làm sạch',
         'Hai nhánh ghép được làm sạch riêng, sau đó hợp nhất và lọc chung trước khi phân tích.',
-        'Bắt đầu với IMDb: kho phim thay đổi thế nào theo thời gian?',
+        'Đi vào từng thao tác: chuẩn hóa dữ liệu trước khi ghép phim.',
         'Đọc ba cụm từ trái sang phải: mã IMDb có sẵn, tự ghép tên torrent, rồi hợp hai nguồn và lọc chung. Nhãn số cho biết số torrent còn lại sau mỗi bước.',45,
         'Mỗi cụm có thang riêng; không so trực tiếp độ dài thanh giữa các cụm và không cộng hai nhánh vì có phần giao nhau. Phễu dùng phạm vi dữ liệu gốc, khác cửa sổ thống kê của dashboard.')
+    slides.extend(method_slides)
     chart('1_imdb/01_movies_per_year','IMDb','Kho phim thay đổi thế nào theo thời gian?',
         'Quy mô danh mục khác nhau giữa các năm; cần hiểu nền dữ liệu trước khi so sánh.',
         'Nhiều phim như vậy, sự chú ý có phân bố đều không?',
@@ -238,6 +247,8 @@ def build_slides():
             uri='data:image/png;base64,'+base64.b64encode(image.read_bytes()).decode()
             # Slide biểu đồ chỉ gồm tiêu đề + hình; lời dẫn, điều rút ra, lưu ý nằm trong ghi chú (phím N) và kich_ban.md
             body=f"<button class='figure-frame' data-zoom aria-label='Phóng to: {esc(s['title'])}'><img src='{uri}' alt='{esc(s['title'])}'></button>"
+        elif s['kind']=='method':
+            body=render_method_slide(s)
         else:
             body=f"<p class='subtitle'>{esc(s['subtitle'])}</p><div class='concept-cards'>"+''.join(f"<div><span class='card-number'>{j+1:02d}</span><h3>{esc(t)}</h3><p>{esc(d)}</p></div>" for j,(t,d) in enumerate(s['cards']))+'</div>'
             if s.get('steps'):
@@ -263,13 +274,14 @@ def build_slides():
         '.prep-steps h4{display:inline;font-size:18px;margin:0}.prep-steps p{font-size:16px;line-height:1.45;color:var(--muted);margin:8px 0 0}'
         '.prep-result{font-size:17px;margin:16px 0 0;color:var(--ink,inherit)}'
         '@media (max-width:900px){.prep-steps{grid-template-columns:1fr}.prep-steps li::after{display:none}}\n</style>')
+    template=template.replace('</style>',(HERE/'slides.methods.css').read_text(encoding='utf8')+'\n</style>')
     result=template.replace('<!-- SLIDES -->','\n'.join(rendered)).replace('<!-- DATA -->',json_text(slides))
     (HERE/'slides.html').write_text(result,encoding='utf8')
     (HERE/'slides.json').write_text(json.dumps(slides,ensure_ascii=False,indent=2),encoding='utf8')
     outline=['# Kịch bản thuyết trình',f'{N} slide; thời lượng lời nói dự kiến {mmss(total)}. Phân tích từng nguồn trước, tích hợp sau.']
     for n,s in enumerate(slides,1):
         outline.append(f"## {n:02d}. {s['title']} — {s['seconds']} giây")
-        if s['kind']=='chart':
+        if s['kind'] in ('chart','method'):
             outline.extend([f"**Lời dẫn:** {s['why']}",f"**Cách đọc:** {s['reading']}",f"**Chốt:** {s['finding']}",f"**Chuyển:** {s['next_question']}",f"**Lưu ý:** {s['caution']}"])
         else:outline.append(s['notes'])
     (HERE/'kich_ban.md').write_text('\n\n'.join(outline),encoding='utf8')
@@ -283,12 +295,16 @@ def build_dashboard(payload):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--dashboard-only',action='store_true',help='Rebuild the dashboard without changing slides.')
+    selection=parser.add_mutually_exclusive_group()
+    selection.add_argument('--dashboard-only',action='store_true',help='Rebuild the dashboard without changing slides.')
+    selection.add_argument('--slides-only',action='store_true',help='Rebuild slides from existing images and notebook outputs.')
     args=parser.parse_args()
-    payload=export_data()
-    build_dashboard(payload)
-    result={'movies':len(payload['rows']),'release_facts':len(payload['releases']['rows']),
-            'watch_facts':len(payload['watch']['rows'])}
+    result={}
+    if not args.slides_only:
+        payload=export_data()
+        build_dashboard(payload)
+        result.update(movies=len(payload['rows']),release_facts=len(payload['releases']['rows']),
+                      watch_facts=len(payload['watch']['rows']))
     if not args.dashboard_only:
         slides=build_slides()
         result.update(slides=len(slides),seconds=sum(s['seconds'] for s in slides))

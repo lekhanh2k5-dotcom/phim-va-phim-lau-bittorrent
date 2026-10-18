@@ -163,15 +163,26 @@ async function main(){
  await js("location.hash='explore-releases'");await sleep(150);check('Release deep link selects the correct view',await js("activeView==='releases' && activeTab==='explore'"));
  if(!process.argv.includes('--dashboard-only')){
  await resize(1440,900);await navigate('slides.html',"typeof data!=='undefined'");
- check('14 slides, 12 figures, 730 seconds',await js("data.length===14 && data.reduce((n,s)=>n+s.seconds,0)===730 && document.querySelectorAll('.figure-frame img').length===12"));
+ check('19 slides, 12 figures, 890 seconds',await js("data.length===19 && data.reduce((n,s)=>n+s.seconds,0)===890 && document.querySelectorAll('.figure-frame img').length===12"));
  check('All slide images load',await js("Promise.all([...document.querySelectorAll('.figure-frame img')].map(im=>im.decode().then(()=>im.naturalWidth>0))).then(xs=>xs.every(Boolean))"));
  await shot('preview_slides.png');
  await js("show(2)");
- check('Cleaning figure is slide 3 immediately after the source overview',await js("data[1].title==='Ba nguồn dữ liệu và bước tiền xử lý' && data[2].image==='plots/6_integration/01_cleaning_funnel.png' && data[3].image==='plots/1_imdb/01_movies_per_year.png' && pos===2 && location.hash==='#3' && byId('count').textContent==='3 / 14'"));
- check('Slide 3 uses the original high resolution image and updated contents',await js("document.querySelector('.slide.active img').naturalWidth>=1000 && byId('toc-items').children.length===14 && byId('toc-items').children[2].textContent.includes('Dữ liệu còn lại')"));
+ check('Cleaning figure remains slide 3 immediately after the source overview',await js("data[1].title==='Ba nguồn dữ liệu và bước tiền xử lý' && data[2].image==='plots/6_integration/01_cleaning_funnel.png' && data[8].image==='plots/1_imdb/01_movies_per_year.png' && pos===2 && location.hash==='#3' && byId('count').textContent==='3 / 19'"));
+ check('Slide 3 uses the original high resolution image and updated contents',await js("document.querySelector('.slide.active img').naturalWidth>=1000 && byId('toc-items').children.length===19 && byId('toc-items').children[2].textContent.includes('Dữ liệu còn lại')"));
  await shot('preview_slide_03_cleaning.png');
  await js("openZoom()");check('Slide 3 image enlarges',await js("zoom.open && byId('zoom-title').textContent==='Dữ liệu còn lại sau từng bước làm sạch'"));await js("byId('zoom-close').click()");
- await js("show(11);byId('notes-toggle').click()");
+ const methodsReference=JSON.parse(fs.readFileSync(path.join(root,'methods_reference.json'),'utf8'));
+ const notebookHash=require('node:crypto').createHash('sha256').update(fs.readFileSync(path.join(root,'../../notebooks/00_quy_trinh_xu_ly.ipynb'))).digest('hex');
+ check('Method slides retain provenance of the saved notebook',methodsReference.notebook_sha256===notebookHash&&methodsReference.facts.clean_pairs===2078927&&methodsReference.facts.clean_torrents===2066598&&methodsReference.facts.stable_pairs===923998);
+ check('Five method slides follow slide 3 in the intended order',await js("JSON.stringify(data.slice(3,8).map(s=>s.method_id))===JSON.stringify(['normalize','matching','tmdb','cleaning','outputs']) && data.slice(3,8).every(s=>s.kind==='method'&&s.phase==='Tiền xử lý')"));
+ check('Normalization and exact-matching examples appear in slides',await js("document.querySelector('.method-normalize').textContent.includes('el gran lebowski') && document.querySelector('.method-normalize').textContent.includes('1.875.336') && document.querySelector('.method-matching').textContent.includes('Parasite.2019.PLSUBBED') && document.querySelector('.method-matching').textContent.includes('193.739')"));
+ check('Independent matching evaluation is distinguished from the main pipeline',await js("document.querySelector('.method-matching').textContent.includes('87,9%') && document.querySelector('.method-matching').textContent.includes('63,2%') && document.querySelector('.method-matching').textContent.includes('không phải tỷ lệ đúng của toàn bộ pipeline chính')"));
+ check('TMDb slide distinguishes grains, release type and snapshot',await js("['tmdb_movies','tmdb_release_dates','tmdb_watch_providers','04/05/2022','Ảnh chụp năm 2026'].every(s=>document.querySelector('.method-tmdb').textContent.includes(s))"));
+ check('Cleaning slide shows actual rejected examples and flags',await js("['S03E01','2016','1996','18/12/2022','15/02/2023','implausible'].every(s=>document.querySelector('.method-cleaning').textContent.includes(s))"));
+ check('Final processing slide separates pairs, torrents and observation window',await js("['2.078.927','2.066.598','126.081','923.998','01/04/2021','29/09/2024','UTC'].every(s=>document.querySelector('.method-outputs').textContent.includes(s))"));
+ for(let i=3;i<8;i++){await js('show('+i+')');await shot('preview_slide_'+String(i+1).padStart(2,'0')+'_'+['normalize','matching','tmdb','cleaning','outputs'][i-3]+'.png')}
+ await js("show(4);byId('notes-toggle').click()");check('Method speaker notes explain the reference labels',await js("!byId('notes').hidden && byId('note-reading').textContent.includes('Parasite') && byId('note-limit').textContent.includes('20.000')"));await js("byId('notes-close').click()");
+ await js("show(16);byId('notes-toggle').click()");
  check('Speaker notes explain current chart',await js("!byId('notes').hidden && byId('note-reading').textContent.includes('Mỗi chấm')"));
  await js("byId('notes-close').click()");
  check('Dashboard button links to dashboard',await js("document.querySelector('.dashboard-link').getAttribute('href')==='dashboard.html'"));
@@ -180,7 +191,7 @@ async function main(){
  await resize(390,844,true);const phone=await js("(()=>{const bad=[];for(let i=0;i<data.length;i++){show(i);if(document.documentElement.scrollWidth>innerWidth+1)bad.push(i+1)}return bad})()");check('All slides fit phone width',phone.length===0,phone);
  await resize(1440,900);await js('show(0)');
  const pdf=await call('Page.printToPDF',{printBackground:true,preferCSSPageSize:true});fs.writeFileSync(path.join(root,'slides.pdf'),Buffer.from(pdf.data,'base64'));
- const pdfText=Buffer.from(pdf.data,'base64').toString('latin1');const pageCount=(pdfText.match(/\/Type \/Page\b/g)||[]).length;check('PDF exports exactly 14 pages',pageCount===14,pageCount);
+ const pdfText=Buffer.from(pdf.data,'base64').toString('latin1');const pageCount=(pdfText.match(/\/Type \/Page\b/g)||[]).length;check('PDF exports exactly 19 pages',pageCount===19,pageCount);
  }
  check('No external assets or data requested',requests.every(u=>!/^https?:/.test(u)),requests.filter(u=>/^https?:/.test(u)));
  check('No JavaScript exceptions',errors.length===0,errors);

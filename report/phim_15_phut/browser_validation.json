@@ -417,7 +417,7 @@
     "detail": ""
   },
   {
-    "check": "14 slides, 12 figures, 730 seconds",
+    "check": "19 slides, 12 figures, 890 seconds",
     "passed": true,
     "detail": ""
   },
@@ -427,7 +427,7 @@
     "detail": ""
   },
   {
-    "check": "Cleaning figure is slide 3 immediately after the source overview",
+    "check": "Cleaning figure remains slide 3 immediately after the source overview",
     "passed": true,
     "detail": ""
   },
@@ -438,6 +438,46 @@
   },
   {
     "check": "Slide 3 image enlarges",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Method slides retain provenance of the saved notebook",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Five method slides follow slide 3 in the intended order",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Normalization and exact-matching examples appear in slides",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Independent matching evaluation is distinguished from the main pipeline",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "TMDb slide distinguishes grains, release type and snapshot",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Cleaning slide shows actual rejected examples and flags",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Final processing slide separates pairs, torrents and observation window",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Method speaker notes explain the reference labels",
     "passed": true,
     "detail": ""
   },
@@ -467,9 +507,9 @@
     "detail": []
   },
   {
-    "check": "PDF exports exactly 14 pages",
+    "check": "PDF exports exactly 19 pages",
     "passed": true,
-    "detail": 14
+    "detail": 19
   },
   {
     "check": "No external assets or data requested",

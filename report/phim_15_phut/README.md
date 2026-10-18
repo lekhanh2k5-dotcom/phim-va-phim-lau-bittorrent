@@ -4,18 +4,28 @@ Mở `slides.html` để thuyết trình; mở `dashboard.html` để khám phá
 
 ## Bộ slide
 
-14 slide: 2 slide mở đầu (slide 2 gồm ba nguồn dữ liệu và 5 bước tiền xử lý), slide 3 là biểu đồ các bước làm sạch dữ liệu, 6 biểu đồ giới thiệu từng nguồn, 1 sơ đồ tích hợp, 1 biểu đồ độ phủ ghép, 3 biểu đồ phân tích chung. Có 11 biểu đồ dữ liệu và 1 sơ đồ. Slide biểu đồ chỉ gồm tiêu đề và hình; lời dẫn, điều rút ra và lưu ý nằm trong ghi chú (phím N) và `kich_ban.md`. Lời nói dự kiến 12 phút 10 giây.
+19 slide: 2 slide mở đầu (slide 2 gồm ba nguồn dữ liệu và 5 bước tiền xử lý), slide 3 là biểu đồ phễu làm sạch, slide 4–8 giải thích chi tiết phương pháp từ notebook `00_quy_trinh_xu_ly`, sau đó đến 6 biểu đồ giới thiệu từng nguồn, 1 sơ đồ tích hợp, 1 biểu đồ độ phủ ghép và 3 biểu đồ phân tích chung. Có 11 biểu đồ dữ liệu và 1 sơ đồ. Lời dẫn, điều rút ra và lưu ý nằm trong ghi chú (phím N) và `kich_ban.md`. Thời lượng lời dẫn được phân bổ 14 phút 50 giây.
 
 | Phần | Slide | Thời gian |
 |---|---|---|
-| Mở đầu, ba nguồn và tiền xử lý | 1–3 | 2 phút 30 giây |
-| IMDb | 4–5 | 1 phút 45 giây |
-| TMDb / JustWatch | 6–7 | 1 phút 35 giây |
-| MagnetDB | 8–9 | 1 phút 20 giây |
-| Tích hợp | 10–11 | 1 phút 30 giây |
-| Phân tích chung | 12–14 | 3 phút 30 giây |
+| Mở đầu, ba nguồn và tiền xử lý | 1–8 | 5 phút 10 giây |
+| IMDb | 9–10 | 1 phút 45 giây |
+| TMDb / JustWatch | 11–12 | 1 phút 35 giây |
+| MagnetDB | 13–14 | 1 phút 20 giây |
+| Tích hợp | 15–16 | 1 phút 30 giây |
+| Phân tích chung | 17–19 | 3 phút 30 giây |
 
-Dùng ←/→ hoặc Space để chuyển; N mở lời dẫn; Z phóng to biểu đồ; F toàn màn hình; M mở mục lục. Nút Dashboard mở dashboard ở một tab riêng. Có bản `slides.pdf` 14 trang để chia sẻ hoặc trình bày khi cần. Lời dẫn và cách chuyển phần nằm trong `kich_ban.md` và bảng Lời dẫn của slide.
+Dùng ←/→ hoặc Space để chuyển; N mở lời dẫn; Z phóng to biểu đồ; F toàn màn hình; M mở mục lục. Nút Dashboard mở dashboard ở một tab riêng. Có bản `slides.pdf` 19 trang để chia sẻ hoặc trình bày khi cần. Lời dẫn và cách chuyển phần nằm trong `kich_ban.md` và bảng Lời dẫn của slide.
+
+Năm slide phương pháp nằm ngay sau biểu đồ tổng quan slide 3:
+
+- **4 — Chuẩn hóa:** trích metadata từ SQLite, giữ định danh, bổ sung tên `akas`; ví dụ tên thay thế của The Big Lebowski và chỉ mục 1.875.336 tên.
+- **5 — Ghép thực thể:** tra chính xác tên chuẩn hóa + năm lệch tối đa ±1; loại ca mơ hồ; ví dụ Parasite. Phân biệt pipeline chính với phép đối chiếu riêng `guessit` + `rapidfuzz` trên 20.000 tên file (precision 87,9%, recall 63,2% so với nhãn MagnetDB).
+- **6 — TMDb:** tìm bằng mã IMDb, lưu đệm JSON và tách ba bảng theo mức chi tiết; ví dụ hồ sơ Top Gun, mốc Premiere tại Mỹ và nơi xem năm 2026.
+- **7 — Làm sạch A–J:** nhóm các quy tắc, ví dụ tập phim bộ, năm lệch và bản tự xưng BluRay trước khi ra rạp; giải thích nhật ký và cờ `implausible`.
+- **8 — Đầu ra:** phân biệt cặp torrent–phim, torrent riêng biệt và phim. Toàn phạm vi có 2.078.927 cặp sạch, 2.066.598 torrent và 126.081 phim; trong cửa sổ quan sát còn 923.998 cặp. Phân biệt ba loại thời gian.
+
+`methods_slides.py` đọc các bảng kết quả HTML đã lưu trong notebook 00, không chạy lại notebook hoặc tải dữ liệu thô. `methods_reference.json` lưu số liệu, ví dụ, chỉ số ô nguồn và SHA-256 notebook để đối chiếu. Phần chữ chi tiết là HTML, nên tìm kiếm và sao chép được trong bộ slide; không dùng ảnh chụp code làm nội dung chính.
 
 Các biểu đồ slide lấy từ dự án ba nguồn gốc; lời dẫn được viết lại theo mạch 15 phút. Các kết luận được giới hạn ở mối liên hệ quan sát. Không dùng biểu đồ “tăng 22 lần” vì bộ lọc trước Digital ảnh hưởng phân bố đó.
 
@@ -63,9 +73,9 @@ Không có lượt tải, người xem hoặc thất thu trong dữ liệu này.
 - `dashboard.html`, `assets/`: dashboard và các hình nguồn.
 - `kich_ban.md`, `slides.json`: lời dẫn và nội dung từng trang.
 - `data.json`: cùng dữ liệu được nhúng trong dashboard, khoảng 24 MB. Gồm danh mục phim, ngày phát hành sớm nhất được mã hóa theo ngày từ 1970 và danh sách nơi xem tại Mỹ bằng chỉ mục. Phần `business` chỉ bổ sung mẫu tài chính 9.324 phim và số đếm nước sản xuất của mẫu gốc, không nhúng toàn bộ kho TMDb. Không cần tải dữ liệu qua mạng khi mở HTML.
-- `build.py`, `dashboard.template.html`, `dashboard.css`, `dashboard.explore.html`, `dashboard.charts.js`, `dashboard.phases.js`, `dashboard.business.js`: nguồn tạo hai trang từ các parquet gốc. Chạy từ dự án: `python report/phim_15_phut/build.py`. Chỉ dựng lại dashboard: `python report/phim_15_phut/build.py --dashboard-only`. Cần Python và DuckDB đã có trong môi trường dự án. Script chỉ đọc dữ liệu gốc, ghi vào thư mục này.
+- `build.py`, `dashboard.template.html`, `dashboard.css`, `dashboard.explore.html`, `dashboard.charts.js`, `dashboard.phases.js`, `dashboard.business.js`: nguồn tạo hai trang từ các parquet gốc. Chạy từ dự án: `python report/phim_15_phut/build.py`. Chỉ dựng lại dashboard: `python report/phim_15_phut/build.py --dashboard-only`. Chỉ dựng slide: `python report/phim_15_phut/build.py --slides-only` (dùng ảnh trong `plots/`, notebook 00 và `methods_slides.py`, `slides.methods.css`). Cần Python và DuckDB đã có trong môi trường dự án. Script chỉ đọc dữ liệu gốc, ghi vào thư mục này.
 - `data_validation.json`, `reference_checks.json`, `phase_reference_checks.json`, `business_reference_checks.json`, `browser_validation.json`: kiểm tra dữ liệu và giao diện. `python report/phim_15_phut/verify_phases.py` tính lại tham chiếu SQL độc lập cho đánh giá, lịch phát hành và ba biểu đồ kinh doanh. `node report/phim_15_phut/verify.cjs --dashboard-only` kiểm tra dashboard, lưu kết quả và ảnh; bỏ cờ để kiểm tra thêm slide và xuất PDF.
 
-Đã đối chiếu bảy nhóm lọc với SQL độc lập; kiểm tra các biểu đồ, trạng thái rỗng, khoảng năm sai, hồ sơ phim, sắp xếp, phân trang, xuất CSV, hiển thị trên laptop/điện thoại, giải mã ảnh và PDF đủ 14 trang. Kiểm tra riêng slide 3 đúng vị trí, dùng ảnh gốc, cập nhật mục lục và mở được ảnh phóng to. Không phát sinh yêu cầu mạng bên ngoài hay lỗi JavaScript trong kiểm tra.
+Đã đối chiếu bảy nhóm lọc với SQL độc lập; kiểm tra các biểu đồ, trạng thái rỗng, khoảng năm sai, hồ sơ phim, sắp xếp, phân trang, xuất CSV, hiển thị trên laptop/điện thoại, giải mã ảnh và PDF đủ 19 trang. Kiểm tra riêng slide 3 đúng vị trí và ảnh gốc; năm slide phương pháp đúng thứ tự, có số liệu/nguồn notebook, ví dụ thật, ghi chú và phạm vi chỉ số. Không phát sinh yêu cầu mạng bên ngoài hay lỗi JavaScript trong kiểm tra.
 
 Nguồn: IMDb Non-Commercial Datasets; TMDb API (watch providers do JustWatch cung cấp); MagnetDB và pipeline của dự án hiện tại. Tham khảo README ở gốc dự án để biết nguồn vào và điều kiện sử dụng.
