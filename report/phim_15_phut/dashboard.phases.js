@@ -129,7 +129,8 @@ function renderRanking(){
 }
 function renderReleaseHeatmap(){
  const {el,W,H}=svgFrame('release-heatmap'),s=releaseState,code=payload.releases.countries[s.country];
- $('release-heatmap-caption').textContent=`${releaseModeLabel(s.mode)} · ${releaseCountryLabel(s.country)}${s.country<0||s.mode<0?' · mốc sớm nhất của mỗi phim':''}. Di chuột vào ô để xem số phim.`;
+ const fy=getFilters(),outsideYears=s.dated.filter(r=>{const yr=dayYear(r.day);return yr<fy.min||yr>fy.max}).length;
+ $('release-heatmap-caption').textContent=`${releaseModeLabel(s.mode)} · ${releaseCountryLabel(s.country)}${s.country<0||s.mode<0?' · mốc sớm nhất của mỗi phim':''}. Hàng là năm phát hành trên TMDb, không phải năm phim IMDb${outsideYears?`: ${nf(outsideYears)} / ${nf(s.dated.length)} mốc nằm ngoài ${fy.min}–${fy.max} (phát hành ở nước khác hoặc lên Digital/TV muộn hơn)`:''}. Di chuột vào ô để xem số phim.`;
  if(!s.dated.length){svgEmpty(el,W,H);$('release-heatmap-note').textContent=`Không có mốc ${releaseModeLabel(s.mode).toLowerCase()} phù hợp trong dữ liệu của thị trường này. Thiếu ghi nhận không có nghĩa là phim chưa phát hành.`;return}
  const years=s.dated.map(r=>dayYear(r.day)),min=Math.min(...years),max=Math.max(...years),binSize=max-min>11?10:1,counts=new Map();
  for(const r of s.dated){const d=new Date(r.day*86400000),year=Math.floor(d.getUTCFullYear()/binSize)*binSize,key=year+'-'+d.getUTCMonth();counts.set(key,(counts.get(key)||0)+1)}
@@ -215,22 +216,23 @@ function boxRowsSvg(id,rows,{left=150}={}){
  });el.innerHTML=out;return data;
 }
 function renderRatingYear(){
- // Luôn vẽ đủ 1920–2024 để thấy xu hướng; các bộ lọc khác (thể loại, bình chọn, tên) vẫn áp dụng.
- const {el,W,H}=svgFrame('rating-year'),f=getFilters(),pool=movies.filter(m=>Number.isFinite(m.rating)&&matches(m,{...f,min:payload.method.year_min,max:payload.method.year_max})),byYear=new Map();
+ const {el,W,H}=svgFrame('rating-year'),f=getFilters(),pool=currentRows.filter(m=>Number.isFinite(m.rating)),byYear=new Map();
  for(const m of pool){if(!byYear.has(m.year))byYear.set(m.year,[]);byYear.get(m.year).push(m.rating)}
  ratingYearData=[...byYear].filter(([,v])=>v.length>=20).sort((a,b)=>a[0]-b[0]).map(([year,v])=>{const s=v.sort((a,b)=>a-b);return {year,n:s.length,q1:quantileSorted(s,.25),median:quantileSorted(s,.5),q3:quantileSorted(s,.75)}});
- const y0=payload.method.year_min,y1=payload.method.year_max;
- $('rating-year-note').textContent=`${nf(pool.length)} phim (mọi năm 1920–2024, theo các bộ lọc khác); chỉ vẽ năm có từ 20 phim. Vùng tô là khoảng năm đang lọc (${f.min}–${f.max}). Phim cũ còn được xem và chấm đến nay thường là phim hay (thiên lệch sống sót), nên điểm cao hơn không có nghĩa phim xưa hay hơn.`;
- if(ratingYearData.length<2){svgEmpty(el,W,H);return}
+ const span=ratingYearData.length?ratingYearData.at(-1).year-ratingYearData[0].year:0;
+ $('rating-year-note').textContent=`${nf(pool.length)} phim trong nhóm đang chọn; chỉ vẽ năm có từ 20 phim.${span<10?' Khoảng năm đang lọc ngắn: chọn 1980–2024 hoặc gõ năm từ 1920 để thấy xu hướng dài hạn.':''} Phim cũ còn được xem và chấm đến nay thường là phim hay (thiên lệch sống sót), nên điểm cao hơn không có nghĩa phim xưa hay hơn.`;
+ if(!ratingYearData.length){svgEmpty(el,W,H,'Không có năm nào đủ 20 phim trong nhóm đang chọn');return}
+ const y0=ratingYearData[0].year-(span?0:1),y1=ratingYearData.at(-1).year+(span?0:1);
  const lo=Math.max(0,Math.floor(Math.min(...ratingYearData.map(d=>d.q1))-.5)),hi=Math.min(10,Math.ceil(Math.max(...ratingYearData.map(d=>d.q3))+.5));
  const L=40,R=14,T=24,B=36,x=yr=>L+(yr-y0)/(y1-y0)*(W-L-R),y=v=>T+(hi-v)/(hi-lo)*(H-T-B);
  let out=`<text x="${L}" y="13" font-size="12" fill="#596778">Điểm IMDb</text>`;
- const a=Math.max(f.min,y0),b=Math.min(f.max,y1);if(a<=b)out+=`<rect x="${x(a)}" y="${T}" width="${Math.max(2,x(b)-x(a))}" height="${H-T-B}" fill="#fdf3e8"/>`;
  for(let v=lo;v<=hi;v++)out+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#e4e9f0"/><text x="${L-7}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="#596778">${v}</text>`;
- for(let yr=1920;yr<=2020;yr+=20)out+=`<text x="${x(yr)}" y="${H-B+18}" text-anchor="middle" font-size="11" fill="#596778">${yr}</text>`;
- out+=`<path d="${ratingYearData.map((d,i)=>(i?'L':'M')+x(d.year).toFixed(1)+' '+y(d.q3).toFixed(1)).join('')}${[...ratingYearData].reverse().map(d=>'L'+x(d.year).toFixed(1)+' '+y(d.q1).toFixed(1)).join('')}Z" fill="#cfe0f3"/>`;
+ const step=span<=12?1:span<=30?5:span<=60?10:20;
+ for(let yr=Math.ceil(y0/step)*step;yr<=y1;yr+=step)out+=`<text x="${x(yr)}" y="${H-B+18}" text-anchor="middle" font-size="11" fill="#596778">${yr}</text>`;
+ if(ratingYearData.length>1)out+=`<path d="${ratingYearData.map((d,i)=>(i?'L':'M')+x(d.year).toFixed(1)+' '+y(d.q3).toFixed(1)).join('')}${[...ratingYearData].reverse().map(d=>'L'+x(d.year).toFixed(1)+' '+y(d.q1).toFixed(1)).join('')}Z" fill="#cfe0f3"/>`;
  out+=`<path d="${ratingYearData.map((d,i)=>(i?'L':'M')+x(d.year).toFixed(1)+' '+y(d.median).toFixed(1)).join('')}" fill="none" stroke="#16599d" stroke-width="2.2"/>`;
- const w=Math.max(2,(W-L-R)/(y1-y0+1));for(const d of ratingYearData)out+=`<rect x="${x(d.year)-w/2}" y="${T}" width="${w}" height="${H-T-B}" fill="transparent"><title>${d.year}: trung vị ${nice(d.median)} · 25–75%: ${nice(d.q1)}–${nice(d.q3)} · ${nf(d.n)} phim</title></rect>`;
+ if(ratingYearData.length<=15)for(const d of ratingYearData)out+=`<line x1="${x(d.year)}" x2="${x(d.year)}" y1="${y(d.q1)}" y2="${y(d.q3)}" stroke="#9cbde3" stroke-width="6"/><circle cx="${x(d.year)}" cy="${y(d.median)}" r="4" fill="#16599d"/>`;
+ const w=Math.max(4,(W-L-R)/(y1-y0+1));for(const d of ratingYearData)out+=`<rect x="${x(d.year)-w/2}" y="${T}" width="${w}" height="${H-T-B}" fill="transparent"><title>${d.year}: trung vị ${nice(d.median)} · 25–75%: ${nice(d.q1)}–${nice(d.q3)} · ${nf(d.n)} phim</title></rect>`;
  out+=`<g font-size="11" fill="#596778"><rect x="${W-R-215}" y="4" width="12" height="9" fill="#cfe0f3"/><text x="${W-R-199}" y="12">25–75% phim</text><rect x="${W-R-118}" y="7" width="12" height="3" fill="#16599d"/><text x="${W-R-102}" y="12">Trung vị</text></g>`;
  el.innerHTML=out;
 }

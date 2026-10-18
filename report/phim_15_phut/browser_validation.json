@@ -25,10 +25,10 @@
     "detail": ""
   },
   {
-    "check": "Rating year trend ignores year filter",
+    "check": "Rating year trend follows year filter",
     "passed": true,
     "detail": {
-      "yearDefault": 101,
+      "yearDefault": 3,
       "years": 101,
       "first": 1924,
       "runtime": [
@@ -59,6 +59,21 @@
       "genres": 10,
       "svgs": true
     }
+  },
+  {
+    "check": "Business charts explain TMDb year windows when filter is outside",
+    "passed": true,
+    "detail": {
+      "treemap": "Không có phim năm TMDb 2000–2024 có nước sản xuất trong nhóm đang chọn",
+      "finance": 0,
+      "season": "Mẫu tài chính chỉ gồm phim phát hành 1980–2024 (năm TMDb)",
+      "caption": "Chiếu rạp · Hoa Kỳ. Hàng là năm phát hành trên TMDb, không phải năm phim IMDb: 102 / 3.130 mốc nằm ngoài 1950–1970 (phát hành ở nước khác hoặc lên Digital/TV muộn hơn). Di chuột vào ô để xem số phim."
+    }
+  },
+  {
+    "check": "First-share chart explains its release window",
+    "passed": true,
+    "detail": ""
   },
   {
     "check": "Runtime and region charts match independent SQL",

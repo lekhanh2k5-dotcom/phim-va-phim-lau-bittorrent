@@ -45,7 +45,12 @@ async function main(){
  const yearDefault=await js("ratingYearData.length");
  await js("$('year-min').value=1920;$('year-max').value=2024;update()");
  const ratingExtra=await js("({years:ratingYearData.length,first:ratingYearData[0].year,runtime:runtimeData.map(d=>Math.round(d.median*10)/10),runtimeN:runtimeData.reduce((s,d)=>s+d.n,0),regions:regionData.map(d=>Math.round(d.median*10)/10),regionN:regionData.map(d=>d.n),pair:genrePairData.cells.get('Horror|Thriller'),genres:genrePairData.genres.length,svgs:['rating-year','rating-runtime','rating-regions','genre-pairs'].every(id=>$(id).children.length>0)})");
- check('Rating year trend ignores year filter',yearDefault===ratingExtra.years&&ratingExtra.first<=1925,{yearDefault,...ratingExtra});
+ check('Rating year trend follows year filter',yearDefault===3&&ratingExtra.years>90&&ratingExtra.first<=1925,{yearDefault,...ratingExtra});
+ await js("$('year-min').value=1950;$('year-max').value=1970;update();switchView('releases')");
+ const oldYears=await js("({treemap:$('origin-treemap').textContent,finance:financePoints.length,season:$('season-polar').textContent,caption:$('release-heatmap-caption').textContent})");
+ check('Business charts explain TMDb year windows when filter is outside',oldYears.treemap.includes('2000–2024')&&oldYears.finance===0&&oldYears.season.includes('1980–2024')&&oldYears.caption.includes('năm phát hành trên TMDb'),oldYears);
+ await js("switchView('torrents')");check('First-share chart explains its release window',await js("$('first-share').textContent.includes('31/05/2021')"));
+ await js("$('year-min').value=1920;$('year-max').value=2024;switchView('ratings')");
  check('Runtime and region charts match independent SQL',JSON.stringify(ratingExtra.runtime)==='[6.1,6.3,6.8,7.1]'&&ratingExtra.runtimeN===47039&&JSON.stringify(ratingExtra.regions)==='[6.3,6.4,6.3,6.6,7.3]'&&JSON.stringify(ratingExtra.regionN)==='[1379,12553,21344,10519,1294]',ratingExtra);
  check('Genre pair heatmap matches independent SQL',ratingExtra.genres===10&&ratingExtra.pair.n===2051&&Math.round(ratingExtra.pair.median*10)/10===5.2&&ratingExtra.svgs,ratingExtra);
  await js("$('rating-year').closest('.chart-row').scrollIntoView({block:'start'})");await shot('preview_ratings_extra.png');

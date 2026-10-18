@@ -43,7 +43,7 @@ function treemapLayout(items,width,height){
 function renderOriginTreemap(){
  const {el,W,H}=svgFrame('origin-treemap',350),s=businessState;
  $('origin-note').textContent=`${nf(s.originTotal)} phim phát hành 2000–2024 theo năm TMDb, biết nước sản xuất chính (mục đầu trong origin_country). Loại ${nf(s.originMissing)} phim thiếu nước trong giai đoạn này. Top 14 nước, phần còn lại gộp chung. Độ phủ TMDb không đại diện đầy đủ sản lượng điện ảnh toàn cầu.`;
- if(!s.originTotal){originTiles=[];svgEmpty(el,W,H);$('origin-callout').textContent='Chưa có phim đủ dữ liệu nước sản xuất trong phạm vi này.';return}
+ if(!s.originTotal){originTiles=[];svgEmpty(el,W,H,'Không có phim năm TMDb 2000–2024 có nước sản xuất trong nhóm đang chọn');$('origin-callout').textContent='Biểu đồ này chỉ gồm phim phát hành 2000–2024 (năm TMDb), như notebook. Hãy chọn khoảng năm phim giao với 2000–2024.';return}
  const colors=['#1d5092','#286ab8','#3987da','#6ba5e5'],top=s.origins.slice(0,14).map((d,i)=>({...d,label:originName(d.country),color:colors[i===0?0:i<4?1:i<9?2:3]})),rest=s.origins.slice(14);
  if(rest.length)top.push({country:null,label:nf(rest.length)+' nước khác',n:rest.reduce((a,b)=>a+b.n,0),color:'#aaa9a3'});
  top.sort((a,b)=>b.n-a.n||a.label.localeCompare(b.label));originTiles=treemapLayout(top,W,H);
@@ -63,7 +63,7 @@ function renderSeasonPolar(){
  $('season-warning').hidden=!(s.finance.length&&coverage<.3);
  $('season-warning').textContent=`Chỉ ${pct(coverage)} phim đủ tài chính có ngày ra rạp ${place}, thường là phim lớn; cột xám không đại diện cho mọi phim. So sánh cần thận trọng.`;
  $('season-note').textContent=`${nf(s.seasonTotal)} / ${nf(s.finance.length)} phim đủ tài chính có ngày ra rạp ${place}, gồm ${nf(s.seasonBig)} bom tấn doanh thu ≥ 300 triệu USD. Tỷ lệ xám chia cho ${nf(s.seasonTotal)} phim; xanh chia cho ${nf(s.seasonBig)} bom tấn. Đổi theo ô Thị trường phát hành (luôn dùng hình thức chiếu rạp); mặc định Mỹ như notebook. Mẫu tài chính: năm TMDb 1980–2024.${s.seasonOutside?` ${nf(s.seasonOutside)} phim của mẫu gốc nằm ngoài danh mục dashboard nên không có lịch theo nước.`:''}${s.seasonTotal&&!s.seasonBig?' Không có bom tấn trong nhóm đang chọn.':''}`;
- if(!s.seasonTotal){svgEmpty(el,W,H,'Chưa có phim đủ tài chính và ngày ra rạp '+place);return}
+ if(!s.seasonTotal){svgEmpty(el,W,H,s.finance.length?'Chưa có phim đủ tài chính và ngày ra rạp '+place:'Mẫu tài chính chỉ gồm phim phát hành 1980–2024 (năm TMDb)');return}
  const cx=W/2,cy=H/2-4,R=Math.min((W-72)/2,(H-58)/2),fractions=s.months.flatMap(d=>[d.all/s.seasonTotal,s.seasonBig?d.big/s.seasonBig:0]),max=Math.max(.2,Math.ceil(Math.max(...fractions)/.05)*.05),angle=2*Math.PI/12,barWidth=angle*.42;
  let out='';
  for(const d of s.months){const theta=(d.month-1)*angle-Math.PI/2,all=d.all/s.seasonTotal,big=s.seasonBig?d.big/s.seasonBig:0;
@@ -81,6 +81,7 @@ function renderFinanceScatter(){
  const s=businessState,rows=s.finance,L=W<500?64:74,R=23,T=30,B=48,pw=W-L-R,ph=H-T-B,xmin=6,xmax=Math.log10(Math.max(5e9,...rows.map(m=>m.budget*1.1))),ymin=4,ymax=Math.log10(Math.max(5e9,...rows.map(m=>m.revenue*1.1))),x=v=>L+(Math.log10(v)-xmin)/(xmax-xmin)*pw,y=v=>T+ph-(Math.log10(v)-ymin)/(ymax-ymin)*ph;
  $('finance-ratio').textContent=rows.length?pct(s.aboveReference/rows.length):'—';
  $('finance-note').textContent=`${nf(rows.length)} phim có ngân sách ≥ 1 triệu USD và doanh thu ≥ 10.000 USD, phát hành 1980–2024 theo TMDb; USD danh nghĩa, chưa điều chỉnh lạm phát. ${nf(s.aboveReference)} phim đạt ngưỡng doanh thu/ngân sách ≥ 2,5. Đây là ngưỡng tham khảo như notebook, không xác định lãi/lỗ thực tế; chưa có đầy đủ chi phí quảng bá và phần chia doanh thu.`;
+ if(!rows.length){financePoints=[];c.fillStyle='#596778';c.textAlign='center';c.font="14px 'Segoe UI',sans-serif";c.fillText('Mẫu tài chính chỉ gồm phim phát hành 1980–2024 (năm TMDb), ngân sách ≥ 1 triệu USD',W/2,H/2);return}
  c.strokeStyle='#e4e9f0';c.fillStyle='#596778';c.textAlign='right';
  for(let v=ymin;v<=Math.floor(ymax);v++){const yy=y(10**v);c.beginPath();c.moveTo(L,yy);c.lineTo(W-R,yy);c.stroke();c.fillText(moneyTick(10**v),L-8,yy)}
  c.textAlign='center';for(let v=xmin;v<=Math.floor(xmax);v++){const xx=x(10**v);c.beginPath();c.moveTo(xx,T);c.lineTo(xx,H-B);c.stroke();c.fillText(moneyTick(10**v),xx,H-B+17)}

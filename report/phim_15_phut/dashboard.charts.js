@@ -90,7 +90,7 @@ function renderFirstShare(){
  $('first-share-scope').textContent=country<0?'Ngày ra rạp sớm nhất · mọi thị trường':'Ngày ra rạp '+place;
  $('first-share-warning').hidden=n>=50;
  $('first-share-warning').textContent=`Chỉ ${nf(n)} phim ra rạp ${place} trong khoảng theo dõi được; đường cong dao động mạnh, đọc thận trọng.`;
- if(n<10){svgEmpty(el,W,H,'Quá ít phim ra rạp '+place+' trong khoảng theo dõi được');$('first-share-note').textContent=`${nf(n)} phim đủ điều kiện. ${nf(noDate)} phim không có ngày ra rạp ${place}; ${nf(outside)} phim ra rạp ngoài khoảng theo dõi được.`;return}
+ if(n<10){svgEmpty(el,W,H,`Cần phim ra rạp ${place} từ 31/05/2021 đến 29/09/2023; nhóm đang chọn chỉ có ${nf(n)} phim`);$('first-share-note').textContent=`${nf(n)} phim đủ điều kiện. ${nf(noDate)} phim không có ngày ra rạp ${place}; ${nf(outside)} phim ra rạp ngoài khoảng theo dõi được.`;return}
  const L=46,R=18,T=26,B=38,x=d=>L+(d-shareDayMin)/(shareDayMax-shareDayMin)*(W-L-R),y=p=>T+(1-p)*(H-T-B);
  let out='';
  for(const p of [0,.25,.5,.75,1])out+=`<line x1="${L}" x2="${W-R}" y1="${y(p)}" y2="${y(p)}" stroke="#e3e8ee"/><text x="${L-8}" y="${y(p)+4}" text-anchor="end" font-size="11" fill="#596778">${Math.round(p*100)}%</text>`;
