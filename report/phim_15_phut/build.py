@@ -31,7 +31,8 @@ def export_data():
         CASE WHEN t.tmdb_found THEN t.n_countries_streaming ELSE NULL END,
         t.us_streaming_providers, t.us_theatrical::DATE::VARCHAR, t.us_digital::DATE::VARCHAR,
         web.first_web::VARCHAR, date_diff('day',t.us_digital::DATE,web.first_web),
-        m.imdb_id IS NOT NULL
+        m.imdb_id IS NOT NULL, nullif(split_part(t.origin_country,',',1),''),
+        year(t.release_date), t.budget, t.revenue
         FROM i LEFT JOIN m ON i.tconst=m.imdb_id LEFT JOIN t ON i.tconst=t.imdb_id
         LEFT JOIN web ON i.tconst=web.imdb_id
         WHERE NOT i.is_adult AND i.start_year BETWEEN 1920 AND 2024 AND i.num_votes>=1000
@@ -39,7 +40,8 @@ def export_data():
     rows = [list(r) for r in con.execute(sql).fetchall()]
     assert len(rows) == len({r[0] for r in rows})
     keys = ['id','title','year','genres','rating','votes','torrents','tmdb','streaming',
-            'countries','providers','theatrical','digital','web','lag','matched']
+            'countries','providers','theatrical','digital','web','lag','matched',
+            'origin','tmdb_year','budget','revenue']
     # Compact, deduplicated facts for interactive country and access-mode selection.
     # Movie indices use exactly the same ordering as the IMDb-led export above.
     con.execute("""CREATE TEMP TABLE eligible AS
@@ -69,6 +71,26 @@ def export_data():
     watch = {'country':'US','providers':provider_names,'kinds':watch_kinds,
         'columns':['movie_index','kind_index','provider_index'],
         'rows':[[m,watch_kinds.index(k),provider_index[p]] for m,k,p in watch_facts]}
+    # Reproduce the three notebook samples without embedding the full TMDb catalog.
+    origin_counts = con.execute("""SELECT split_part(t.origin_country,',',1) AS country,count(*) AS n
+        FROM t JOIN i ON i.tconst=t.imdb_id WHERE t.tmdb_found AND NOT i.is_adult
+        AND year(t.release_date) BETWEEN 2000 AND 2024
+        AND nullif(split_part(t.origin_country,',',1),'') IS NOT NULL
+        GROUP BY 1 ORDER BY 2 DESC,1""").fetchall()
+    origin_missing = con.execute("""SELECT count(*) FROM t JOIN i ON i.tconst=t.imdb_id
+        WHERE t.tmdb_found AND NOT i.is_adult AND year(t.release_date) BETWEEN 2000 AND 2024
+        AND nullif(split_part(t.origin_country,',',1),'') IS NULL""").fetchone()[0]
+    finance_keys = ['id','title','year','genres','rating','votes','origin','tmdb_year','budget','revenue','theatrical']
+    finance_rows = [list(r) for r in con.execute("""SELECT i.tconst,coalesce(t.tmdb_title,i.title),
+        i.start_year,i.genres,i.avg_rating,i.num_votes,nullif(split_part(t.origin_country,',',1),''),
+        year(t.release_date),t.budget,t.revenue,t.us_theatrical::DATE::VARCHAR
+        FROM t JOIN i ON i.tconst=t.imdb_id WHERE t.tmdb_found AND NOT i.is_adult
+        AND t.budget>=1000000 AND t.revenue>=10000 AND year(t.release_date) BETWEEN 1980 AND 2024
+        ORDER BY i.tconst""").fetchall()]
+    business = {'original_origin':{'rows':[list(r) for r in origin_counts],'missing':origin_missing},
+        'original_finance':{'columns':finance_keys,'rows':finance_rows},
+        'method':{'origin_year_min':2000,'origin_year_max':2024,'finance_year_min':1980,'finance_year_max':2024,
+            'budget_min':1000000,'revenue_min':10000,'blockbuster_revenue_min':300000000,'reference_ratio':2.5}}
     stats = {
         'catalog': con.execute('SELECT count(*) FROM i WHERE NOT is_adult').fetchone()[0],
         'tmdb_found': con.execute('SELECT count(*) FROM t WHERE tmdb_found').fetchone()[0],
@@ -77,7 +99,7 @@ def export_data():
         'pairs': con.execute('SELECT count(*) FROM tor WHERE NOT implausible AND in_stable_window').fetchone()[0],
         'distinct_torrents': con.execute('SELECT count(DISTINCT torrent_id) FROM tor WHERE NOT implausible AND in_stable_window').fetchone()[0],
     }
-    payload = {'columns': keys, 'rows': rows, 'stats': stats, 'releases':releases, 'watch':watch,
+    payload = {'columns': keys, 'rows': rows, 'stats': stats, 'releases':releases, 'watch':watch,'business':business,
         'method': {'year_min':1920,'year_max':2024,'votes_min':1000,
           'observed_start':'2021-04-01', 'observed_end_exclusive':'2024-09-29',
           'snapshot_label':'2026 (theo tài liệu dự án)',
@@ -92,7 +114,8 @@ def export_data():
         'default_tmdb':sum(r[7] for r in defaults),'unique_ids':True,
         'default_votes':sum(r[5] for r in defaults),
         'release_facts':len(release_facts),'us_watch_facts':len(watch_facts),
-        'release_countries':len(countries), 'watch_country':'US'}
+        'release_countries':len(countries), 'watch_country':'US',
+        'original_origin_movies':sum(r[1] for r in origin_counts),'original_finance_movies':len(finance_rows)}
     (HERE/'data_validation.json').write_text(json.dumps(checks,ensure_ascii=False,indent=2), encoding='utf8')
     return payload
 
@@ -248,7 +271,7 @@ def build_slides():
 
 def build_dashboard(payload):
     template=(HERE/'dashboard.template.html').read_text(encoding='utf8')
-    for marker,filename in [('<!-- DASHBOARD_STYLE -->','dashboard.css'),('<!-- EXPLORE_MARKUP -->','dashboard.explore.html'),('<!-- CHART_CODE -->','dashboard.charts.js'),('<!-- PHASE_CODE -->','dashboard.phases.js')]:
+    for marker,filename in [('<!-- DASHBOARD_STYLE -->','dashboard.css'),('<!-- EXPLORE_MARKUP -->','dashboard.explore.html'),('<!-- CHART_CODE -->','dashboard.charts.js'),('<!-- PHASE_CODE -->','dashboard.phases.js'),('<!-- BUSINESS_CODE -->','dashboard.business.js')]:
         template=template.replace(marker,(HERE/filename).read_text(encoding='utf8'))
     (HERE/'dashboard.html').write_text(template.replace('<!-- EMBEDDED_DATA -->',json_text(payload)),encoding='utf8')
 

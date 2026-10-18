@@ -55,6 +55,56 @@
     "detail": ""
   },
   {
+    "check": "Production, finance and monthly counts agree with SQL: default",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Treemap tile areas preserve country shares",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Polar diagram and financial points render",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Production, finance and monthly counts agree with SQL: original",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Original samples reproduce the supplied notebook charts",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Finance hover exposes budget and revenue",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Clicking a financial point opens budget and revenue details",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Notebook-only films have their own financial profile",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Production, finance and monthly counts agree with SQL: original",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Production, finance and monthly counts agree with SQL: action",
+    "passed": true,
+    "detail": ""
+  },
+  {
     "check": "Digital selection agrees with independent SQL",
     "passed": true,
     "detail": ""
@@ -252,6 +302,11 @@
     "detail": ""
   },
   {
+    "check": "Empty business cohort clears all three added charts",
+    "passed": true,
+    "detail": ""
+  },
+  {
     "check": "Search filters all charts to same film",
     "passed": true,
     "detail": ""
@@ -333,6 +388,11 @@
   },
   {
     "check": "Release view fits phone width",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Added business charts fit phone width",
     "passed": true,
     "detail": ""
   },

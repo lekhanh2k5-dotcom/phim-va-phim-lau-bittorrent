@@ -27,6 +27,12 @@ async function main(){
  await call('Browser.setDownloadBehavior',{behavior:'allow',downloadPath:cache});
  await resize(1440,1000);await navigate('dashboard.html',"typeof currentRows!=='undefined'");
  const phaseReference=JSON.parse(fs.readFileSync(path.join(root,'phase_reference_checks.json'),'utf8'));
+ const businessReference=JSON.parse(fs.readFileSync(path.join(root,'business_reference_checks.json'),'utf8'));
+ const compareBusiness=async name=>{
+  const actual=await js("({origin_total:businessState.originTotal,origin_missing:businessState.originMissing,finance_n:businessState.finance.length,above_reference:businessState.aboveReference,season_n:businessState.seasonTotal,season_big:businessState.seasonBig,months:businessState.months,origins:businessState.origins})");
+  const normalize=v=>[v.origin_total,v.origin_missing,v.finance_n,v.above_reference,v.season_n,v.season_big,v.months.map(d=>[d.month,d.all,d.big]),v.origins.map(d=>[d.country,d.n]).sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0)];
+  check('Production, finance and monthly counts agree with SQL: '+name,JSON.stringify(normalize(actual))===JSON.stringify(normalize(businessReference[name])));
+ };
  const ratingSnapshot=()=>js("({n:currentRows.length,median_rating:median(currentRows.map(m=>m.rating)),median_votes:median(currentRows.map(m=>m.votes)),high:currentRows.filter(m=>m.rating>=7).length})");
  const releaseSnapshot=()=>js("({dated:releaseState.dated.length,pairs:releaseState.pairs.length,valid:releaseState.valid.length,median:median(releaseState.valid.map(r=>r.gap)),negative:releaseState.pairs.filter(r=>r.gap<0).length,long_gap:releaseState.pairs.filter(r=>r.gap>365).length})");
  const sameProviders=async expected=>{const actual=await js("providerCounts");const normalized=a=>a.map(p=>[p.provider,p.n]).sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0);return JSON.stringify(normalized(actual))===JSON.stringify(normalized(expected))};
@@ -46,6 +52,23 @@ async function main(){
  check('US release dates and window agree with independent SQL',JSON.stringify(await releaseSnapshot())===JSON.stringify(phaseReference.default_release_us));
  check('US streaming provider counts agree with independent SQL',await sameProviders(phaseReference.default_providers));
  check('All four release charts render',await js("['release-heatmap','release-window','release-countries','release-providers'].every(id=>$(id).querySelector('rect,circle')) && $('release-window-note').textContent.includes('1.217')"));
+ await compareBusiness('default');
+ check('Treemap tile areas preserve country shares',await js("(()=>{const W=$('origin-treemap').viewBox.baseVal.width,H=$('origin-treemap').viewBox.baseVal.height;return originTiles.length>0&&originTiles.every(d=>Number.isFinite(d.w)&&Number.isFinite(d.h)&&d.w>0&&d.h>0&&Math.abs(d.w*d.h/(W*H)-d.n/businessState.originTotal)<1e-8)&&Math.abs(originTiles.reduce((s,d)=>s+d.n,0)-businessState.originTotal)===0})()"));
+ check('Polar diagram and financial points render',await js("$('season-polar').querySelectorAll('path').length===24 && financePoints.length===618"));
+ await js("$('business-title').scrollIntoView({block:'start'})");await shot('preview_business_filtered.png');
+ await js("$('business-scope').value='original';$('business-scope').dispatchEvent(new Event('change'))");await compareBusiness('original');
+ check('Original samples reproduce the supplied notebook charts',await js("businessState.originTotal===85051 && businessState.finance.length===9324 && businessState.seasonTotal===7909 && $('finance-ratio').textContent==='33,2%' && $('business-scope-note').textContent.includes('không chịu bộ lọc')"));
+ await shot('preview_business_original.png');
+ await js("$('finance-scatter').scrollIntoView({block:'center'})");await shot('preview_finance_original.png');
+ await js("(()=>{const p=financePoints[0],r=$('finance-scatter').getBoundingClientRect();$('finance-scatter').dispatchEvent(new PointerEvent('pointermove',{clientX:r.left+p.x,clientY:r.top+p.y,bubbles:true}))})()");
+ check('Finance hover exposes budget and revenue',await js("!$('tooltip').hidden && $('tooltip').textContent.includes('Ngân sách:') && $('tooltip').textContent.includes('Doanh thu:')"));
+ await js("(()=>{const p=financePoints[0],r=$('finance-scatter').getBoundingClientRect();$('finance-scatter').dispatchEvent(new MouseEvent('click',{clientX:r.left+p.x,clientY:r.top+p.y,bubbles:true}))})()");
+ check('Clicking a financial point opens budget and revenue details',await js("$('movie-dialog').open && $('movie-detail').textContent.includes('Ngân sách sản xuất') && $('movie-detail').textContent.includes('Doanh thu toàn cầu')"));await js("$('movie-close').click()");
+ await js("openFinanceMovie(originalFinance.find(m=>!businessMovieIndex.has(m.id)))");
+ check('Notebook-only films have their own financial profile',await js("$('movie-dialog').open && $('movie-detail').textContent.includes('mẫu gốc') && $('movie-detail').textContent.includes('Ngân sách sản xuất')"));await js("$('movie-close').click()");
+ await js("$('genre').value='Action';update()");await compareBusiness('original');
+ await js("$('business-scope').value='filtered';$('business-scope').dispatchEvent(new Event('change'))");await compareBusiness('action');
+ await js("reset();window.scrollTo(0,0)");
  await shot('preview_releases.png');
  await js("$('release-providers').scrollIntoView({block:'center'})");await shot('preview_releases_detail.png');await js("window.scrollTo(0,0)");
  await js("$('release-mode').value='1';$('release-mode').dispatchEvent(new Event('change'))");
@@ -97,6 +120,7 @@ async function main(){
  check('Empty selection handles all charts and table',await js("currentRows.length===0 && $('movie-table').textContent.includes('Không có phim') && $('k-observed').textContent==='—'"));
  await js("switchView('ratings')");check('Empty rating cohort has no stale points or ranking',await js("ratingPoints.length===0 && rankingRows.length===0 && $('k-rating').textContent==='—'"));
  await js("switchView('releases')");check('Empty release cohort has no stale dates or providers',await js("releaseState.dated.length===0 && providerCounts.length===0 && $('k-release-gap').textContent==='—'"));await js("switchView('torrents')");
+ await js("switchView('releases')");check('Empty business cohort clears all three added charts',await js("originTiles.length===0 && financePoints.length===0 && businessState.seasonTotal===0 && $('finance-ratio').textContent==='—'"));await js("switchView('torrents')");
  await js("reset();$('search').value='tt1630029';update()");
  check('Search filters all charts to same film',await js("currentRows.length===1 && points.length===1 && currentRows[0].id==='tt1630029'"));
  await js("document.querySelector('[data-movie]').click()");
@@ -131,6 +155,8 @@ async function main(){
  await js("$('rating-histogram').scrollIntoView({block:'center'})");await shot('preview_ratings_chart_mobile.png');await js("window.scrollTo(0,0)");
  await js("switchView('releases')");check('Release view fits phone width',await js("document.documentElement.scrollWidth<=innerWidth+1"));await shot('preview_releases_mobile.png');
  await js("$('release-heatmap').scrollIntoView({block:'center'})");await shot('preview_releases_chart_mobile.png');await js("window.scrollTo(0,0)");
+ await js("$('business-scope').value='original';renderBusinessCharts();$('business-title').scrollIntoView({block:'start'})");check('Added business charts fit phone width',await js("document.documentElement.scrollWidth<=innerWidth+1 && $('origin-treemap').getBoundingClientRect().width<=innerWidth && $('season-polar').getBoundingClientRect().width<=innerWidth"));await shot('preview_business_mobile.png');
+ await js("$('finance-scatter').scrollIntoView({block:'center'})");await shot('preview_finance_mobile.png');await js("reset();window.scrollTo(0,0)");
  await resize(1366,768);await js("switchView('ratings')");check('Rating view fits laptop width',await js("document.documentElement.scrollWidth<=innerWidth+1"));await shot('preview_ratings_laptop.png');
  await js("switchView('releases')");check('Release view fits laptop width',await js("document.documentElement.scrollWidth<=innerWidth+1"));await shot('preview_releases_laptop.png');
  await js("location.hash='explore-torrents'");await sleep(150);check('Torrent deep link selects the correct view',await js("activeView==='torrents' && activeTab==='explore'"));

@@ -42,7 +42,7 @@ function routeFromHash(){
 function renderCharts(){
  if(activeTab!=='explore')return;
  if(activeView==='ratings'){renderRatingHistogram();renderRatingGenres();renderRatingScatter();renderRanking()}
- else if(activeView==='releases'){renderReleaseHeatmap();renderReleaseWindow();renderReleaseCountries();renderProviders()}
+ else if(activeView==='releases'){renderReleaseHeatmap();renderReleaseWindow();renderReleaseCountries();renderProviders();renderBusinessCharts()}
  else renderTorrentCharts();
 }
 function getReleaseState(){
@@ -178,6 +178,7 @@ function selectedReleaseProfile(m){
  return `<h3>Lịch phát hành tại ${esc(name)}</h3>`+(events.length?`<div class="timeline">${events.map(r=>`<div><span>TMDb · ${releaseModeNames[r[2]]}</span>${dateText(isoDay(r[3]))}${r[3]>releaseCutoff?' · sau ngày chốt, chưa tính vào biểu đồ':''}</div>`).join('')}</div>`:'<p>Chưa có mốc phát hành được ghi nhận tại thị trường này.</p>');
 }
 function initPhases(){
+ initBusiness();
  const options=payload.releases.countries.map((code,i)=>({code,i,label:countryName(code)})).sort((a,b)=>(a.code==='US'?-1:b.code==='US'?1:a.code==='VN'?-1:b.code==='VN'?1:a.label.localeCompare(b.label,'vi')));
  for(const item of options){const option=document.createElement('option');option.value=item.i;option.textContent=item.label+' ('+item.code+')';$('release-country').append(option)}
  $('release-country').value=String(payload.releases.countries.indexOf('US'));

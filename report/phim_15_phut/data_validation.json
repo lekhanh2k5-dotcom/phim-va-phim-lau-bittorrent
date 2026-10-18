@@ -9,5 +9,7 @@
   "release_facts": 496097,
   "us_watch_facts": 380497,
   "release_countries": 248,
-  "watch_country": "US"
+  "watch_country": "US",
+  "original_origin_movies": 85051,
+  "original_finance_movies": 9324
 }
