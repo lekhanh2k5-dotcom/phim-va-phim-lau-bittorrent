@@ -21,16 +21,19 @@ Các biểu đồ slide lấy từ dự án ba nguồn gốc; lời dẫn đư�
 
 ## Dashboard
 
-Ba phần: **Khám phá tích hợp**, **Hiểu từng nguồn**, **Cách đọc dữ liệu**. Các bộ lọc chỉ áp dụng cho phần Khám phá; hình tổng quan nguồn giữ phạm vi gốc.
+Ba mục chính: **Phân tích**, **Nguồn dữ liệu**, **Phương pháp**. Trong Phân tích, ba góc nhìn đi theo thứ tự:
 
-- Lọc theo khoảng năm IMDb, thể loại, bình chọn tối thiểu, tình trạng ghi nhận torrent, nơi xem streaming tại Mỹ và tên/mã phim.
-- Bốn chỉ số: số phim, tổng cặp torrent–phim, tỷ lệ phim có ghi nhận torrent và tỷ lệ có hồ sơ TMDb.
-- Hai hình chính ở đầu trang: cột trung vị torrent theo nhóm bình chọn và thanh ngang theo thể loại. Có thể chuyển hình thể loại giữa số phim và torrent trung vị/phim.
-- So sánh trực tiếp hai thể loại bằng hai màu: số phim, bình chọn trung vị, torrent trung vị và tỷ lệ có ghi nhận. Phần so sánh giữ các bộ lọc khác, dùng hai lựa chọn thể loại riêng.
-- Hình độ trễ WEB–Digital Mỹ, nơi xem và biểu đồ chấm từng phim nằm ở phía dưới.
-- Bảng phim có sắp xếp, phân trang, hồ sơ từng phim và xuất CSV theo nhóm đang chọn.
+1. **Đánh giá phim** (mở đầu, `#explore`): phân bố điểm IMDb, boxplot điểm theo thể loại, biểu đồ điểm × bình chọn và 10 phim điểm cao nhất có ngưỡng bình chọn riêng. Bốn chỉ số là số phim, điểm trung vị, bình chọn trung vị và tỷ lệ phim đạt từ 7 điểm.
+2. **Phát hành & nơi xem** (`#explore-releases`): chọn thị trường và hình thức để xem lịch theo năm × tháng, cửa sổ rạp–Digital, độ phủ các thị trường và nơi xem tại Mỹ. Bản đồ nhiệt gộp theo thập niên khi phạm vi ngày dài. Có các hình thức streaming (thuê bao / miễn phí / quảng cáo), thuê và mua phim.
+3. **Torrent & đối chiếu** (`#explore-torrents`): cột trung vị torrent theo nhóm bình chọn, thể loại (chuyển giữa số phim và torrent trung vị), so sánh hai thể loại, độ trễ WEB–Digital Mỹ, nơi xem và biểu đồ bình chọn × torrent.
+
+Năm IMDb, thể loại, bình chọn tối thiểu và tên/mã phim là bộ lọc chung, được giữ khi đổi góc nhìn. Hai nút chọn nhanh dùng 2021–2023 hoặc 1980–2024. Bộ lọc tình trạng torrent và streaming chỉ áp dụng trong phần Torrent; các giá trị được giữ để dùng khi quay lại. Nguồn dữ liệu và Phương pháp giữ phạm vi gốc, không chịu bộ lọc.
+
+Bảng phim chung có sắp xếp, phân trang, hồ sơ và xuất CSV. Ở phần đánh giá, ẩn các cột torrent và nơi xem; ở phần phát hành, ẩn cột torrent. Hồ sơ mở từ bảng, bảng xếp hạng hoặc chấm trên biểu đồ điểm; trong phần phát hành có thêm lịch tại thị trường đang chọn. CSV chứa các trường gốc tại Mỹ và cột ngày phát hành của thị trường đang chọn.
 
 Dashboard gồm **47.089 phim** không gắn cờ `is_adult`, có năm 1920–2024 và từ 1.000 lượt bình chọn. Nhóm mặc định 2021–2023 gồm **4.981 phim**, **225.770 cặp torrent–phim**, trong đó **565 phim chưa ghi nhận torrent**. Bắt đầu từ IMDb rồi ghép trái để giữ những phim này.
+
+Nhóm mặc định có điểm trung vị **6,2**, bình chọn trung vị **2.937** và **1.185 phim đạt từ 7 điểm**. Tại Mỹ, **1.742 phim** có mốc ra rạp, **1.284 phim** đủ cả ngày rạp và Digital; **1.217 phim** có khoảng cách 0–365 ngày, trung vị **11 ngày**. Phép tính gộp loại rạp limited và theatrical, nên không dùng để thay thế số liệu của notebook gốc chỉ dùng theatrical.
 
 Ví dụ 60 giây: nhấn Ví dụ thuyết trình → xem Hành động và Tài liệu cạnh nhau → đối chiếu số phim, bình chọn, torrent trung vị và tỷ lệ ghi nhận → nhấn tên một phim trong bảng để xem các nguồn đã nối → đặt lại bộ lọc. Chênh lệch thô giữa hai thể loại chưa tách riêng ảnh hưởng của các đặc điểm phim.
 
@@ -40,6 +43,8 @@ Ví dụ 60 giây: nhấn Ví dụ thuyết trình → xem Hành động và Tà
 - Cửa sổ quan sát giữ đúng pipeline gốc: `2021-04-01 <= discovered_at_utc < 2024-09-29`. Ngày 29/09/2024 không được tính; khoảng quan sát vẫn có gián đoạn thu thập.
 - Giá trị 0 nghĩa là chưa ghi nhận trong dữ liệu đã ghép, lọc và cửa sổ này; không chứng minh phim không được chia sẻ.
 - Năm phim IMDb, ngày phát hành TMDb và ngày phát hiện torrent có ý nghĩa khác nhau.
+- Phát hành: ngày sớm nhất theo phim–quốc gia–hình thức; gộp hai loại rạp limited và theatrical. Biểu đồ tính các mốc đến **18/10/2026**, không tính lịch tương lai. Hai mốc rạp–Digital thuộc cùng quốc gia; chỉ giữ khoảng cách 0–365 ngày và ghi số giá trị âm hoặc trên 365 ngày bị loại. Đổi hình thức phát hành không đổi định nghĩa của biểu đồ cửa sổ rạp–Digital.
+- Bảng nơi xem chỉ xuất dữ liệu Mỹ để giữ bản HTML gọn. Chọn thị trường khác chỉ đổi lịch phát hành, không đổi phạm vi biểu đồ nền tảng. Dữ liệu gốc hiện không có bản ghi nơi xem `VN`; không coi là bằng chứng không có nơi xem hợp pháp tại Việt Nam.
 - Bình chọn và nơi xem là ảnh chụp năm 2026 theo tài liệu dự án. Không có thời điểm thu thập chính xác của từng hồ sơ để coi các nguồn đồng bộ trong cùng một ngày.
 - Streaming tại Mỹ: thuê bao, miễn phí hoặc có quảng cáo, không gồm thuê/mua. Không dùng nơi xem hiện tại để giải thích chia sẻ trong quá khứ.
 - Độ trễ dashboard: WEB đầu tiên được phát hiện **trong cửa sổ quan sát**, trừ ngày Digital tại Mỹ. Chỉ phim đủ ngày mới tham gia. Ngày âm có thể liên quan tới khác mốc quốc gia; bộ lọc và biên cửa sổ ảnh hưởng kết quả.
@@ -52,9 +57,9 @@ Không có lượt tải, người xem hoặc thất thu trong dữ liệu này.
 - `slides.html`, `slides.pdf`: bản thuyết trình.
 - `dashboard.html`, `assets/`: dashboard và các hình nguồn.
 - `kich_ban.md`, `slides.json`: lời dẫn và nội dung từng trang.
-- `data.json`: dữ liệu đã rút gọn, cùng dữ liệu được nhúng trong dashboard.
-- `build.py`, `dashboard.template.html`, `dashboard.css`, `dashboard.explore.html`, `dashboard.charts.js`: nguồn tạo hai trang từ các parquet gốc. Chạy từ dự án: `python report/phim_15_phut/build.py`. Cần Python và DuckDB đã có trong môi trường dự án. Script chỉ đọc dữ liệu gốc, ghi vào thư mục này.
-- `data_validation.json`, `reference_checks.json`, `browser_validation.json`: kiểm tra dữ liệu và giao diện. Reference được đối chiếu độc lập từ các parquet gốc. `verify.cjs` dùng Node và Chrome có sẵn để kiểm tra, chụp ảnh và xuất PDF.
+- `data.json`: cùng dữ liệu được nhúng trong dashboard, khoảng 22 MB. Gồm danh mục phim, ngày phát hành sớm nhất được mã hóa theo ngày từ 1970 và danh sách nơi xem tại Mỹ bằng chỉ mục. Không cần tải dữ liệu qua mạng khi mở HTML.
+- `build.py`, `dashboard.template.html`, `dashboard.css`, `dashboard.explore.html`, `dashboard.charts.js`, `dashboard.phases.js`: nguồn tạo hai trang từ các parquet gốc. Chạy từ dự án: `python report/phim_15_phut/build.py`. Chỉ dựng lại dashboard: `python report/phim_15_phut/build.py --dashboard-only`. Cần Python và DuckDB đã có trong môi trường dự án. Script chỉ đọc dữ liệu gốc, ghi vào thư mục này.
+- `data_validation.json`, `reference_checks.json`, `phase_reference_checks.json`, `browser_validation.json`: kiểm tra dữ liệu và giao diện. `python report/phim_15_phut/verify_phases.py` tính lại tham chiếu SQL độc lập cho hai góc nhìn mới. `node report/phim_15_phut/verify.cjs --dashboard-only` kiểm tra dashboard, lưu kết quả và ảnh; bỏ cờ để kiểm tra thêm slide và xuất PDF.
 
 Đã đối chiếu bảy nhóm lọc với SQL độc lập; kiểm tra các biểu đồ, trạng thái rỗng, khoảng năm sai, hồ sơ phim, sắp xếp, phân trang, xuất CSV, hiển thị trên laptop/điện thoại, giải mã ảnh và PDF đủ 13 trang. Không phát sinh yêu cầu mạng bên ngoài hay lỗi JavaScript trong kiểm tra.
 

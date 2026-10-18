@@ -1,0 +1,921 @@
+{
+  "cutoff": "2026-10-18",
+  "default_ratings": {
+    "n": 4981,
+    "median_rating": 6.2,
+    "median_votes": 2937.0,
+    "high": 1185
+  },
+  "all_ratings": {
+    "n": 47089,
+    "median_rating": 6.4,
+    "median_votes": 3356.0,
+    "high": 13512
+  },
+  "default_genres": [
+    {
+      "genre": "Drama",
+      "n": 2670,
+      "p10": 4.9,
+      "q1": 5.7,
+      "median": 6.4,
+      "q3": 7.0,
+      "p90": 7.5
+    },
+    {
+      "genre": "Comedy",
+      "n": 1445,
+      "p10": 4.7,
+      "q1": 5.5,
+      "median": 6.1,
+      "q3": 6.7,
+      "p90": 7.200000000000001
+    },
+    {
+      "genre": "Thriller",
+      "n": 1082,
+      "p10": 3.9,
+      "q1": 4.8,
+      "median": 5.7,
+      "q3": 6.5,
+      "p90": 7.2
+    },
+    {
+      "genre": "Action",
+      "n": 1054,
+      "p10": 3.8,
+      "q1": 4.9,
+      "median": 5.85,
+      "q3": 6.675000000000001,
+      "p90": 7.299999999999999
+    },
+    {
+      "genre": "Crime",
+      "n": 791,
+      "p10": 4.5,
+      "q1": 5.4,
+      "median": 6.2,
+      "q3": 6.8,
+      "p90": 7.4
+    },
+    {
+      "genre": "Horror",
+      "n": 723,
+      "p10": 3.7,
+      "q1": 4.4,
+      "median": 5.2,
+      "q3": 5.8,
+      "p90": 6.5
+    },
+    {
+      "genre": "Romance",
+      "n": 622,
+      "p10": 4.9,
+      "q1": 5.6,
+      "median": 6.3,
+      "q3": 6.8,
+      "p90": 7.4
+    },
+    {
+      "genre": "Mystery",
+      "n": 519,
+      "p10": 4.2,
+      "q1": 4.95,
+      "median": 5.8,
+      "q3": 6.5,
+      "p90": 7.1
+    }
+  ],
+  "default_release_us": {
+    "dated": 1742,
+    "pairs": 1284,
+    "valid": 1217,
+    "median": 11.0,
+    "negative": 57,
+    "long_gap": 10
+  },
+  "default_release_vn": {
+    "dated": 249,
+    "pairs": 7,
+    "valid": 5,
+    "median": 91.0,
+    "negative": 2,
+    "long_gap": 0
+  },
+  "default_release_us_digital": {
+    "dated": 2493,
+    "pairs": 1284,
+    "valid": 1217,
+    "median": 11.0,
+    "negative": 57,
+    "long_gap": 10
+  },
+  "default_providers": [
+    {
+      "provider": "Amazon Prime Video",
+      "n": 983
+    },
+    {
+      "provider": "Tubi TV",
+      "n": 960
+    },
+    {
+      "provider": "Amazon Prime Video with Ads",
+      "n": 959
+    },
+    {
+      "provider": "Netflix",
+      "n": 925
+    },
+    {
+      "provider": "Netflix Standard with Ads",
+      "n": 906
+    },
+    {
+      "provider": "Hoopla",
+      "n": 731
+    },
+    {
+      "provider": "Kanopy",
+      "n": 672
+    },
+    {
+      "provider": "Plex Channel",
+      "n": 622
+    },
+    {
+      "provider": "Plex",
+      "n": 613
+    },
+    {
+      "provider": "Fawesome",
+      "n": 534
+    },
+    {
+      "provider": "Fandango at Home Free",
+      "n": 447
+    },
+    {
+      "provider": "The Roku Channel",
+      "n": 396
+    },
+    {
+      "provider": "YouTube Free",
+      "n": 307
+    },
+    {
+      "provider": "Philo",
+      "n": 290
+    },
+    {
+      "provider": "Hulu",
+      "n": 276
+    },
+    {
+      "provider": "Amazon Prime Video Free with Ads",
+      "n": 272
+    },
+    {
+      "provider": "Amazon MX Player",
+      "n": 255
+    },
+    {
+      "provider": "AMC+ Amazon Channel",
+      "n": 195
+    },
+    {
+      "provider": "fuboTV",
+      "n": 174
+    },
+    {
+      "provider": "AMC Plus Apple TV channel",
+      "n": 159
+    },
+    {
+      "provider": "AMC+",
+      "n": 156
+    },
+    {
+      "provider": "AMC+ Roku Premium Channel",
+      "n": 150
+    },
+    {
+      "provider": "Xumo Play",
+      "n": 146
+    },
+    {
+      "provider": "Shudder",
+      "n": 140
+    },
+    {
+      "provider": "Shudder Amazon Channel",
+      "n": 135
+    },
+    {
+      "provider": "Shudder Apple TV channel",
+      "n": 135
+    },
+    {
+      "provider": "YouTube TV",
+      "n": 114
+    },
+    {
+      "provider": "Pluto TV",
+      "n": 112
+    },
+    {
+      "provider": "HBO Max Amazon Channel",
+      "n": 97
+    },
+    {
+      "provider": "HBO Max",
+      "n": 96
+    },
+    {
+      "provider": "Cineverse",
+      "n": 92
+    },
+    {
+      "provider": "Disney Plus",
+      "n": 78
+    },
+    {
+      "provider": "Peacock Premium",
+      "n": 72
+    },
+    {
+      "provider": "Lionsgate+ Amazon Channel",
+      "n": 71
+    },
+    {
+      "provider": "Paramount+ Amazon Channel",
+      "n": 71
+    },
+    {
+      "provider": "Paramount Plus Premium",
+      "n": 70
+    },
+    {
+      "provider": "Peacock Premium Plus",
+      "n": 70
+    },
+    {
+      "provider": "Paramount+ Roku Premium Channel",
+      "n": 66
+    },
+    {
+      "provider": "Mometu",
+      "n": 59
+    },
+    {
+      "provider": "MUBI Amazon Channel",
+      "n": 54
+    },
+    {
+      "provider": "MUBI",
+      "n": 53
+    },
+    {
+      "provider": "MovieSphere+ Amazon Channel",
+      "n": 52
+    },
+    {
+      "provider": "Paramount Plus Essential",
+      "n": 51
+    },
+    {
+      "provider": "Starz Apple TV channel",
+      "n": 49
+    },
+    {
+      "provider": "The CW",
+      "n": 49
+    },
+    {
+      "provider": "Cineverse Amazon Channel",
+      "n": 47
+    },
+    {
+      "provider": "Screambox Amazon Channel",
+      "n": 47
+    },
+    {
+      "provider": "Filmzie",
+      "n": 46
+    },
+    {
+      "provider": "Sundance Now",
+      "n": 44
+    },
+    {
+      "provider": "Bloodstream",
+      "n": 42
+    },
+    {
+      "provider": "FXNow",
+      "n": 41
+    },
+    {
+      "provider": "Fandor Amazon Channel",
+      "n": 38
+    },
+    {
+      "provider": "Sun Nxt",
+      "n": 37
+    },
+    {
+      "provider": "Amasian TV",
+      "n": 36
+    },
+    {
+      "provider": "Midnight Pulp Amazon Channel",
+      "n": 36
+    },
+    {
+      "provider": "Apple TV",
+      "n": 35
+    },
+    {
+      "provider": "Apple TV Amazon Channel",
+      "n": 34
+    },
+    {
+      "provider": "Kino Film Collection",
+      "n": 34
+    },
+    {
+      "provider": "YOW.tv",
+      "n": 32
+    },
+    {
+      "provider": "JustWatch TV",
+      "n": 31
+    },
+    {
+      "provider": "OVID",
+      "n": 30
+    },
+    {
+      "provider": "Rakuten Viki",
+      "n": 29
+    },
+    {
+      "provider": "France Channel Amazon Channel",
+      "n": 28
+    },
+    {
+      "provider": "Darkroom",
+      "n": 27
+    },
+    {
+      "provider": "Howdy Amazon Channel",
+      "n": 26
+    },
+    {
+      "provider": "Midnight Pulp",
+      "n": 25
+    },
+    {
+      "provider": "Shout! Factory Amazon Channel",
+      "n": 25
+    },
+    {
+      "provider": "OnDemandKorea",
+      "n": 23
+    },
+    {
+      "provider": "Starz Amazon Channel",
+      "n": 21
+    },
+    {
+      "provider": "Angel Studios",
+      "n": 20
+    },
+    {
+      "provider": "Crunchyroll Amazon Channel",
+      "n": 20
+    },
+    {
+      "provider": "Strand Releasing Amazon Channel",
+      "n": 20
+    },
+    {
+      "provider": "Hi-YAH Amazon Channel",
+      "n": 19
+    },
+    {
+      "provider": "Crunchyroll",
+      "n": 18
+    },
+    {
+      "provider": "TNT",
+      "n": 18
+    },
+    {
+      "provider": "Hi-YAH",
+      "n": 17
+    },
+    {
+      "provider": "Starz",
+      "n": 17
+    },
+    {
+      "provider": "TBS",
+      "n": 17
+    },
+    {
+      "provider": "ViX Premium Amazon Channel",
+      "n": 17
+    },
+    {
+      "provider": "tru TV",
+      "n": 17
+    },
+    {
+      "provider": "Shahid VIP",
+      "n": 16
+    },
+    {
+      "provider": "VIX ",
+      "n": 16
+    },
+    {
+      "provider": "Klassiki",
+      "n": 15
+    },
+    {
+      "provider": "Runtime",
+      "n": 15
+    },
+    {
+      "provider": "Shout! Factory TV",
+      "n": 15
+    },
+    {
+      "provider": "Starz Roku Premium Channel",
+      "n": 15
+    },
+    {
+      "provider": "aha",
+      "n": 15
+    },
+    {
+      "provider": "AsianCrush",
+      "n": 14
+    },
+    {
+      "provider": "Film Movement Plus",
+      "n": 14
+    },
+    {
+      "provider": "Film Movement Plus Amazon Channel",
+      "n": 14
+    },
+    {
+      "provider": "Magnolia Selects Amazon Channel",
+      "n": 14
+    },
+    {
+      "provider": "Brew",
+      "n": 13
+    },
+    {
+      "provider": "DistroTV",
+      "n": 13
+    },
+    {
+      "provider": "Hoichoi",
+      "n": 12
+    },
+    {
+      "provider": "MGM+ Amazon Channel",
+      "n": 12
+    },
+    {
+      "provider": "Viaplay Amazon Channel",
+      "n": 12
+    },
+    {
+      "provider": "ARROW",
+      "n": 11
+    },
+    {
+      "provider": "Dekkoo",
+      "n": 11
+    },
+    {
+      "provider": "Dekkoo Amazon Channel",
+      "n": 11
+    },
+    {
+      "provider": "MGM Plus",
+      "n": 11
+    },
+    {
+      "provider": "MGM Plus Roku Premium Channel",
+      "n": 11
+    },
+    {
+      "provider": "Cinemax Apple TV channel",
+      "n": 10
+    },
+    {
+      "provider": "Great American Pure Flix Amazon Channel",
+      "n": 10
+    },
+    {
+      "provider": "Cinemax Amazon Channel",
+      "n": 9
+    },
+    {
+      "provider": "FOUND TV",
+      "n": 9
+    },
+    {
+      "provider": "Metrograph",
+      "n": 9
+    },
+    {
+      "provider": "Night Flight Plus",
+      "n": 9
+    },
+    {
+      "provider": "Pure Flix",
+      "n": 8
+    },
+    {
+      "provider": "Cohen Media Amazon Channel",
+      "n": 7
+    },
+    {
+      "provider": "Kocowa",
+      "n": 7
+    },
+    {
+      "provider": "Monsters and Nightmares Amazon Channel",
+      "n": 6
+    },
+    {
+      "provider": "FlixFling",
+      "n": 5
+    },
+    {
+      "provider": "FlixHouse",
+      "n": 5
+    },
+    {
+      "provider": "Lifetime Movie Club Amazon Channel",
+      "n": 5
+    },
+    {
+      "provider": "Lifetime Movie Club Apple TV channel",
+      "n": 5
+    },
+    {
+      "provider": "UP Faith & Family Amazon Channel ",
+      "n": 5
+    },
+    {
+      "provider": "UP Faith & Family Apple TV channel",
+      "n": 5
+    },
+    {
+      "provider": "USA Network",
+      "n": 5
+    },
+    {
+      "provider": "BFI Player Amazon Channel",
+      "n": 4
+    },
+    {
+      "provider": "Chai Flicks",
+      "n": 4
+    },
+    {
+      "provider": "Chilling",
+      "n": 4
+    },
+    {
+      "provider": "Dove Amazon Channel",
+      "n": 4
+    },
+    {
+      "provider": "Eternal Family",
+      "n": 4
+    },
+    {
+      "provider": "Filmtap",
+      "n": 4
+    },
+    {
+      "provider": "Lifetime Movie Club",
+      "n": 4
+    },
+    {
+      "provider": "Wonder Project Amazon Channel",
+      "n": 4
+    },
+    {
+      "provider": "A&E Crime Central Apple TV channel",
+      "n": 3
+    },
+    {
+      "provider": "ALLBLK Amazon channel ",
+      "n": 3
+    },
+    {
+      "provider": "ALLBLK Apple TV channel",
+      "n": 3
+    },
+    {
+      "provider": "Criterion Channel",
+      "n": 3
+    },
+    {
+      "provider": "Fuse+ Amazon Channel",
+      "n": 3
+    },
+    {
+      "provider": "Here TV",
+      "n": 3
+    },
+    {
+      "provider": "Here TV  Amazon Channel",
+      "n": 3
+    },
+    {
+      "provider": "History Vault",
+      "n": 3
+    },
+    {
+      "provider": "Troma NOW",
+      "n": 3
+    },
+    {
+      "provider": "Acorn TV Apple TV channel",
+      "n": 2
+    },
+    {
+      "provider": "AcornTV Amazon Channel",
+      "n": 2
+    },
+    {
+      "provider": "DocuramaFilms Amazon Channel",
+      "n": 2
+    },
+    {
+      "provider": "Fandor",
+      "n": 2
+    },
+    {
+      "provider": "Gaia Amazon Channel",
+      "n": 2
+    },
+    {
+      "provider": "GuideDoc",
+      "n": 2
+    },
+    {
+      "provider": "IndiePix Unlimited Amazon Channel",
+      "n": 2
+    },
+    {
+      "provider": "KableOne",
+      "n": 2
+    },
+    {
+      "provider": "Passionflix Amazon Channel",
+      "n": 2
+    },
+    {
+      "provider": "Qello Concerts by Stingray Amazon Channel",
+      "n": 2
+    },
+    {
+      "provider": "Warriors and Gangsters Amazon Channel",
+      "n": 2
+    },
+    {
+      "provider": "iQIYI",
+      "n": 2
+    },
+    {
+      "provider": "AD tv",
+      "n": 1
+    },
+    {
+      "provider": "ALLBLK",
+      "n": 1
+    },
+    {
+      "provider": "AMC",
+      "n": 1
+    },
+    {
+      "provider": "Aspire TV Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "BINGE Movies & TV",
+      "n": 1
+    },
+    {
+      "provider": "BYUtv",
+      "n": 1
+    },
+    {
+      "provider": "Britbox Apple TV channel",
+      "n": 1
+    },
+    {
+      "provider": "Discovery +",
+      "n": 1
+    },
+    {
+      "provider": "DisneyNOW",
+      "n": 1
+    },
+    {
+      "provider": "DocAlliance Films",
+      "n": 1
+    },
+    {
+      "provider": "Dox Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "Eros Now Select Apple TV channel",
+      "n": 1
+    },
+    {
+      "provider": "Full Moon Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "HISTORY Vault Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "HISTORY Vault Apple TV channel",
+      "n": 1
+    },
+    {
+      "provider": "Hallmark TV Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "Hallmark+ Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "Hallmark+ Apple TV channel",
+      "n": 1
+    },
+    {
+      "provider": "HiDive",
+      "n": 1
+    },
+    {
+      "provider": "IFC Films Unlimited Apple TV channel",
+      "n": 1
+    },
+    {
+      "provider": "IndieFlix Shorts Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "Marquee TV Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "PBS Documentaries Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "PBS Masterpiece Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "Peacock Premium Plus Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "Pinoy Box Office Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "RetroCrush Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "Retrocrush",
+      "n": 1
+    },
+    {
+      "provider": "Revry",
+      "n": 1
+    },
+    {
+      "provider": "ShortsTV Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "Sony Pictures Core Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "Stingray Karaoke Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "TCM",
+      "n": 1
+    },
+    {
+      "provider": "The Coda Collection Amazon Channel",
+      "n": 1
+    },
+    {
+      "provider": "True Story",
+      "n": 1
+    },
+    {
+      "provider": "WETA+",
+      "n": 1
+    },
+    {
+      "provider": "myfilmfriend",
+      "n": 1
+    }
+  ],
+  "default_rent_providers": [
+    {
+      "provider": "Amazon Video",
+      "n": 2257
+    },
+    {
+      "provider": "Google Play Movies",
+      "n": 2087
+    },
+    {
+      "provider": "YouTube",
+      "n": 2086
+    },
+    {
+      "provider": "Apple TV Store",
+      "n": 2019
+    },
+    {
+      "provider": "Fandango At Home",
+      "n": 2007
+    },
+    {
+      "provider": "Plex",
+      "n": 410
+    },
+    {
+      "provider": "Spectrum On Demand",
+      "n": 380
+    },
+    {
+      "provider": "FlixFling",
+      "n": 51
+    },
+    {
+      "provider": "MovieMe",
+      "n": 29
+    },
+    {
+      "provider": "JustWatch TV",
+      "n": 28
+    },
+    {
+      "provider": "Bloodstream",
+      "n": 8
+    },
+    {
+      "provider": "Rakuten Viki",
+      "n": 7
+    },
+    {
+      "provider": "Brew",
+      "n": 6
+    },
+    {
+      "provider": "OnDemandKorea",
+      "n": 5
+    },
+    {
+      "provider": "Pijama Films",
+      "n": 4
+    },
+    {
+      "provider": "DocAlliance Films",
+      "n": 1
+    },
+    {
+      "provider": "Eventive",
+      "n": 1
+    }
+  ]
+}

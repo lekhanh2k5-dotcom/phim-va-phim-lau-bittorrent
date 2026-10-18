@@ -1,5 +1,100 @@
 [
   {
+    "check": "Ratings open first with the shared default cohort",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Rating metrics agree with independent SQL",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Genre boxplots agree with SQL quantiles",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All rating points and histogram films accounted for",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Rating table shows rating columns",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Ranking threshold affects only the ranking",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Ranking opens a movie profile",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Keyboard navigation opens releases accessibly",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "US release dates and window agree with independent SQL",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "US streaming provider counts agree with independent SQL",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All four release charts render",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Digital selection agrees with independent SQL",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Vietnam release dates agree with independent SQL",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Release profiles show the selected country timeline",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Provider scope remains explicitly US when release market changes",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Rental providers agree with independent SQL",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Common filters persist across views",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Torrent-specific filters do not restrict ratings",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Torrent filters are restored when returning",
+    "passed": true,
+    "detail": ""
+  },
+  {
     "check": "Data agrees with independent SQL: default",
     "passed": true,
     "detail": {
@@ -127,12 +222,32 @@
     "detail": ""
   },
   {
+    "check": "Full rating cohort agrees with independent SQL",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Full rating cohort renders",
+    "passed": true,
+    "detail": ""
+  },
+  {
     "check": "Invalid year range explains error",
     "passed": true,
     "detail": ""
   },
   {
     "check": "Empty selection handles all charts and table",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Empty rating cohort has no stale points or ranking",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Empty release cohort has no stale dates or providers",
     "passed": true,
     "detail": ""
   },
@@ -192,7 +307,7 @@
     "detail": ""
   },
   {
-    "check": "Main charts fit first laptop screen",
+    "check": "Main torrent charts are visible on laptop",
     "passed": true,
     "detail": ""
   },
@@ -212,44 +327,34 @@
     "detail": ""
   },
   {
-    "check": "13 slides, 11 figures, 685 seconds",
+    "check": "Rating view fits phone width",
     "passed": true,
     "detail": ""
   },
   {
-    "check": "All slide images load",
+    "check": "Release view fits phone width",
     "passed": true,
     "detail": ""
   },
   {
-    "check": "Speaker notes explain current chart",
+    "check": "Rating view fits laptop width",
     "passed": true,
     "detail": ""
   },
   {
-    "check": "Dashboard button links to dashboard",
+    "check": "Release view fits laptop width",
     "passed": true,
     "detail": ""
   },
   {
-    "check": "All slides fit desktop",
+    "check": "Torrent deep link selects the correct view",
     "passed": true,
-    "detail": []
+    "detail": ""
   },
   {
-    "check": "All slides fit laptop",
+    "check": "Release deep link selects the correct view",
     "passed": true,
-    "detail": []
-  },
-  {
-    "check": "All slides fit phone width",
-    "passed": true,
-    "detail": []
-  },
-  {
-    "check": "PDF exports exactly 13 pages",
-    "passed": true,
-    "detail": 13
+    "detail": ""
   },
   {
     "check": "No external assets or data requested",

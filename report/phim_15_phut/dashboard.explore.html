@@ -1,6 +1,28 @@
 <section id="explore" role="tabpanel" aria-labelledby="tab-explore">
- <header class="page-title"><div><h1>Mức độ chia sẻ phim</h1><p>Bình chọn, thể loại và thời điểm phát hành trong cùng một nhóm phim.</p></div><button id="demo">Ví dụ thuyết trình</button></header>
- <div class="metrics" aria-live="polite">
+ <header class="page-title"><div><p class="eyebrow" id="phase-source">01 · IMDb</p><h1 id="phase-title">Phim được đánh giá như thế nào?</h1><p id="phase-description">Khám phá điểm số và mức độ quan tâm trước khi theo dõi hành trình phát hành.</p></div><button id="demo">Ví dụ thuyết trình</button></header>
+ <div class="journey-tabs" role="tablist" aria-label="Ba góc nhìn về phim">
+  <button id="view-tab-ratings" role="tab" aria-selected="true" aria-controls="view-ratings" data-view="ratings"><span class="step">01</span><span>Đánh giá phim<small>Điểm số & mức quan tâm</small></span></button>
+  <button id="view-tab-releases" role="tab" aria-selected="false" aria-controls="view-releases" data-view="releases" tabindex="-1"><span class="step">02</span><span>Phát hành & nơi xem<small>Lịch ra mắt & phân phối</small></span></button>
+  <button id="view-tab-torrents" role="tab" aria-selected="false" aria-controls="view-torrents" data-view="torrents" tabindex="-1"><span class="step">03</span><span>Torrent & đối chiếu<small>Các nguồn trong cùng bộ phim</small></span></button>
+ </div>
+ <div id="release-controls" class="release-controls" hidden>
+  <div><label for="release-country">Thị trường phát hành</label><select id="release-country"></select></div>
+  <div><label for="release-mode">Hình thức phát hành</label><select id="release-mode"><option value="0">Chiếu rạp</option><option value="1">Digital</option><option value="2">Đĩa / Physical</option><option value="3">Truyền hình</option><option value="4">Công chiếu / Premiere</option></select></div>
+  <p>Ngày sớm nhất mỗi phim, theo quốc gia và hình thức.<br><span id="release-cutoff-note"></span></p>
+ </div>
+ <div id="metrics-ratings" class="metrics" aria-live="polite">
+  <div class="metric"><span class="kicker">Phim đang chọn</span><strong id="k-ratings-n">—</strong><small>IMDb · nhóm đang chọn</small></div>
+  <div class="metric"><span class="kicker">Điểm IMDb trung vị</span><strong id="k-rating">—</strong><small id="k-rating-note">Thang điểm 1–10</small></div>
+  <div class="metric"><span class="kicker">Bình chọn trung vị</span><strong id="k-votes">—</strong><small>Mức quan tâm của người dùng IMDb</small></div>
+  <div class="metric"><span class="kicker">Phim đạt từ 7 điểm</span><strong id="k-high-rating">—</strong><small id="k-high-rating-note"></small></div>
+ </div>
+ <div id="metrics-releases" class="metrics" aria-live="polite" hidden>
+  <div class="metric"><span class="kicker">Có mốc phát hành đang chọn</span><strong id="k-release-n">—</strong><small id="k-release-note"></small></div>
+  <div class="metric"><span class="kicker">Đủ ngày rạp & Digital</span><strong id="k-release-pairs">—</strong><small id="k-release-pairs-note"></small></div>
+  <div class="metric"><span class="kicker">Từ rạp đến Digital · trung vị</span><strong id="k-release-gap">—</strong><small id="k-release-gap-note"></small></div>
+  <div class="metric"><span class="kicker">Có streaming tại Mỹ · 2026</span><strong id="k-release-streaming">—</strong><small id="k-release-streaming-note"></small></div>
+ </div>
+ <div id="metrics-torrents" class="metrics" aria-live="polite" hidden>
   <div class="metric"><span class="kicker">Phim đang chọn</span><strong id="k-movies">—</strong><small>IMDb · nhóm đang chọn</small></div>
   <div class="metric"><span class="kicker">Bản ghi chia sẻ</span><strong id="k-pairs">—</strong><small>Tổng cặp torrent–phim</small></div>
   <div class="metric"><span class="kicker">Có ghi nhận torrent</span><strong id="k-observed">—</strong><small id="k-observed-note">—</small></div>
@@ -11,16 +33,40 @@
    <div class="filter-head"><h2>Bộ lọc</h2><button id="reset">Đặt lại</button></div>
    <div class="filter-grid">
     <div class="field"><label for="year-min">Năm phim</label><div class="year-pair"><input id="year-min" type="number" min="1920" max="2024" value="2021" aria-label="Từ năm"><span>–</span><input id="year-max" type="number" min="1920" max="2024" value="2023" aria-label="Đến năm"></div></div>
+    <div class="period-presets" aria-label="Chọn nhanh khoảng năm"><button data-period="recent">2021–2023</button><button data-period="long">1980–2024</button></div>
     <div class="field"><label for="genre">Thể loại</label><select id="genre"><option value="">Tất cả thể loại</option></select></div>
     <div class="field"><label for="votes">Bình chọn tối thiểu</label><select id="votes"><option value="1000">1.000</option><option value="10000">10.000</option><option value="100000">100.000</option></select></div>
-    <div class="field"><label for="observed">Torrent được ghi nhận</label><select id="observed"><option value="all">Tất cả phim</option><option value="yes">Có ghi nhận</option><option value="no">Chưa ghi nhận</option></select></div>
-    <div class="field"><label for="availability">Streaming tại Mỹ · 2026</label><select id="availability"><option value="all">Mọi trạng thái</option><option value="yes">Có ghi nhận</option><option value="no">Chưa ghi nhận</option><option value="unknown">Thiếu TMDb</option></select></div>
+    <div class="field" data-torrent-filter hidden><label for="observed">Torrent được ghi nhận</label><select id="observed"><option value="all">Tất cả phim</option><option value="yes">Có ghi nhận</option><option value="no">Chưa ghi nhận</option></select></div>
+    <div class="field" data-torrent-filter hidden><label for="availability">Streaming tại Mỹ · 2026</label><select id="availability"><option value="all">Mọi trạng thái</option><option value="yes">Có ghi nhận</option><option value="no">Chưa ghi nhận</option><option value="unknown">Thiếu TMDb</option></select></div>
     <div class="field"><label for="search">Tên phim / mã IMDb</label><input id="search" type="search" placeholder="Avatar, tt1630029…"></div>
    </div>
    <p id="filter-summary" class="filter-summary" aria-live="polite"></p><p id="filter-error" class="error" hidden></p><p id="demo-note" class="demo-pill" hidden>Xuống phần So sánh hai thể loại, chọn Hành động và Tài liệu. Sau đó mở một phim ở bảng.</p>
-   <p class="window-note"><b>Thời gian ghi nhận torrent</b>01/04/2021 – 28/09/2024.<br><br>Số bản chia sẻ khác số lượt tải. Nơi xem là dữ liệu thu thập năm 2026.</p>
+   <p class="window-note" id="phase-filter-note">Bộ lọc chung được giữ khi chuyển góc nhìn. Điểm và bình chọn là ảnh chụp năm 2026; bình chọn không phải lượt xem.</p>
   </aside>
   <div class="analysis">
+   <section id="view-ratings" role="tabpanel" aria-labelledby="view-tab-ratings">
+    <div class="chart-row phase-chart-row">
+     <article class="plot"><h2>Phần lớn phim nhận mức điểm nào?</h2><p class="caption">Phân bố điểm IMDb, mỗi khoảng rộng 0,5 điểm.</p><svg id="rating-histogram" class="chart-svg" role="img" aria-label="Phân bố số phim theo điểm IMDb"></svg><p id="rating-histogram-note" class="chart-note"></p></article>
+     <article class="plot"><h2>Các thể loại được chấm khác nhau?</h2><p class="caption">8 thể loại có nhiều phim nhất trong nhóm đang chọn.</p><svg id="rating-genres" class="chart-svg" role="img" aria-label="Phân bố điểm IMDb theo thể loại"></svg><p class="chart-note">Hộp: 50% phim ở giữa; vạch đậm: trung vị; râu: mức 10–90%. Một phim có thể thuộc nhiều thể loại.</p></article>
+    </div>
+    <div class="chart-row phase-chart-row sub-row">
+     <article class="plot"><h2>Được chú ý nhiều có được chấm cao?</h2><p class="caption">Mỗi chấm là một phim. Di chuột để xem, nhấn để mở hồ sơ.</p><div class="chart-box"><canvas id="rating-scatter" role="img" aria-label="Điểm IMDb và lượt bình chọn của từng phim"></canvas></div><p id="rating-scatter-note" class="chart-note"></p></article>
+     <article class="plot"><div class="ranking-head"><div><h2>Những phim được đánh giá cao</h2><p class="caption">10 phim điểm cao nhất, ưu tiên nhiều bình chọn khi bằng điểm.</p></div></div><div class="chart-controls"><label for="ranking-votes">Bình chọn tối thiểu cho bảng này</label><select id="ranking-votes"><option value="1000">1.000</option><option value="10000" selected>10.000</option><option value="100000">100.000</option></select></div><div id="rating-ranking" class="ranking-list"></div><p id="ranking-note" class="chart-note"></p></article>
+    </div>
+    <div class="phase-next"><span>Tiếp theo: những phim này được phát hành và xem ở đâu?</span><button data-go-view="releases">Xem phát hành →</button></div>
+   </section>
+   <section id="view-releases" role="tabpanel" aria-labelledby="view-tab-releases" hidden>
+    <div class="chart-row phase-chart-row">
+     <article class="plot"><h2>Phim thường phát hành vào tháng nào?</h2><p id="release-heatmap-caption" class="caption"></p><svg id="release-heatmap" class="chart-svg" role="img" aria-label="Số phim phát hành theo năm và tháng"></svg><p id="release-heatmap-note" class="chart-note"></p></article>
+     <article class="plot"><h2>Từ rạp đến Digital mất bao lâu?</h2><p class="caption">Trung vị theo năm ra rạp; dải màu chứa 50% phim ở giữa.</p><svg id="release-window" class="chart-svg" role="img" aria-label="Khoảng cách từ chiếu rạp đến Digital theo năm"></svg><p id="release-window-note" class="chart-note"></p></article>
+    </div>
+    <div class="chart-row phase-chart-row sub-row">
+     <article class="plot"><h2>Những thị trường được ghi nhận nhiều nhất</h2><p class="caption">Số phim riêng biệt theo hình thức phát hành đang chọn.</p><svg id="release-countries" class="chart-svg" role="img" aria-label="Số phim có mốc phát hành theo quốc gia"></svg><p class="chart-note">Hiển thị 8 thị trường có nhiều phim nhất, kèm thị trường đang chọn nếu nằm ngoài nhóm. Độ phủ dữ liệu khác nhau giữa các quốc gia.</p></article>
+     <article class="plot"><h2>Hiện có thể xem ở nền tảng nào?</h2><p class="caption"><span class="scope-pill">Mỹ · ảnh chụp 2026</span> Dữ liệu nơi xem do JustWatch cung cấp qua TMDb.</p><div class="chart-controls"><label for="watch-mode">Hình thức xem tại Mỹ</label><select id="watch-mode"><option value="streaming">Streaming: thuê bao / miễn phí / quảng cáo</option><option value="flatrate">Thuê bao</option><option value="free">Miễn phí</option><option value="ads">Có quảng cáo</option><option value="rent">Thuê phim</option><option value="buy">Mua phim</option></select></div><svg id="release-providers" class="chart-svg" role="img" aria-label="Số phim theo nền tảng xem tại Mỹ"></svg><p id="release-providers-note" class="chart-note"></p></article>
+    </div>
+    <div class="phase-next"><span>Đối chiếu lịch phát hành với các bản chia sẻ được ghi nhận.</span><button data-go-view="torrents">Khám phá torrent →</button></div>
+   </section>
+   <section id="view-torrents" role="tabpanel" aria-labelledby="view-tab-torrents" hidden>
    <div class="chart-row">
     <article class="plot"><h2>Phim được quan tâm nhiều có nhiều bản chia sẻ hơn?</h2><p class="caption">Số torrent trung vị của một phim, theo nhóm bình chọn.</p><svg id="vote-bars" class="chart-svg" role="img" aria-label="Trung vị số torrent theo ba nhóm bình chọn"></svg><p id="vote-callout" class="chart-callout"></p><p class="chart-note">Trung vị là giá trị ở giữa khi xếp phim theo số torrent. Giữ cả phim chưa ghi nhận với giá trị 0.</p></article>
     <article class="plot"><h2>Khác biệt giữa các thể loại</h2><p class="caption">8 thể loại có nhiều phim nhất trong nhóm đang chọn.</p><div class="chart-controls"><label for="genre-measure">Hiển thị</label><select id="genre-measure"><option value="torrents">Torrent trung vị / phim</option><option value="films">Số lượng phim</option></select></div><svg id="genre-bars" class="chart-svg" role="img" aria-label="So sánh số torrent hoặc số phim theo thể loại"></svg><p class="chart-note">Một phim có thể có nhiều thể loại. Số lượng phim và mức chia sẻ là hai phép so sánh khác nhau.</p></article>
@@ -32,6 +78,7 @@
    </div>
    <section class="scatter-section"><h2>Chi tiết từng phim: bình chọn và torrent</h2><p class="caption">Mỗi chấm là một phim. Hai trục dùng thang log để hiển thị cả phim ít và nhiều bình chọn.</p><div class="chart-box"><canvas id="scatter" role="img" aria-label="Biểu đồ lượt bình chọn và số torrent của từng phim"></canvas></div><div class="mini-row"><i class="swatch"></i>Đường xu hướng trong nhóm đang chọn</div><p id="scatter-note" class="chart-note"></p></section>
    <div id="insight" class="insight" aria-live="polite"></div>
+   </section>
    <section class="table-panel"><div class="table-head"><div><h2>Danh sách phim</h2><p class="caption">Nhấn tên để xem hồ sơ và các mốc phát hành.</p></div><button id="export">Xuất CSV ↓</button></div><div class="table-scroll"><table><thead><tr><th><button data-sort="title">Phim ↕</button></th><th><button data-sort="year">Năm ↕</button></th><th class="num"><button data-sort="votes">Bình chọn ↕</button></th><th class="num"><button data-sort="rating">Điểm ↕</button></th><th class="num"><button data-sort="torrents">Torrent ↕</button></th><th>Streaming Mỹ</th></tr></thead><tbody id="movie-table"></tbody></table></div><div class="table-foot"><span id="table-count"></span><div class="pagination"><button id="page-prev" aria-label="Trang trước">←</button><span id="page-counter"></span><button id="page-next" aria-label="Trang sau">→</button></div></div></section>
   </div>
  </div>

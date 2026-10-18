@@ -1,4 +1,5 @@
 """Build offline slides and dashboard from the original three-source project."""
+import argparse
 import base64
 import html
 import json
@@ -39,6 +40,35 @@ def export_data():
     assert len(rows) == len({r[0] for r in rows})
     keys = ['id','title','year','genres','rating','votes','torrents','tmdb','streaming',
             'countries','providers','theatrical','digital','web','lag','matched']
+    # Compact, deduplicated facts for interactive country and access-mode selection.
+    # Movie indices use exactly the same ordering as the IMDb-led export above.
+    con.execute("""CREATE TEMP TABLE eligible AS
+        SELECT tconst AS imdb_id,
+            (row_number() OVER (ORDER BY num_votes DESC,tconst)-1)::INTEGER AS movie_index
+        FROM i WHERE NOT is_adult AND start_year BETWEEN 1920 AND 2024 AND num_votes>=1000""")
+    release_facts = con.execute(f"""SELECT e.movie_index,r.country,
+        CASE WHEN r.type IN (2,3) THEN 0 WHEN r.type=4 THEN 1
+             WHEN r.type=5 THEN 2 WHEN r.type=6 THEN 3 ELSE 4 END AS mode,
+        date_diff('day',DATE '1970-01-01',min(r.release_date)::DATE)::INTEGER AS day
+        FROM read_parquet('{ROOT.as_posix()}/data_clean/tmdb_release_dates.parquet') r
+        JOIN eligible e USING(imdb_id)
+        WHERE r.release_date IS NOT NULL AND r.country IS NOT NULL AND r.type BETWEEN 1 AND 6
+        GROUP BY 1,2,3 ORDER BY 1,2,3""").fetchall()
+    countries = sorted({r[1] for r in release_facts})
+    country_index = {v:k for k,v in enumerate(countries)}
+    releases = {'countries':countries, 'modes':['theatrical','digital','physical','tv','premiere'],
+        'columns':['movie_index','country_index','mode_index','days_since_1970'],
+        'rows':[[m,country_index[c],mode,day] for m,c,mode,day in release_facts]}
+    watch_facts = con.execute(f"""SELECT DISTINCT e.movie_index,p.kind,p.provider
+        FROM read_parquet('{ROOT.as_posix()}/data_clean/tmdb_watch_providers.parquet') p
+        JOIN eligible e USING(imdb_id) WHERE p.country='US'
+        AND p.kind IN ('flatrate','free','ads','rent','buy') ORDER BY 1,2,3""").fetchall()
+    provider_names = sorted({r[2] for r in watch_facts})
+    provider_index = {v:k for k,v in enumerate(provider_names)}
+    watch_kinds = ['flatrate','free','ads','rent','buy']
+    watch = {'country':'US','providers':provider_names,'kinds':watch_kinds,
+        'columns':['movie_index','kind_index','provider_index'],
+        'rows':[[m,watch_kinds.index(k),provider_index[p]] for m,k,p in watch_facts]}
     stats = {
         'catalog': con.execute('SELECT count(*) FROM i WHERE NOT is_adult').fetchone()[0],
         'tmdb_found': con.execute('SELECT count(*) FROM t WHERE tmdb_found').fetchone()[0],
@@ -47,10 +77,11 @@ def export_data():
         'pairs': con.execute('SELECT count(*) FROM tor WHERE NOT implausible AND in_stable_window').fetchone()[0],
         'distinct_torrents': con.execute('SELECT count(DISTINCT torrent_id) FROM tor WHERE NOT implausible AND in_stable_window').fetchone()[0],
     }
-    payload = {'columns': keys, 'rows': rows, 'stats': stats,
+    payload = {'columns': keys, 'rows': rows, 'stats': stats, 'releases':releases, 'watch':watch,
         'method': {'year_min':1920,'year_max':2024,'votes_min':1000,
           'observed_start':'2021-04-01', 'observed_end_exclusive':'2024-09-29',
           'snapshot_label':'2026 (theo tài liệu dự án)',
+          'release_cutoff':'2026-10-18',
           'unit':'Số torrent riêng biệt theo từng phim; tổng qua phim là số cặp torrent–phim.',
           'zero':'Không ghi nhận trong dữ liệu đã ghép và làm sạch; không khẳng định phim không được chia sẻ.',
           'lag':'Ngày phát hiện bản WEB đầu tiên trong cửa sổ quan sát trừ ngày Digital tại Mỹ.'}}
@@ -59,7 +90,9 @@ def export_data():
     checks = {'eligible_movies':len(rows),'default_movies':len(defaults),
         'default_pairs':sum(r[6] for r in defaults),'default_unobserved':sum(r[6]==0 for r in defaults),
         'default_tmdb':sum(r[7] for r in defaults),'unique_ids':True,
-        'default_votes':sum(r[5] for r in defaults)}
+        'default_votes':sum(r[5] for r in defaults),
+        'release_facts':len(release_facts),'us_watch_facts':len(watch_facts),
+        'release_countries':len(countries), 'watch_country':'US'}
     (HERE/'data_validation.json').write_text(json.dumps(checks,ensure_ascii=False,indent=2), encoding='utf8')
     return payload
 
@@ -213,13 +246,23 @@ def build_slides():
     (HERE/'kich_ban.md').write_text('\n\n'.join(outline),encoding='utf8')
     return slides
 
-def main():
-    payload=export_data()
-    slides=build_slides()
+def build_dashboard(payload):
     template=(HERE/'dashboard.template.html').read_text(encoding='utf8')
-    for marker,filename in [('<!-- DASHBOARD_STYLE -->','dashboard.css'),('<!-- EXPLORE_MARKUP -->','dashboard.explore.html'),('<!-- CHART_CODE -->','dashboard.charts.js')]:
+    for marker,filename in [('<!-- DASHBOARD_STYLE -->','dashboard.css'),('<!-- EXPLORE_MARKUP -->','dashboard.explore.html'),('<!-- CHART_CODE -->','dashboard.charts.js'),('<!-- PHASE_CODE -->','dashboard.phases.js')]:
         template=template.replace(marker,(HERE/filename).read_text(encoding='utf8'))
     (HERE/'dashboard.html').write_text(template.replace('<!-- EMBEDDED_DATA -->',json_text(payload)),encoding='utf8')
-    print(json.dumps({'movies':len(payload['rows']),'slides':len(slides),'seconds':sum(s['seconds'] for s in slides)},ensure_ascii=False))
+
+def main():
+    parser=argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--dashboard-only',action='store_true',help='Rebuild the dashboard without changing slides.')
+    args=parser.parse_args()
+    payload=export_data()
+    build_dashboard(payload)
+    result={'movies':len(payload['rows']),'release_facts':len(payload['releases']['rows']),
+            'watch_facts':len(payload['watch']['rows'])}
+    if not args.dashboard_only:
+        slides=build_slides()
+        result.update(slides=len(slides),seconds=sum(s['seconds'] for s in slides))
+    print(json.dumps(result,ensure_ascii=False))
 
 if __name__=='__main__':main()

@@ -5,5 +5,9 @@
   "default_unobserved": 565,
   "default_tmdb": 4821,
   "unique_ids": true,
-  "default_votes": 87871391
+  "default_votes": 87871391,
+  "release_facts": 496097,
+  "us_watch_facts": 380497,
+  "release_countries": 248,
+  "watch_country": "US"
 }

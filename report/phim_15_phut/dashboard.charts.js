@@ -1,12 +1,13 @@
-function svgBars(id,items,{color='#2670bc',format=nice}={}){
- const el=$(id),W=Math.max(270,Math.round(el.clientWidth)),H=id==='genre-bars'?310:210;
+function svgBars(id,items,{color='#2670bc',format=nice,height,leftWidth}={}){
+ const el=$(id),W=Math.max(270,Math.round(el.clientWidth)),H=height??(id==='genre-bars'?310:210);
  el.setAttribute('viewBox',`0 0 ${W} ${H}`);
  if(!items.length){el.innerHTML=`<text x="${W/2}" y="${H/2}" text-anchor="middle" fill="#596778" font-size="14">Không có phim phù hợp</text>`;return}
- const max=Math.max(1,...items.map(d=>d.value??0)),left=Math.min(135,W*.36),right=62,plot=W-left-right,step=(H-10)/items.length;
+ const max=Math.max(1,...items.map(d=>d.value??0)),left=leftWidth??Math.min(135,W*.36),right=62,plot=W-left-right,step=(H-10)/items.length;
  el.innerHTML=items.map((d,i)=>{
   const yy=10+i*step,bar=Math.min(23,step*.5),val=d.value??0,ww=val/max*plot;
   const subtitle=d.n!==undefined?`<text x="0" y="${yy+bar/2+16}" font-size="11" fill="#647488">${nf(d.n)} phim</text>`:'';
-  return `<g><title>${esc(d.label)}: ${d.value===null?'không có phim':format(val)}${d.n!==undefined?' · '+nf(d.n)+' phim':''}</title><text x="0" y="${yy+bar/2}" dominant-baseline="middle" font-size="14" fill="#26364a">${esc(d.label)}</text>${subtitle}<rect x="${left}" y="${yy}" width="${plot}" height="${bar}" fill="#f0f3f7"/><rect x="${left}" y="${yy}" width="${ww}" height="${bar}" fill="${d.color||color}"/><text x="${left+ww+7}" y="${yy+bar/2}" dominant-baseline="middle" font-size="15" font-weight="600" fill="#172334">${d.value===null?'—':format(val)}</text></g>`;
+  const maxChars=Math.max(10,Math.floor((left-10)/7.1)),label=d.label.length>maxChars?d.label.slice(0,maxChars-1)+'…':d.label;
+  return `<g><title>${esc(d.label)}: ${d.value===null?'không có phim':format(val)}${d.n!==undefined?' · '+nf(d.n)+' phim':''}</title><text x="0" y="${yy+bar/2}" dominant-baseline="middle" font-size="14" fill="#26364a">${esc(label)}</text>${subtitle}<rect x="${left}" y="${yy}" width="${plot}" height="${bar}" fill="#f0f3f7"/><rect x="${left}" y="${yy}" width="${ww}" height="${bar}" fill="${d.color||color}"/><text x="${left+ww+7}" y="${yy+bar/2}" dominant-baseline="middle" font-size="15" font-weight="600" fill="#172334">${d.value===null?'—':format(val)}</text></g>`;
  }).join('');
 }
 function voteColumns(items){
@@ -48,7 +49,7 @@ function renderComparison(){
  });
  el.innerHTML=out;
 }
-function renderCharts(){
+function renderTorrentCharts(){
  scatter();
  const bins=[[1000,10000,'1.000–9.999'],[10000,100000,'10.000–99.999'],[100000,Infinity,'≥ 100.000']];
  voteColumns(bins.map(([a,b,label])=>{const ms=currentRows.filter(m=>m.votes>=a&&m.votes<b);return {label,value:median(ms.map(m=>m.torrents)),n:ms.length}}));
