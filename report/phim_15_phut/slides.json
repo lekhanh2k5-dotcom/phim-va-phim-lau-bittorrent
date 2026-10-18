@@ -69,6 +69,20 @@
     "result": "Kết quả: ~2,07 triệu cặp torrent–phim cho ~126 nghìn phim"
   },
   {
+    "phase": "Tiền xử lý",
+    "kind": "chart",
+    "image": "plots/6_integration/01_cleaning_funnel.png",
+    "title": "Dữ liệu còn lại sau từng bước làm sạch",
+    "finding": "Hai nhánh ghép được làm sạch riêng, sau đó hợp nhất và lọc chung trước khi phân tích.",
+    "next_question": "Bắt đầu với IMDb: kho phim thay đổi thế nào theo thời gian?",
+    "why": "Hình này minh họa cụ thể các bước làm sạch vừa giới thiệu. Cụm xanh dương bên trái là nhánh dùng mã IMDb có sẵn trong MagnetDB; nhiều bản ghi bị loại sau khi kiểm tra loại nội dung, dung lượng, tên và năm. Cụm cam ở giữa là nhánh tự ghép tên torrent với IMDb, sau đó bỏ các trường hợp mơ hồ. Cụm xanh lá bên phải là hợp hai nguồn rồi áp dụng các bộ lọc chung. Không cộng trực tiếp hai nhánh vì chúng có phần giao nhau. Mỗi cụm dùng thang riêng, nên đọc nhãn số thay vì so chiều dài thanh giữa các cụm. Đây là phễu làm sạch trên phạm vi dữ liệu gốc, trước khi giới hạn cửa sổ quan sát của dashboard. Sau khi hiểu cách hình thành dữ liệu, chúng tôi bắt đầu phân tích riêng từng nguồn, trước hết là danh mục IMDb.",
+    "reading": "Đọc ba cụm từ trái sang phải: mã IMDb có sẵn, tự ghép tên torrent, rồi hợp hai nguồn và lọc chung. Nhãn số cho biết số torrent còn lại sau mỗi bước.",
+    "limitation": "Tên/năm phù hợp là bằng chứng metadata, không kiểm tra nội dung tệp. Một số bộ lọc dùng ngày Digital và vì vậy ảnh hưởng phân tích thời điểm ở phần sau.",
+    "scope": "IMDb × TMDb × MagnetDB · quy trình làm sạch",
+    "caution": "Mỗi cụm có thang riêng; không so trực tiếp độ dài thanh giữa các cụm và không cộng hai nhánh vì có phần giao nhau. Phễu dùng phạm vi dữ liệu gốc, khác cửa sổ thống kê của dashboard.",
+    "seconds": 45
+  },
+  {
     "phase": "IMDb",
     "kind": "chart",
     "image": "plots/1_imdb/01_movies_per_year.png",

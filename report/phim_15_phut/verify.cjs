@@ -163,10 +163,15 @@ async function main(){
  await js("location.hash='explore-releases'");await sleep(150);check('Release deep link selects the correct view',await js("activeView==='releases' && activeTab==='explore'"));
  if(!process.argv.includes('--dashboard-only')){
  await resize(1440,900);await navigate('slides.html',"typeof data!=='undefined'");
- check('13 slides, 11 figures, 685 seconds',await js("data.length===13 && data.reduce((n,s)=>n+s.seconds,0)===685 && document.querySelectorAll('.figure-frame img').length===11"));
+ check('14 slides, 12 figures, 730 seconds',await js("data.length===14 && data.reduce((n,s)=>n+s.seconds,0)===730 && document.querySelectorAll('.figure-frame img').length===12"));
  check('All slide images load',await js("Promise.all([...document.querySelectorAll('.figure-frame img')].map(im=>im.decode().then(()=>im.naturalWidth>0))).then(xs=>xs.every(Boolean))"));
  await shot('preview_slides.png');
- await js("show(10);byId('notes-toggle').click()");
+ await js("show(2)");
+ check('Cleaning figure is slide 3 immediately after the source overview',await js("data[1].title==='Ba nguồn dữ liệu và bước tiền xử lý' && data[2].image==='plots/6_integration/01_cleaning_funnel.png' && data[3].image==='plots/1_imdb/01_movies_per_year.png' && pos===2 && location.hash==='#3' && byId('count').textContent==='3 / 14'"));
+ check('Slide 3 uses the original high resolution image and updated contents',await js("document.querySelector('.slide.active img').naturalWidth>=1000 && byId('toc-items').children.length===14 && byId('toc-items').children[2].textContent.includes('Dữ liệu còn lại')"));
+ await shot('preview_slide_03_cleaning.png');
+ await js("openZoom()");check('Slide 3 image enlarges',await js("zoom.open && byId('zoom-title').textContent==='Dữ liệu còn lại sau từng bước làm sạch'"));await js("byId('zoom-close').click()");
+ await js("show(11);byId('notes-toggle').click()");
  check('Speaker notes explain current chart',await js("!byId('notes').hidden && byId('note-reading').textContent.includes('Mỗi chấm')"));
  await js("byId('notes-close').click()");
  check('Dashboard button links to dashboard',await js("document.querySelector('.dashboard-link').getAttribute('href')==='dashboard.html'"));
@@ -175,7 +180,7 @@ async function main(){
  await resize(390,844,true);const phone=await js("(()=>{const bad=[];for(let i=0;i<data.length;i++){show(i);if(document.documentElement.scrollWidth>innerWidth+1)bad.push(i+1)}return bad})()");check('All slides fit phone width',phone.length===0,phone);
  await resize(1440,900);await js('show(0)');
  const pdf=await call('Page.printToPDF',{printBackground:true,preferCSSPageSize:true});fs.writeFileSync(path.join(root,'slides.pdf'),Buffer.from(pdf.data,'base64'));
- const pdfText=Buffer.from(pdf.data,'base64').toString('latin1');const pageCount=(pdfText.match(/\/Type \/Page\b/g)||[]).length;check('PDF exports exactly 13 pages',pageCount===13,pageCount);
+ const pdfText=Buffer.from(pdf.data,'base64').toString('latin1');const pageCount=(pdfText.match(/\/Type \/Page\b/g)||[]).length;check('PDF exports exactly 14 pages',pageCount===14,pageCount);
  }
  check('No external assets or data requested',requests.every(u=>!/^https?:/.test(u)),requests.filter(u=>/^https?:/.test(u)));
  check('No JavaScript exceptions',errors.length===0,errors);

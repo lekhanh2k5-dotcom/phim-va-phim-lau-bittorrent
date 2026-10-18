@@ -124,6 +124,7 @@ def build_slides():
     by_image = {s.get('image'):s for s in original if s.get('image')}
     slides = []
     narration = {
+      '6_integration/01_cleaning_funnel': 'Hình này minh họa cụ thể các bước làm sạch vừa giới thiệu. Cụm xanh dương bên trái là nhánh dùng mã IMDb có sẵn trong MagnetDB; nhiều bản ghi bị loại sau khi kiểm tra loại nội dung, dung lượng, tên và năm. Cụm cam ở giữa là nhánh tự ghép tên torrent với IMDb, sau đó bỏ các trường hợp mơ hồ. Cụm xanh lá bên phải là hợp hai nguồn rồi áp dụng các bộ lọc chung. Không cộng trực tiếp hai nhánh vì chúng có phần giao nhau. Mỗi cụm dùng thang riêng, nên đọc nhãn số thay vì so chiều dài thanh giữa các cụm. Đây là phễu làm sạch trên phạm vi dữ liệu gốc, trước khi giới hạn cửa sổ quan sát của dashboard. Sau khi hiểu cách hình thành dữ liệu, chúng tôi bắt đầu phân tích riêng từng nguồn, trước hết là danh mục IMDb.',
       '1_imdb/01_movies_per_year': 'Trước tiên, chúng tôi nhìn riêng vào IMDb. Hình này đếm các bản ghi phim theo năm. Quy mô danh mục tăng ở nhiều giai đoạn gần đây, nhưng cần nhớ IMDb không phải một cuộc tổng điều tra sản lượng phim toàn cầu. Điều quan trọng ở đây là các năm có quy mô khác nhau, nên khi đối chiếu các nhóm phim, ta cần giữ khoảng năm rõ ràng. Với một danh mục lớn như vậy, câu hỏi tiếp theo là: sự chú ý của người dùng có phân bố đều giữa các phim không?',
       '1_imdb/06_votes_lorenz': 'Hình thứ hai trả lời câu hỏi về sự chú ý. Chúng tôi xếp phim từ ít đến nhiều lượt bình chọn. Nếu mọi phim nhận số bình chọn như nhau thì kết quả nằm trên đường chéo. Đường thực tế cong mạnh: trong nhóm có đánh giá, khoảng một phần trăm phim nhiều bình chọn nhất chiếm sáu mươi chín phần trăm tổng lượt bình chọn. Vì vậy, bình chọn là một góc nhìn hữu ích về mức độ quan tâm, dù không phải lượt xem. Nhưng được quan tâm chưa cho biết phim có thể được xem ở đâu.',
       '3_tmdb_streaming/01_world_catalog_map': 'Chuyển sang TMDb, chúng tôi xem riêng khả năng tiếp cận phim hợp pháp. Bản đồ cho thấy số phim có nơi xem được ghi nhận khác nhau giữa các quốc gia. Chỉ cần đối chiếu vài vùng theo chú giải để thấy danh mục không đồng nhất. Đây là dữ liệu nơi xem do JustWatch cung cấp qua TMDb, tại thời điểm thu thập năm hai nghìn không trăm hai mươi sáu. Nó chưa phản ánh danh mục của từng quốc gia trong quá khứ. Ngoài khác biệt về địa điểm, khán giả còn có thể tiếp cận một phim ở những thời điểm khác nhau.',
@@ -163,6 +164,11 @@ def build_slides():
                ('Làm sạch','Bỏ tệp < 100 MB, năm lệch, ca trùng tên, torrent giả'),
                ('Cửa sổ thời gian','Chỉ giữ giai đoạn thu thập ổn định 04/2021 – 09/2024')],
         result='Kết quả: ~2,07 triệu cặp torrent–phim cho ~126 nghìn phim')
+    chart('6_integration/01_cleaning_funnel','Tiền xử lý','Dữ liệu còn lại sau từng bước làm sạch',
+        'Hai nhánh ghép được làm sạch riêng, sau đó hợp nhất và lọc chung trước khi phân tích.',
+        'Bắt đầu với IMDb: kho phim thay đổi thế nào theo thời gian?',
+        'Đọc ba cụm từ trái sang phải: mã IMDb có sẵn, tự ghép tên torrent, rồi hợp hai nguồn và lọc chung. Nhãn số cho biết số torrent còn lại sau mỗi bước.',45,
+        'Mỗi cụm có thang riêng; không so trực tiếp độ dài thanh giữa các cụm và không cộng hai nhánh vì có phần giao nhau. Phễu dùng phạm vi dữ liệu gốc, khác cửa sổ thống kê của dashboard.')
     chart('1_imdb/01_movies_per_year','IMDb','Kho phim thay đổi thế nào theo thời gian?',
         'Quy mô danh mục khác nhau giữa các năm; cần hiểu nền dữ liệu trước khi so sánh.',
         'Nhiều phim như vậy, sự chú ý có phân bố đều không?',

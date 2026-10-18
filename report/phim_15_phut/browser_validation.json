@@ -417,6 +417,61 @@
     "detail": ""
   },
   {
+    "check": "14 slides, 12 figures, 730 seconds",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All slide images load",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Cleaning figure is slide 3 immediately after the source overview",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Slide 3 uses the original high resolution image and updated contents",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Slide 3 image enlarges",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Speaker notes explain current chart",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Dashboard button links to dashboard",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All slides fit desktop",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "All slides fit laptop",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "All slides fit phone width",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "PDF exports exactly 14 pages",
+    "passed": true,
+    "detail": 14
+  },
+  {
     "check": "No external assets or data requested",
     "passed": true,
     "detail": []
