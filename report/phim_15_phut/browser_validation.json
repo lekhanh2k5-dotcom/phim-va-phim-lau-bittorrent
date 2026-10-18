@@ -80,6 +80,33 @@
     "detail": ""
   },
   {
+    "check": "Season polar follows market and warns on thin coverage",
+    "passed": true,
+    "detail": {
+      "n": 1216,
+      "big": 359,
+      "outside": 404,
+      "warn": true,
+      "scope": "Ngày ra rạp tại Việt Nam",
+      "paths": 24
+    }
+  },
+  {
+    "check": "All markets uses earliest theatrical date without warning",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "US market restores notebook season numbers",
+    "passed": true,
+    "detail": {
+      "n": 7909,
+      "us": true,
+      "warn": false,
+      "scope": "Ngày ra rạp tại Mỹ"
+    }
+  },
+  {
     "check": "Finance hover exposes budget and revenue",
     "passed": true,
     "detail": ""

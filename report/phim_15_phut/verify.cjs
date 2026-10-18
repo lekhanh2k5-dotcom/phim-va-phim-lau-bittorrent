@@ -59,6 +59,14 @@ async function main(){
  await js("$('business-scope').value='original';$('business-scope').dispatchEvent(new Event('change'))");await compareBusiness('original');
  check('Original samples reproduce the supplied notebook charts',await js("businessState.originTotal===85051 && businessState.finance.length===9324 && businessState.seasonTotal===7909 && $('finance-ratio').textContent==='33,2%' && $('business-scope-note').textContent.includes('không chịu bộ lọc')"));
  await shot('preview_business_original.png');
+ await js("$('release-country').value=String(payload.releases.countries.indexOf('VN'));update()");
+ const vnSeason=await js("({n:businessState.seasonTotal,big:businessState.seasonBig,outside:businessState.seasonOutside,warn:!$('season-warning').hidden,scope:$('season-scope').textContent,paths:$('season-polar').querySelectorAll('path').length})");
+ check('Season polar follows market and warns on thin coverage',vnSeason.n===1216&&vnSeason.big===359&&vnSeason.warn&&vnSeason.scope.includes('Việt Nam')&&vnSeason.paths===24,vnSeason);
+ await js("$('release-country').value='-1';update()");
+ check('All markets uses earliest theatrical date without warning',await js("businessState.seasonTotal>7909 && $('season-warning').hidden && $('season-scope').textContent.includes('mọi thị trường')"));
+ await js("$('release-country').value=String(payload.releases.countries.indexOf('US'));update()");
+ const usSeason=await js("({n:businessState.seasonTotal,us:businessState.seasonUS,warn:!$('season-warning').hidden,scope:$('season-scope').textContent})");
+ check('US market restores notebook season numbers',usSeason.n===7909&&usSeason.us&&!usSeason.warn&&usSeason.scope==='Ngày ra rạp tại Mỹ',usSeason);
  await js("$('finance-scatter').scrollIntoView({block:'center'})");await shot('preview_finance_original.png');
  await js("(()=>{const p=financePoints[0],r=$('finance-scatter').getBoundingClientRect();$('finance-scatter').dispatchEvent(new PointerEvent('pointermove',{clientX:r.left+p.x,clientY:r.top+p.y,bubbles:true}))})()");
  check('Finance hover exposes budget and revenue',await js("!$('tooltip').hidden && $('tooltip').textContent.includes('Ngân sách:') && $('tooltip').textContent.includes('Doanh thu:')"));

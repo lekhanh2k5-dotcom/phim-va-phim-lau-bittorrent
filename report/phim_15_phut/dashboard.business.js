@@ -17,9 +17,12 @@ function getBusinessState(){
   origins=[...counts].map(([country,n])=>({country,n})).sort((a,b)=>b.n-a.n||a.country.localeCompare(b.country));
   finance=currentRows.filter(m=>m.tmdb_year>=businessMethod.finance_year_min&&m.tmdb_year<=businessMethod.finance_year_max&&Number.isFinite(m.budget)&&m.budget>=businessMethod.budget_min&&Number.isFinite(m.revenue)&&m.revenue>=businessMethod.revenue_min);
  }
+ // Mỹ giữ đúng trường us_theatrical của notebook; thị trường khác (hoặc Tất cả) dùng ngày rạp sớm nhất trong lịch TMDb.
+ const seasonCountry=selectedReleaseCountry(),seasonUS=seasonCountry===payload.releases.countries.indexOf('US');let seasonOutside=0;
+ const theatricalDate=m=>{if(seasonUS)return m.theatrical;const movie=businessMovieIndex.get(m.id);if(!movie){seasonOutside++;return null}const d=releaseDay(movie,seasonCountry,0);return d===null?null:isoDay(d)};
  const months=Array.from({length:12},(_,i)=>({month:i+1,all:0,big:0}));let seasonTotal=0,seasonBig=0;
- for(const m of finance){if(!m.theatrical)continue;const month=new Date(m.theatrical+'T00:00:00Z').getUTCMonth();if(!Number.isInteger(month))continue;months[month].all++;seasonTotal++;if(m.revenue>=businessMethod.blockbuster_revenue_min){months[month].big++;seasonBig++}}
- return {original,origins,originTotal:origins.reduce((s,r)=>s+r.n,0),originMissing:missing,finance,months,seasonTotal,seasonBig,aboveReference:finance.filter(m=>m.revenue/m.budget>=businessMethod.reference_ratio).length};
+ for(const m of finance){const theatrical=theatricalDate(m);if(!theatrical)continue;const month=new Date(theatrical+'T00:00:00Z').getUTCMonth();if(!Number.isInteger(month))continue;months[month].all++;seasonTotal++;if(m.revenue>=businessMethod.blockbuster_revenue_min){months[month].big++;seasonBig++}}
+ return {original,origins,originTotal:origins.reduce((s,r)=>s+r.n,0),originMissing:missing,finance,months,seasonTotal,seasonBig,seasonCountry,seasonUS,seasonOutside,aboveReference:finance.filter(m=>m.revenue/m.budget>=businessMethod.reference_ratio).length};
 }
 function renderBusinessCharts(){
  businessState=getBusinessState();
@@ -55,8 +58,12 @@ function polarSector(cx,cy,r,start,end){
 }
 function renderSeasonPolar(){
  const {el,W,H}=svgFrame('season-polar',350),s=businessState;
- $('season-note').textContent=`${nf(s.seasonTotal)} phim đủ tài chính có ngày ra rạp tại Mỹ, gồm ${nf(s.seasonBig)} bom tấn doanh thu ≥ 300 triệu USD. Tỷ lệ xám chia cho ${nf(s.seasonTotal)} phim; xanh chia cho ${nf(s.seasonBig)} bom tấn. Luôn dùng Mỹ, không đổi theo thị trường ở trên. Mẫu tài chính: năm TMDb 1980–2024.${s.seasonTotal&&!s.seasonBig?' Không có bom tấn trong nhóm đang chọn.':''}`;
- if(!s.seasonTotal){svgEmpty(el,W,H,'Chưa có phim đủ tài chính và ngày ra rạp Mỹ');return}
+ const place=s.seasonCountry<0?'ở bất kỳ thị trường nào (ngày sớm nhất)':'tại '+(s.seasonUS?'Mỹ':releaseCountryLabel(s.seasonCountry)),coverage=s.finance.length?s.seasonTotal/s.finance.length:0;
+ $('season-scope').textContent=s.seasonCountry<0?'Ngày ra rạp sớm nhất · mọi thị trường':'Ngày ra rạp '+place;
+ $('season-warning').hidden=!(s.finance.length&&coverage<.3);
+ $('season-warning').textContent=`Chỉ ${pct(coverage)} phim đủ tài chính có ngày ra rạp ${place}, thường là phim lớn; cột xám không đại diện cho mọi phim. So sánh cần thận trọng.`;
+ $('season-note').textContent=`${nf(s.seasonTotal)} / ${nf(s.finance.length)} phim đủ tài chính có ngày ra rạp ${place}, gồm ${nf(s.seasonBig)} bom tấn doanh thu ≥ 300 triệu USD. Tỷ lệ xám chia cho ${nf(s.seasonTotal)} phim; xanh chia cho ${nf(s.seasonBig)} bom tấn. Đổi theo ô Thị trường phát hành (luôn dùng hình thức chiếu rạp); mặc định Mỹ như notebook. Mẫu tài chính: năm TMDb 1980–2024.${s.seasonOutside?` ${nf(s.seasonOutside)} phim của mẫu gốc nằm ngoài danh mục dashboard nên không có lịch theo nước.`:''}${s.seasonTotal&&!s.seasonBig?' Không có bom tấn trong nhóm đang chọn.':''}`;
+ if(!s.seasonTotal){svgEmpty(el,W,H,'Chưa có phim đủ tài chính và ngày ra rạp '+place);return}
  const cx=W/2,cy=H/2-4,R=Math.min((W-72)/2,(H-58)/2),fractions=s.months.flatMap(d=>[d.all/s.seasonTotal,s.seasonBig?d.big/s.seasonBig:0]),max=Math.max(.2,Math.ceil(Math.max(...fractions)/.05)*.05),angle=2*Math.PI/12,barWidth=angle*.42;
  let out='';
  for(const d of s.months){const theta=(d.month-1)*angle-Math.PI/2,all=d.all/s.seasonTotal,big=s.seasonBig?d.big/s.seasonBig:0;
