@@ -430,6 +430,48 @@
     "detail": ""
   },
   {
+    "check": "Dragging the year slider updates label and inputs before release",
+    "passed": true,
+    "detail": {
+      "label": "1995 – 2023",
+      "min": "1995",
+      "rows": 4981
+    }
+  },
+  {
+    "check": "Releasing the slider applies the year filter",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Slider handles cannot cross",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Overlapping slider thumbs: pressing left grabs start year, right grabs end year",
+    "passed": true,
+    "detail": [
+      "3",
+      "3"
+    ]
+  },
+  {
+    "check": "All-years preset selects every film and is highlighted",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Typed years are swapped and applied on commit",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Typed years are clamped to 1920–2024",
+    "passed": true,
+    "detail": ""
+  },
+  {
     "check": "Invalid year range explains error",
     "passed": true,
     "detail": ""

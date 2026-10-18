@@ -194,7 +194,8 @@ function initPhases(){
   b.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const names=Object.keys(phaseConfig),i=names.indexOf(b.dataset.view),next=e.key==='Home'?0:e.key==='End'?2:(i+(e.key==='ArrowRight'?1:2))%3;switchView(names[next]);$('view-tab-'+names[next]).focus()};
  }
  for(const b of document.querySelectorAll('[data-go-view]'))b.onclick=()=>{switchView(b.dataset.goView);$('phase-title').scrollIntoView({block:'start',behavior:'smooth'})};
- for(const b of document.querySelectorAll('[data-period]'))b.onclick=()=>{$('year-min').value=b.dataset.period==='long'?1980:2021;$('year-max').value=b.dataset.period==='long'?2024:2023;update()};
+ for(const b of document.querySelectorAll('[data-period]'))b.onclick=()=>{const [a,c]=b.dataset.period.split('-');$('year-min').value=a;$('year-max').value=c;update()};
+ initYearFilter();
  $('release-country').onchange=update;$('release-mode').onchange=update;$('watch-mode').onchange=renderProviders;$('ranking-votes').onchange=renderRanking;
  const canvas=$('rating-scatter');
  const nearest=e=>{const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;let found=null,best=70;for(const p of ratingPoints){const d=(p.x-x)**2+(p.y-y)**2;if(d<best){found=p.m;best=d}}return found};
@@ -265,4 +266,35 @@ function renderGenrePairs(){
   if(!c||c.n<30){out+=`<rect x="${xx+1}" y="${yy+1}" width="${size-2}" height="${size-2}" fill="#f6f7f9"><title>${esc(name(a))}${a===b?'':' + '+esc(name(b))}: ${c?nf(c.n):0} phim (dưới 30, không tô)</title></rect>`;return}
   const v=(c.median-overall)/.8;out+=`<g><title>${esc(name(a))}${a===b?'':' + '+esc(name(b))}: trung vị ${nice(c.median)} · ${nf(c.n)} phim</title><rect x="${xx+1}" y="${yy+1}" width="${size-2}" height="${size-2}" rx="2" fill="${color(c.median)}" ${a===b?'stroke="#26364a" stroke-width="1"':''}/>${size>=30?`<text x="${xx+size/2}" y="${yy+size/2+4}" text-anchor="middle" font-size="${size>=40?11:10}" fill="${Math.abs(v)>.6?'white':'#26364a'}">${nice(c.median)}</text>`:''}</g>`}));
  el.innerHTML=out;
+}
+
+// Bộ lọc năm: thanh kéo hai đầu + biểu đồ cột mini + ô nhập (áp dụng khi Enter hoặc rời ô).
+const yearCounts=new Map();for(const m of movies)yearCounts.set(m.year,(yearCounts.get(m.year)||0)+1);
+const YEAR_MIN=1920,YEAR_MAX=2024;
+function yearValues(){return [Number($('year-min').value),Number($('year-max').value)]}
+function syncYearUI(live){
+ const [a,b]=live||yearValues(),ok=Number.isInteger(a)&&Number.isInteger(b)&&a>=YEAR_MIN&&b<=YEAR_MAX&&a<=b;
+ $('year-label').textContent=ok?(a===b?String(a):a+' – '+b):'—';
+ if(ok){$('year-slider-min').value=a;$('year-slider-max').value=b}
+ const pos=v=>(v-YEAR_MIN)/(YEAR_MAX-YEAR_MIN)*100;
+ $('year-fill').style.left=(ok?pos(a):0)+'%';$('year-fill').style.width=(ok?pos(b)-pos(a):0)+'%';
+ const top=Math.max(...yearCounts.values()),w=210/(YEAR_MAX-YEAR_MIN+1);let out='';
+ for(let y=YEAR_MIN;y<=YEAR_MAX;y++){const n=yearCounts.get(y)||0,h=Math.max(n?1:0,n/top*27);out+=`<rect x="${(y-YEAR_MIN)*w}" y="${28-h}" width="${w+.15}" height="${h}" fill="${ok&&y>=a&&y<=b?'#2670bc':'#cfdbe8'}"/>`}
+ $('year-spark').innerHTML=out;
+ for(const btn of document.querySelectorAll('[data-period]'))btn.classList.toggle('active',ok&&btn.dataset.period===a+'-'+b);
+}
+function initYearFilter(){
+ const smin=$('year-slider-min'),smax=$('year-slider-max');
+ // Khi kéo: chỉ đổi nhãn, ô nhập và thanh màu; dashboard cập nhật khi thả tay.
+ const drag=which=>{let a=Number(smin.value),b=Number(smax.value);if(a>b){if(which==='min')a=b;else b=a;smin.value=a;smax.value=b}$('year-min').value=a;$('year-max').value=b;syncYearUI([a,b])};
+ smin.addEventListener('input',()=>drag('min'));smax.addEventListener('input',()=>drag('max'));
+ smin.addEventListener('change',update);smax.addEventListener('change',update);
+ // Hai núm có thể chồng nhau (ví dụ 2021–2023): đưa núm gần điểm bấm lên trên; trùng nhau thì bấm bên trái nắm núm năm đầu.
+ const pick=e=>{const r=smin.getBoundingClientRect(),v=YEAR_MIN+(e.clientX-r.left-8)/Math.max(1,r.width-16)*(YEAR_MAX-YEAR_MIN),a=Number(smin.value),b=Number(smax.value);
+  const useMin=Math.abs(v-a)<Math.abs(v-b)||(Math.abs(v-a)===Math.abs(v-b)&&v<=a);smin.style.zIndex=useMin?3:1;smax.style.zIndex=useMin?1:3};
+ smin.parentElement.addEventListener('pointerdown',pick,true);smin.parentElement.addEventListener('mousemove',pick);
+ // Ô nhập: chuẩn hóa (giới hạn 1920–2024, tự đổi chỗ nếu năm đầu lớn hơn) khi nhấn Enter hoặc rời ô.
+ const commit=()=>{let [a,b]=yearValues();if(!Number.isFinite(a))a=YEAR_MIN;if(!Number.isFinite(b))b=YEAR_MAX;a=Math.min(YEAR_MAX,Math.max(YEAR_MIN,Math.round(a)));b=Math.min(YEAR_MAX,Math.max(YEAR_MIN,Math.round(b)));if(a>b)[a,b]=[b,a];$('year-min').value=a;$('year-max').value=b;update()};
+ for(const id of ['year-min','year-max']){$(id).addEventListener('change',commit);$(id).addEventListener('keydown',e=>{if(e.key==='Enter')commit()})}
+ syncYearUI();
 }

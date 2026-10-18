@@ -84,6 +84,7 @@ function update(){
  currentRows=bad?[]:movies.filter(m=>matches(m,f));
  page=0;renderPhaseMetrics();renderCharts();sortRows();renderTable();
  $('filter-summary').textContent=`${nf(currentRows.length)} phim phù hợp · ${f.min}–${f.max}.`;
+ if(typeof syncYearUI==='function')syncYearUI();
 }
 function renderMetrics(){
  const n=currentRows.length,obs=currentRows.filter(m=>m.torrents>0).length,tmdb=currentRows.filter(m=>m.tmdb).length;
@@ -130,7 +131,7 @@ function exportCSV(){const country=selectedReleaseCountry();const columns=['imdb
 function reset(){ $('year-min').value=2021;$('year-max').value=2023;$('genre').value='';$('votes').value='1000';$('observed').value='all';$('availability').value='all';$('search').value='';$('compare-a').value='Action';$('compare-b').value='Documentary';$('genre-measure').value='torrents';$('first-share-basis').value='world';$('lag-basis').value='us';$('ranking-votes').value='10000';$('release-country').value=String(payload.releases.countries.indexOf('US'));$('release-mode').value='0';$('watch-mode').value='streaming';$('business-scope').value='filtered';update() }
 function switchTab(name,hash=true){if(!['explore','sources','method'].includes(name))name='explore';activeTab=name;for(const n of ['explore','sources','method']){$(n).hidden=n!==name;$('tab-'+n).setAttribute('aria-selected',String(n===name));$('tab-'+n).tabIndex=n===name?0:-1}if(hash)history.replaceState(null,'','#'+(name==='explore'?phaseHash():name));$('tooltip').hidden=true;if(name==='explore')requestAnimationFrame(renderCharts);window.scrollTo(0,0)}
 for(const b of document.querySelectorAll('[data-tab]')){b.onclick=()=>switchTab(b.dataset.tab);b.onkeydown=e=>{if(!['ArrowRight','ArrowLeft','Home','End'].includes(e.key))return;e.preventDefault();const ns=['explore','sources','method'],i=ns.indexOf(b.dataset.tab);const j=e.key==='Home'?0:e.key==='End'?2:(i+(e.key==='ArrowRight'?1:2))%3;switchTab(ns[j]);$('tab-'+ns[j]).focus()}}
-let debounce;for(const id of ['year-min','year-max','genre','votes','observed','availability','search'])$(id).addEventListener(id==='search'||id.startsWith('year')?'input':'change',()=>{clearTimeout(debounce);debounce=setTimeout(update,100)});
+let debounce;for(const id of ['genre','votes','observed','availability','search'])$(id).addEventListener(id==='search'?'input':'change',()=>{clearTimeout(debounce);debounce=setTimeout(update,100)});
 document.querySelectorAll('[data-sort]').forEach(b=>b.onclick=()=>{if(sortKey===b.dataset.sort)sortDir*=-1;else{sortKey=b.dataset.sort;sortDir=sortKey==='title'?1:-1}sortRows();page=0;renderTable()});
 $('page-prev').onclick=()=>{page--;renderTable()};$('page-next').onclick=()=>{page++;renderTable()};$('export').onclick=exportCSV;$('reset').onclick=reset;$('movie-close').onclick=()=>$('movie-dialog').close();$('image-close').onclick=()=>$('image-dialog').close();
 document.addEventListener('click',e=>{const b=e.target.closest('[data-movie]');if(b)openMovie(b.dataset.movie)});
