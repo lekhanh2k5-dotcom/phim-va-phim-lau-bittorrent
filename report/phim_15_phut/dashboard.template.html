@@ -59,7 +59,8 @@
 'use strict';
 const payload=JSON.parse(document.getElementById('dataset').textContent);
 const movies=payload.rows.map(r=>Object.fromEntries(payload.columns.map((k,i)=>[k,r[i]])));
-for(const m of movies)m.genreList=(m.genres||'').split(',').filter(Boolean);
+const foldText=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[đĐ]/g,'d').toLowerCase();
+for(const m of movies){m.genreList=(m.genres||'').split(',').filter(Boolean);m.searchKey=foldText([m.title,m.alt,m.id].join(' '))}
 const $=id=>document.getElementById(id);
 const fmt=new Intl.NumberFormat('vi-VN');
 const nf=n=>fmt.format(n);
@@ -74,8 +75,8 @@ const median=values=>{if(!values.length)return null;const a=[...values].sort((x,
 const nice=n=>Number(n).toLocaleString('vi-VN',{maximumFractionDigits:1});
 const setOptions=[...new Set(movies.flatMap(m=>m.genreList))].filter(g=>g!=='Adult').sort((a,b)=>(genreNames[a]||a).localeCompare(genreNames[b]||b,'vi'));
 for(const g of setOptions){const o=document.createElement('option');o.value=g;o.textContent=genreNames[g]||g;$('genre').append(o)}
-function getFilters(){return {min:Number($('year-min').value),max:Number($('year-max').value),genre:$('genre').value,votes:Number($('votes').value),observed:activeView==='torrents'?$('observed').value:'all',availability:activeView==='torrents'?$('availability').value:'all',q:$('search').value.trim().toLocaleLowerCase()}}
-function matches(m,f){return m.year>=f.min&&m.year<=f.max&&m.votes>=f.votes&&(!f.genre||m.genreList.includes(f.genre))&&(f.observed==='all'||(f.observed==='yes'?m.torrents>0:m.torrents===0))&&(f.availability==='all'||(f.availability==='unknown'?!m.tmdb:f.availability==='yes'?m.tmdb&&m.streaming===true:m.tmdb&&m.streaming!==true))&&(!f.q||(m.title||'').toLocaleLowerCase().includes(f.q)||m.id.toLowerCase().includes(f.q))}
+function getFilters(){return {min:Number($('year-min').value),max:Number($('year-max').value),genre:$('genre').value,votes:Number($('votes').value),observed:activeView==='torrents'?$('observed').value:'all',availability:activeView==='torrents'?$('availability').value:'all',q:foldText($('search').value.trim())}}
+function matches(m,f){return (f.q||(m.year>=f.min&&m.year<=f.max))&&m.votes>=f.votes&&(!f.genre||m.genreList.includes(f.genre))&&(f.observed==='all'||(f.observed==='yes'?m.torrents>0:m.torrents===0))&&(f.availability==='all'||(f.availability==='unknown'?!m.tmdb:f.availability==='yes'?m.tmdb&&m.streaming===true:m.tmdb&&m.streaming!==true))&&(!f.q||m.searchKey.includes(f.q))}
 function update(){
  const f=getFilters();
  const bad=!Number.isInteger(f.min)||!Number.isInteger(f.max)||f.min<1920||f.max>2024||f.min>f.max;

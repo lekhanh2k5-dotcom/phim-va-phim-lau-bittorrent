@@ -121,6 +121,9 @@ async function main(){
  await js("switchView('ratings')");check('Empty rating cohort has no stale points or ranking',await js("ratingPoints.length===0 && rankingRows.length===0 && $('k-rating').textContent==='—'"));
  await js("switchView('releases')");check('Empty release cohort has no stale dates or providers',await js("releaseState.dated.length===0 && providerCounts.length===0 && $('k-release-gap').textContent==='—'"));await js("switchView('torrents')");
  await js("switchView('releases')");check('Empty business cohort clears all three added charts',await js("originTiles.length===0 && financePoints.length===0 && businessState.seasonTotal===0 && $('finance-ratio').textContent==='—'"));await js("switchView('torrents')");
+ await js("reset();$('search').value='bố già';update()");check('Vietnamese title search ignores year filter',await js("currentRows.some(m=>m.id==='tt0068646')"));
+ await js("reset();$('search').value='hoa vang tren co xanh';update()");check('Accent-free Vietnamese search finds the film',await js("currentRows.length===1 && currentRows[0].id==='tt4669954'"));
+ await js("reset();$('search').value='Godfather';update()");check('English search finds films outside default years',await js("currentRows.some(m=>m.id==='tt0068646')"));
  await js("reset();$('search').value='tt1630029';update()");
  check('Search filters all charts to same film',await js("currentRows.length===1 && points.length===1 && currentRows[0].id==='tt1630029'"));
  await js("document.querySelector('[data-movie]').click()");

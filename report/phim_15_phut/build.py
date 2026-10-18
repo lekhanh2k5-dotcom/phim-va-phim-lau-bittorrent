@@ -44,9 +44,19 @@ def export_data():
         ORDER BY i.num_votes DESC, i.tconst"""
     rows = [list(r) for r in con.execute(sql).fetchall()]
     assert len(rows) == len({r[0] for r in rows})
+    # Alternate names for search only: IMDb original title plus Vietnamese (region VN) akas.
+    con.execute("CREATE TEMP TABLE ids AS SELECT unnest(?) AS tconst", [[r[0] for r in rows]])
+    alt = dict(con.execute(f"""SELECT tconst, string_agg(DISTINCT name, ' · ') FROM (
+        SELECT tconst, original_title AS name FROM i WHERE tconst IN (SELECT tconst FROM ids) AND original_title<>title
+        UNION SELECT a.titleId, a.title FROM read_csv('{ROOT.as_posix()}/data_raw/imdb/title.akas.tsv.gz',
+            delim='\t', quote='', header=true, all_varchar=true) a
+        JOIN ids ON ids.tconst=a.titleId WHERE a.region='VN')
+        GROUP BY 1""").fetchall())
+    for r in rows:
+        r.append(alt.get(r[0]))
     keys = ['id','title','year','genres','rating','votes','torrents','tmdb','streaming',
             'countries','providers','theatrical','digital','web','lag','matched',
-            'origin','tmdb_year','budget','revenue']
+            'origin','tmdb_year','budget','revenue','alt']
     # Compact, deduplicated facts for interactive country and access-mode selection.
     # Movie indices use exactly the same ordering as the IMDb-led export above.
     con.execute("""CREATE TEMP TABLE eligible AS
