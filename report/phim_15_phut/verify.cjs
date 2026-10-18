@@ -48,7 +48,7 @@ async function main(){
  check('Rating year trend always shows 1920–2024 with the filter shaded',yearDefault===ratingExtra.years&&ratingExtra.first<=1925,{yearDefault,...ratingExtra});
  await js("$('year-min').value=1950;$('year-max').value=1970;update();switchView('releases')");
  const oldYears=await js("({treemap:$('origin-treemap').textContent,finance:financePoints.length,season:$('season-polar').textContent,caption:$('release-heatmap-caption').textContent})");
- check('Business charts explain TMDb year windows when filter is outside',oldYears.treemap.includes('2000–2024')&&oldYears.finance===0&&oldYears.season.includes('1980–2024')&&oldYears.caption.includes('năm phát hành trên TMDb'),oldYears);
+ check('Treemap follows old year filter while finance charts explain TMDb window',await js("originTiles.length>0 && businessState.originTotal>0 && $('origin-scope').textContent==='Năm phim theo bộ lọc'")&&oldYears.finance===0&&oldYears.season.includes('1980–2024')&&oldYears.caption.includes('năm phát hành trên TMDb'),oldYears);
  await js("switchView('torrents')");check('First-share chart explains its release window',await js("$('first-share').textContent.includes('31/05/2021')"));
  await js("$('year-min').value=1920;$('year-max').value=2024;switchView('ratings')");
  check('Runtime and region charts match independent SQL',JSON.stringify(ratingExtra.runtime)==='[6.1,6.3,6.8,7.1]'&&ratingExtra.runtimeN===47039&&JSON.stringify(ratingExtra.regions)==='[6.3,6.4,6.3,6.6,7.3]'&&JSON.stringify(ratingExtra.regionN)==='[1379,12553,21344,10519,1294]',ratingExtra);

@@ -12,7 +12,8 @@ function getBusinessState(){
  let origins,missing,finance;
  if(original){origins=payload.business.original_origin.rows.map(([country,n])=>({country,n}));missing=payload.business.original_origin.missing;finance=originalFinance}
  else{
-  const originPool=currentRows.filter(m=>m.tmdb_year>=businessMethod.origin_year_min&&m.tmdb_year<=businessMethod.origin_year_max),counts=new Map();
+  // Nhóm đang lọc: theo đúng năm phim ở bộ lọc bên trái (mọi phim có hồ sơ TMDb). Mẫu gốc vẫn giữ năm TMDb 2000–2024 như notebook.
+  const originPool=currentRows.filter(m=>m.tmdb),counts=new Map();
   missing=0;for(const m of originPool){if(m.origin)counts.set(m.origin,(counts.get(m.origin)||0)+1);else missing++}
   origins=[...counts].map(([country,n])=>({country,n})).sort((a,b)=>b.n-a.n||a.country.localeCompare(b.country));
   finance=currentRows.filter(m=>m.tmdb_year>=businessMethod.finance_year_min&&m.tmdb_year<=businessMethod.finance_year_max&&Number.isFinite(m.budget)&&m.budget>=businessMethod.budget_min&&Number.isFinite(m.revenue)&&m.revenue>=businessMethod.revenue_min);
@@ -42,8 +43,9 @@ function treemapLayout(items,width,height){
 }
 function renderOriginTreemap(){
  const {el,W,H}=svgFrame('origin-treemap',350),s=businessState;
- $('origin-note').textContent=`${nf(s.originTotal)} phim phát hành 2000–2024 theo năm TMDb, biết nước sản xuất chính (mục đầu trong origin_country). Loại ${nf(s.originMissing)} phim thiếu nước trong giai đoạn này. Top 14 nước, phần còn lại gộp chung. Độ phủ TMDb không đại diện đầy đủ sản lượng điện ảnh toàn cầu.`;
- if(!s.originTotal){originTiles=[];svgEmpty(el,W,H,'Không có phim năm TMDb 2000–2024 có nước sản xuất trong nhóm đang chọn');$('origin-callout').textContent='Biểu đồ này chỉ gồm phim phát hành 2000–2024 (năm TMDb), như notebook. Hãy chọn khoảng năm phim giao với 2000–2024.';return}
+ $('origin-scope').textContent=s.original?'Năm TMDb 2000–2024 · mẫu gốc':'Năm phim theo bộ lọc';
+ $('origin-note').textContent=`${nf(s.originTotal)} phim ${s.original?'phát hành 2000–2024 theo năm TMDb':'trong nhóm đang lọc có hồ sơ TMDb'}, biết nước sản xuất chính (mục đầu trong origin_country). Loại ${nf(s.originMissing)} phim thiếu nước sản xuất. Top 14 nước, phần còn lại gộp chung. Độ phủ TMDb không đại diện đầy đủ sản lượng điện ảnh toàn cầu.`;
+ if(!s.originTotal){originTiles=[];svgEmpty(el,W,H,'Không có phim có nước sản xuất trong nhóm đang chọn');$('origin-callout').textContent='Chưa có phim đủ dữ liệu nước sản xuất trong phạm vi này.';return}
  const colors=['#1d5092','#286ab8','#3987da','#6ba5e5'],top=s.origins.slice(0,14).map((d,i)=>({...d,label:originName(d.country),color:colors[i===0?0:i<4?1:i<9?2:3]})),rest=s.origins.slice(14);
  if(rest.length)top.push({country:null,label:nf(rest.length)+' nước khác',n:rest.reduce((a,b)=>a+b.n,0),color:'#aaa9a3'});
  top.sort((a,b)=>b.n-a.n||a.label.localeCompare(b.label));originTiles=treemapLayout(top,W,H);

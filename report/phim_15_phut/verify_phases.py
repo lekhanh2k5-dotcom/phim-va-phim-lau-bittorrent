@@ -72,14 +72,16 @@ con.execute("""CREATE TEMP VIEW business_source AS SELECT i.tconst AS id,i.start
 con.execute("""CREATE TEMP VIEW first_us_theatrical AS SELECT imdb_id,min(release_date)::DATE AS us_date
     FROM r WHERE country='US' AND type IN (2,3) GROUP BY 1""")
 
-def business_reference(condition):
+def business_reference(condition, origin_window=False):
+    # The filtered dashboard cohort follows the IMDb year filter; only the notebook sample keeps TMDb 2000-2024.
+    origin_years = 'year(release_date) BETWEEN 2000 AND 2024' if origin_window else 'true'
     con.execute(f'CREATE OR REPLACE TEMP VIEW business_sample AS SELECT * FROM business_source WHERE {condition}')
     con.execute("""CREATE OR REPLACE TEMP VIEW financial_sample AS SELECT * FROM business_sample
         WHERE year(release_date) BETWEEN 1980 AND 2024 AND budget>=1000000 AND revenue>=10000""")
-    origin = records("""SELECT split_part(origin_country,',',1) AS country,count(*) AS n FROM business_sample
-        WHERE year(release_date) BETWEEN 2000 AND 2024 AND nullif(split_part(origin_country,',',1),'') IS NOT NULL
+    origin = records(f"""SELECT split_part(origin_country,',',1) AS country,count(*) AS n FROM business_sample
+        WHERE {origin_years} AND nullif(split_part(origin_country,',',1),'') IS NOT NULL
         GROUP BY 1 ORDER BY 2 DESC,1""")
-    missing = records("""SELECT count(*) AS n FROM business_sample WHERE year(release_date) BETWEEN 2000 AND 2024
+    missing = records(f"""SELECT count(*) AS n FROM business_sample WHERE {origin_years}
         AND nullif(split_part(origin_country,',',1),'') IS NULL""")[0]['n']
     financial = records("""SELECT count(*) AS finance_n,
         count(*) FILTER(WHERE revenue/budget>=2.5) AS above_reference FROM financial_sample""")[0]
@@ -93,7 +95,7 @@ def business_reference(condition):
 
 business_references = {
     'default':business_reference('imdb_year BETWEEN 2021 AND 2023 AND num_votes>=1000'),
-    'original':business_reference('true'),
+    'original':business_reference('true', origin_window=True),
     'action':business_reference("imdb_year BETWEEN 2021 AND 2023 AND num_votes>=1000 AND list_contains(string_split(genres,','),'Action')"),
 }
 (HERE/'business_reference_checks.json').write_text(json.dumps(business_references,ensure_ascii=False,indent=2),encoding='utf8')

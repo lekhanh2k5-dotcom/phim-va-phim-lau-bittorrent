@@ -61,10 +61,10 @@
     }
   },
   {
-    "check": "Business charts explain TMDb year windows when filter is outside",
+    "check": "Treemap follows old year filter while finance charts explain TMDb window",
     "passed": true,
     "detail": {
-      "treemap": "Không có phim năm TMDb 2000–2024 có nước sản xuất trong nhóm đang chọn",
+      "treemap": "Mỹ: 2.150 phim (55,3%)Mỹ55,3%Anh: 425 phim (10,9%)Anh10,9%Pháp: 282 phim (7,3%)Pháp7,3%Ý: 261 phim (6,7%)Ý6,7%Nhật: 211 phim (5,4%)Nhật5,4%29 nước khác: 148 phim (3,8%)29 nước khác3,8%Nga: 86 phim (2,2%)Nga2,2%Đức: 65 phim (1,7%)Đức1,7%Ấn Độ: 56 phim (1,4%)Ấn Độ1,4%Hy Lạp: 46 phim (1,2%)Thụy Điển: 42 phim (1,1%)Mexico: 37 phim (1%)XC: 37 phim (1%)Ba Lan: 20 phim (0,5%)Tây Ban Nha: 20 phim (0,5%)",
       "finance": 0,
       "season": "Mẫu tài chính chỉ gồm phim phát hành 1980–2024 (năm TMDb)",
       "caption": "Chiếu rạp · Hoa Kỳ. Hàng là năm phát hành trên TMDb, không phải năm phim IMDb: 102 / 3.130 mốc nằm ngoài 1950–1970 (phát hành ở nước khác hoặc lên Digital/TV muộn hơn). Di chuột vào ô để xem số phim."
