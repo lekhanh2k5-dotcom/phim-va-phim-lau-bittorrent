@@ -8,6 +8,10 @@ const phaseConfig={
 const releaseModeNames=['Chiếu rạp','Digital','Đĩa / Physical','Truyền hình','Công chiếu / Premiere'];
 const displayCountries=new Intl.DisplayNames(['vi'],{type:'region'});
 const countryName=code=>displayCountries.of(code)||code;
+// -1 = Tất cả: lấy mốc sớm nhất trên mọi thị trường / mọi hình thức.
+const releaseCountryLabel=i=>i<0?'Tất cả thị trường':countryName(payload.releases.countries[i]);
+const releaseModeLabel=mode=>mode<0?'Mọi hình thức':releaseModeNames[mode];
+const releaseMatch=(r,country,mode)=>(country<0||r[1]===country)&&(mode<0||r[2]===mode);
 const releaseCutoff=Math.floor(Date.parse(payload.method.release_cutoff+'T00:00:00Z')/86400000);
 const isoDay=day=>day===null?'':new Date(day*86400000).toISOString().slice(0,10);
 const dayYear=day=>new Date(day*86400000).getUTCFullYear();
@@ -15,7 +19,7 @@ let ratingPoints=[],ratingGenreData=[],ratingHistogram=[],rankingRows=[],release
 for(const m of movies){m.releaseEvents=[];m.usWatch=[]}
 for(const row of payload.releases.rows)movies[row[0]].releaseEvents.push(row);
 for(const row of payload.watch.rows)movies[row[0]].usWatch.push(row);
-function releaseDay(m,country,mode){const r=m.releaseEvents.find(r=>r[1]===country&&r[2]===mode);return r&&r[3]<=releaseCutoff?r[3]:null}
+function releaseDay(m,country,mode){let best=null;for(const r of m.releaseEvents)if(releaseMatch(r,country,mode)&&r[3]<=releaseCutoff&&(best===null||r[3]<best))best=r[3];return best}
 function selectedReleaseCountry(){return Number($('release-country').value)}
 function phaseHash(){return activeView==='ratings'?'explore':'explore-'+activeView}
 function switchView(name,hash=true){
@@ -51,7 +55,7 @@ function getReleaseState(){
  for(const m of currentRows){
   const d=releaseDay(m,country,mode);
   if(d!==null)dated.push({m,day:d});
-  if(m.releaseEvents.some(r=>r[1]===country&&r[2]===mode&&r[3]>releaseCutoff))future++;
+  if(d===null&&m.releaseEvents.some(r=>releaseMatch(r,country,mode)&&r[3]>releaseCutoff))future++;
   const t=releaseDay(m,country,0),digital=releaseDay(m,country,1);
   if(t!==null&&digital!==null)pairs.push({m,theatrical:t,digital,gap:digital-t,year:dayYear(t)});
  }
@@ -68,8 +72,8 @@ function renderPhaseMetrics(){
   $('k-high-rating').textContent=rated.length?pct(high/rated.length):'—';$('k-high-rating-note').textContent=`${nf(high)} / ${nf(rated.length)} phim có điểm`;
  }else{
   releaseState=getReleaseState();const s=releaseState,code=payload.releases.countries[s.country],streaming=currentRows.filter(m=>m.tmdb&&m.streaming===true).length,missing=currentRows.filter(m=>!m.tmdb).length;
-  $('k-release-n').textContent=nf(s.dated.length);$('k-release-note').textContent=`${releaseModeNames[s.mode]} · ${countryName(code)} · ${n?pct(s.dated.length/n):'—'} nhóm phim`;
-  $('k-release-pairs').textContent=nf(s.pairs.length);$('k-release-pairs-note').textContent=`Cả hai mốc tại ${countryName(code)}`;
+  $('k-release-n').textContent=nf(s.dated.length);$('k-release-note').textContent=`${releaseModeLabel(s.mode)} · ${releaseCountryLabel(s.country)} · ${n?pct(s.dated.length/n):'—'} nhóm phim`;
+  $('k-release-pairs').textContent=nf(s.pairs.length);$('k-release-pairs-note').textContent=s.country<0?'Mốc sớm nhất toàn cầu, hai mốc có thể ở hai nước':`Cả hai mốc tại ${releaseCountryLabel(s.country)}`;
   $('k-release-gap').textContent=s.valid.length?nice(median(s.valid.map(r=>r.gap)))+' ngày':'—';$('k-release-gap-note').textContent=`${nf(s.valid.length)} phim có khoảng cách 0–365 ngày`;
   $('k-release-streaming').textContent=n?pct(streaming/n):'—';$('k-release-streaming-note').textContent=`${nf(streaming)} / ${nf(n)} phim · ${nf(missing)} thiếu TMDb`;
  }
@@ -125,8 +129,8 @@ function renderRanking(){
 }
 function renderReleaseHeatmap(){
  const {el,W,H}=svgFrame('release-heatmap'),s=releaseState,code=payload.releases.countries[s.country];
- $('release-heatmap-caption').textContent=`${releaseModeNames[s.mode]} · ${countryName(code)}. Di chuột vào ô để xem số phim.`;
- if(!s.dated.length){svgEmpty(el,W,H);$('release-heatmap-note').textContent=`Không có mốc ${releaseModeNames[s.mode].toLowerCase()} phù hợp trong dữ liệu của thị trường này. Thiếu ghi nhận không có nghĩa là phim chưa phát hành.`;return}
+ $('release-heatmap-caption').textContent=`${releaseModeLabel(s.mode)} · ${releaseCountryLabel(s.country)}${s.country<0||s.mode<0?' · mốc sớm nhất của mỗi phim':''}. Di chuột vào ô để xem số phim.`;
+ if(!s.dated.length){svgEmpty(el,W,H);$('release-heatmap-note').textContent=`Không có mốc ${releaseModeLabel(s.mode).toLowerCase()} phù hợp trong dữ liệu của thị trường này. Thiếu ghi nhận không có nghĩa là phim chưa phát hành.`;return}
  const years=s.dated.map(r=>dayYear(r.day)),min=Math.min(...years),max=Math.max(...years),binSize=max-min>11?10:1,counts=new Map();
  for(const r of s.dated){const d=new Date(r.day*86400000),year=Math.floor(d.getUTCFullYear()/binSize)*binSize,key=year+'-'+d.getUTCMonth();counts.set(key,(counts.get(key)||0)+1)}
  const bins=[...new Set(years.map(y=>Math.floor(y/binSize)*binSize))].sort((a,b)=>a-b),top=Math.max(...counts.values()),L=binSize===1?44:66,R=5,T=30,B=35,cw=(W-L-R)/12,rh=Math.min(42,(H-T-B)/bins.length);
@@ -143,7 +147,7 @@ function renderReleaseWindow(){
  const {el,W,H}=svgFrame('release-window'),s=releaseState,groups=new Map();
  for(const r of s.valid){if(!groups.has(r.year))groups.set(r.year,[]);groups.get(r.year).push(r.gap)}
  windowYearData=[...groups].sort((a,b)=>a[0]-b[0]).map(([year,vals])=>{const v=vals.sort((a,b)=>a-b);return {year,n:v.length,q1:quantileSorted(v,.25),median:quantileSorted(v,.5),q3:quantileSorted(v,.75)}});
- $('release-window-note').textContent=`${nf(s.valid.length)} / ${nf(s.pairs.length)} phim đủ hai mốc tại ${countryName(payload.releases.countries[s.country])}, có khoảng cách 0–365 ngày; loại ${nf(s.pairs.filter(r=>r.gap<0).length)} giá trị âm và ${nf(s.pairs.filter(r=>r.gap>365).length)} giá trị trên 365 ngày. Năm có ít phim cần được đọc thận trọng.`;
+ $('release-window-note').textContent=`${nf(s.valid.length)} / ${nf(s.pairs.length)} phim đủ hai mốc ${s.country<0?'(rạp và Digital sớm nhất toàn cầu, có thể ở hai nước khác nhau)':'tại '+releaseCountryLabel(s.country)}, có khoảng cách 0–365 ngày; loại ${nf(s.pairs.filter(r=>r.gap<0).length)} giá trị âm và ${nf(s.pairs.filter(r=>r.gap>365).length)} giá trị trên 365 ngày. Năm có ít phim cần được đọc thận trọng.`;
  if(!windowYearData.length){svgEmpty(el,W,H,'Chưa đủ hai mốc rạp và Digital');return}
  const L=43,R=17,T=28,B=37,pw=W-L-R,ph=H-T-B,lo=windowYearData[0].year-.5,hi=windowYearData.at(-1).year+.5,top=Math.max(30,Math.ceil(Math.max(...windowYearData.map(g=>g.q3))/30)*30),x=y=>L+(y-lo)/(hi-lo)*pw,y=v=>T+ph-v/top*ph;
  let out=`<text x="${L}" y="14" font-size="12" fill="#596778">Số ngày</text>`;
@@ -155,7 +159,7 @@ function renderReleaseWindow(){
 }
 function renderReleaseCountries(){
  const counts=new Map(),mode=Number($('release-mode').value),selected=selectedReleaseCountry();
- for(const m of currentRows)for(const r of m.releaseEvents)if(r[2]===mode&&r[3]<=releaseCutoff)counts.set(r[1],(counts.get(r[1])||0)+1);
+ for(const m of currentRows){const seen=new Set();for(const r of m.releaseEvents)if((mode<0||r[2]===mode)&&r[3]<=releaseCutoff)seen.add(r[1]);for(const c of seen)counts.set(c,(counts.get(c)||0)+1)}
  countryCounts=[...counts].map(([country,n])=>({country,n})).sort((a,b)=>b.n-a.n||a.country-b.country);
  const top=countryCounts.slice(0,8),extra=countryCounts.find(d=>d.country===selected);
  if(extra&&!top.some(d=>d.country===selected))top.push(extra);
@@ -173,13 +177,14 @@ function applyTableView(){
  for(const tr of table.rows){if(tr.cells.length===1){tr.cells[0].colSpan=activeView==='ratings'?4:activeView==='releases'?5:6;continue}tr.cells[4].hidden=activeView!=='torrents';tr.cells[5].hidden=activeView==='ratings'}
 }
 function selectedReleaseProfile(m){
- const country=selectedReleaseCountry(),name=countryName(payload.releases.countries[country]);
- const events=m.releaseEvents.filter(r=>r[1]===country).sort((a,b)=>a[3]-b[3]);
- return `<h3>Lịch phát hành tại ${esc(name)}</h3>`+(events.length?`<div class="timeline">${events.map(r=>`<div><span>TMDb · ${releaseModeNames[r[2]]}</span>${dateText(isoDay(r[3]))}${r[3]>releaseCutoff?' · sau ngày chốt, chưa tính vào biểu đồ':''}</div>`).join('')}</div>`:'<p>Chưa có mốc phát hành được ghi nhận tại thị trường này.</p>');
+ const country=selectedReleaseCountry(),name=releaseCountryLabel(country);
+ const events=m.releaseEvents.filter(r=>country<0||r[1]===country).sort((a,b)=>a[3]-b[3]||a[1]-b[1]);
+ return `<h3>Lịch phát hành ${country<0?'tại mọi thị trường':'tại '+esc(name)}</h3>`+(events.length?`<div class="timeline">${events.map(r=>`<div><span>TMDb · ${country<0?esc(countryName(payload.releases.countries[r[1]]))+' · ':''}${releaseModeNames[r[2]]}</span>${dateText(isoDay(r[3]))}${r[3]>releaseCutoff?' · sau ngày chốt, chưa tính vào biểu đồ':''}</div>`).join('')}</div>`:'<p>Chưa có mốc phát hành được ghi nhận tại thị trường này.</p>');
 }
 function initPhases(){
  initBusiness();
  const options=payload.releases.countries.map((code,i)=>({code,i,label:countryName(code)})).sort((a,b)=>(a.code==='US'?-1:b.code==='US'?1:a.code==='VN'?-1:b.code==='VN'?1:a.label.localeCompare(b.label,'vi')));
+ {const all=document.createElement('option');all.value='-1';all.textContent='Tất cả thị trường (mốc sớm nhất)';$('release-country').append(all)}
  for(const item of options){const option=document.createElement('option');option.value=item.i;option.textContent=item.label+' ('+item.code+')';$('release-country').append(option)}
  $('release-country').value=String(payload.releases.countries.indexOf('US'));
  $('release-cutoff-note').textContent=`Tính các mốc đến ${dateText(payload.method.release_cutoff)}; lịch tương lai được loại riêng.`;

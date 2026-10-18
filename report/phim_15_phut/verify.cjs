@@ -121,6 +121,14 @@ async function main(){
  await js("switchView('ratings')");check('Empty rating cohort has no stale points or ranking',await js("ratingPoints.length===0 && rankingRows.length===0 && $('k-rating').textContent==='—'"));
  await js("switchView('releases')");check('Empty release cohort has no stale dates or providers',await js("releaseState.dated.length===0 && providerCounts.length===0 && $('k-release-gap').textContent==='—'"));await js("switchView('torrents')");
  await js("switchView('releases')");check('Empty business cohort clears all three added charts',await js("originTiles.length===0 && financePoints.length===0 && businessState.seasonTotal===0 && $('finance-ratio').textContent==='—'"));await js("switchView('torrents')");
+ await js("reset();switchView('releases')");const usDefault=await releaseSnapshot();
+ check('All-market and all-mode options exist, default stays US theatrical',await js("[...$('release-country').options].some(o=>o.value==='-1') && [...$('release-mode').options].some(o=>o.value==='-1') && $('release-country').value===String(payload.releases.countries.indexOf('US')) && $('release-mode').value==='0'"));
+ check('All markets uses earliest worldwide date',await js("(()=>{const m=movies.find(m=>m.id==='tt1745960');return isoDay(releaseDay(m,-1,0))==='2022-05-21' && isoDay(releaseDay(m,-1,-1))==='2022-05-04' && isoDay(releaseDay(m,payload.releases.countries.indexOf('US'),-1))==='2022-05-04' && isoDay(releaseDay(m,payload.releases.countries.indexOf('US'),0))==='2022-05-27'})()"));
+ await js("$('release-country').value='-1';$('release-mode').value='-1';update()");
+ check('All/all renders release charts and profile',await js("releaseState.dated.length>="+usDefault.dated+" && countryCounts.length>1 && $('k-release-note').textContent.includes('Tất cả thị trường') && selectedReleaseProfile(movies.find(m=>m.id==='tt1745960')).includes('mọi thị trường')"));
+ await js("$('release-country').value=String(payload.releases.countries.indexOf('US'));$('release-mode').value='0';update()");
+ check('Returning to US theatrical restores original numbers',JSON.stringify(await releaseSnapshot())===JSON.stringify(usDefault));
+ await js("switchView('torrents')");
  await js("reset();$('search').value='bố già';update()");check('Vietnamese title search ignores year filter',await js("currentRows.some(m=>m.id==='tt0068646')"));
  await js("reset();$('search').value='hoa vang tren co xanh';update()");check('Accent-free Vietnamese search finds the film',await js("currentRows.length===1 && currentRows[0].id==='tt4669954'"));
  await js("reset();$('search').value='Godfather';update()");check('English search finds films outside default years',await js("currentRows.some(m=>m.id==='tt0068646')"));

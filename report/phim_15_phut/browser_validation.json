@@ -307,6 +307,26 @@
     "detail": ""
   },
   {
+    "check": "All-market and all-mode options exist, default stays US theatrical",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All markets uses earliest worldwide date",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All/all renders release charts and profile",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Returning to US theatrical restores original numbers",
+    "passed": true,
+    "detail": ""
+  },
+  {
     "check": "Vietnamese title search ignores year filter",
     "passed": true,
     "detail": ""
