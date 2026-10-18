@@ -1,15 +1,19 @@
 <section id="explore" role="tabpanel" aria-labelledby="tab-explore">
- <header class="page-title"><div><p class="eyebrow" id="phase-source">01 · IMDb</p><h1 id="phase-title">Phim được đánh giá như thế nào?</h1><p id="phase-description">Khám phá điểm số và mức độ quan tâm trước khi theo dõi hành trình phát hành.</p></div><button id="demo">Ví dụ thuyết trình</button></header>
+ <div class="explore-head">
  <div class="journey-tabs" role="tablist" aria-label="Ba góc nhìn về phim">
-  <button id="view-tab-ratings" role="tab" aria-selected="true" aria-controls="view-ratings" data-view="ratings"><span class="step">01</span><span>Đánh giá phim<small>Điểm số & mức quan tâm</small></span></button>
-  <button id="view-tab-releases" role="tab" aria-selected="false" aria-controls="view-releases" data-view="releases" tabindex="-1"><span class="step">02</span><span>Phát hành & nơi xem<small>Lịch ra mắt & phân phối</small></span></button>
-  <button id="view-tab-torrents" role="tab" aria-selected="false" aria-controls="view-torrents" data-view="torrents" tabindex="-1"><span class="step">03</span><span>Torrent & đối chiếu<small>Các nguồn trong cùng bộ phim</small></span></button>
+  <button id="view-tab-ratings" role="tab" aria-selected="true" aria-controls="view-ratings" data-view="ratings" title="Điểm số & mức quan tâm"><span class="step">01</span><span>Đánh giá phim</span></button>
+  <button id="view-tab-releases" role="tab" aria-selected="false" aria-controls="view-releases" data-view="releases" tabindex="-1" title="Lịch ra mắt & phân phối"><span class="step">02</span><span>Phát hành & nơi xem</span></button>
+  <button id="view-tab-torrents" role="tab" aria-selected="false" aria-controls="view-torrents" data-view="torrents" tabindex="-1" title="Các nguồn trong cùng bộ phim"><span class="step">03</span><span>Torrent & đối chiếu</span></button>
  </div>
- <div id="release-controls" class="release-controls" hidden>
-  <div><label for="release-country">Thị trường phát hành</label><select id="release-country"></select></div>
-  <div><label for="release-mode">Hình thức phát hành</label><select id="release-mode"><option value="0">Chiếu rạp</option><option value="1">Digital</option><option value="2">Đĩa / Physical</option><option value="3">Truyền hình</option><option value="4">Công chiếu / Premiere</option><option value="-1">Tất cả hình thức (mốc sớm nhất)</option></select></div>
-  <p>Ngày sớm nhất mỗi phim, theo quốc gia và hình thức.<br><span id="release-cutoff-note"></span></p>
+ <button id="demo">Ví dụ thuyết trình</button>
  </div>
+ <header class="page-title"><div class="phase-intro"><span class="eyebrow" id="phase-source">01 · IMDb</span><h1 id="phase-title">Phim được đánh giá như thế nào?</h1><p id="phase-description">Khám phá điểm số và mức độ quan tâm trước khi theo dõi hành trình phát hành.</p></div>
+ <div id="release-controls" class="release-controls" title="Ngày sớm nhất mỗi phim, theo quốc gia và hình thức" hidden>
+   <div><label for="release-country">Thị trường phát hành</label><select id="release-country"></select></div>
+   <div><label for="release-mode">Hình thức phát hành</label><select id="release-mode"><option value="0">Chiếu rạp</option><option value="1">Digital</option><option value="2">Đĩa / Physical</option><option value="3">Truyền hình</option><option value="4">Công chiếu / Premiere</option><option value="-1">Tất cả hình thức (mốc sớm nhất)</option></select></div>
+   <p><span id="release-cutoff-note"></span></p>
+  </div>
+ </header>
  <div id="metrics-ratings" class="metrics" aria-live="polite">
   <div class="metric"><span class="kicker">Phim đang chọn</span><strong id="k-ratings-n">—</strong><small>IMDb · nhóm đang chọn</small></div>
   <div class="metric"><span class="kicker">Điểm IMDb trung vị</span><strong id="k-rating">—</strong><small id="k-rating-note">Thang điểm 1–10</small></div>
