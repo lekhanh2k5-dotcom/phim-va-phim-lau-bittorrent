@@ -52,11 +52,18 @@ def export_data():
             delim='\t', quote='', header=true, all_varchar=true) a
         JOIN ids ON ids.tconst=a.titleId WHERE a.region='VN')
         GROUP BY 1""").fetchall())
+    # First shared copy (any tier / high quality = not pre_release or unknown) in the stable window,
+    # as days since 1970, for the "time to first share" curve.
+    firsts = {r[0]: r[1:] for r in con.execute("""SELECT imdb_id,
+        date_diff('day',DATE '1970-01-01',min(discovered_at_utc)::DATE)::INTEGER,
+        date_diff('day',DATE '1970-01-01',(min(discovered_at_utc) FILTER (WHERE quality_tier NOT IN ('pre_release','unknown')))::DATE)::INTEGER
+        FROM tor WHERE NOT implausible AND in_stable_window GROUP BY 1""").fetchall()}
     for r in rows:
         r.append(alt.get(r[0]))
+        r.extend(firsts.get(r[0], (None, None)))
     keys = ['id','title','year','genres','rating','votes','torrents','tmdb','streaming',
             'countries','providers','theatrical','digital','web','lag','matched',
-            'origin','tmdb_year','budget','revenue','alt']
+            'origin','tmdb_year','budget','revenue','alt','first_share','first_hq']
     # Compact, deduplicated facts for interactive country and access-mode selection.
     # Movie indices use exactly the same ordering as the IMDb-led export above.
     con.execute("""CREATE TEMP TABLE eligible AS

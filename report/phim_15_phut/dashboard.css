@@ -50,3 +50,4 @@ dialog{padding:0;background:white;color:var(--ink);border:1px solid var(--line);
 .metric strong{font-size:24px;line-height:1.3}
 @media(max-width:800px){.explore-head{flex-wrap:wrap;gap:6px}.explore-head .journey-tabs{flex-basis:100%;gap:4px}.explore-head .journey-tabs button{padding:8px 6px;font-size:12px;gap:5px}.explore-head .journey-tabs .step{width:20px;height:20px;font-size:10px}.explore-head #demo{display:none}.explore-head{border-bottom:0}.page-title h1{font-size:17px}.metric strong{font-size:22px}}
 @media print{.explore-head #demo{display:none}}
+.chart-row.wide-row{grid-template-columns:1fr;margin-top:28px}

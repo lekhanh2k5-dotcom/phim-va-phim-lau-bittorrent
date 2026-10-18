@@ -56,10 +56,52 @@ function renderTorrentCharts(){
  const gs=new Map();for(const m of currentRows)for(const g of m.genreList){if(g==='Adult')continue;if(!gs.has(g))gs.set(g,[]);gs.get(g).push(m.torrents)}
  const genreItems=[...gs].sort((a,b)=>b[1].length-a[1].length).slice(0,8).map(([g,vals])=>({label:genreNames[g]||g,value:$('genre-measure').value==='films'?vals.length:median(vals),n:vals.length})).sort((a,b)=>b.value-a.value);
  svgBars('genre-bars',genreItems);
- const lag=currentRows.filter(m=>m.lag!==null&&Number.isFinite(m.lag));
+ // Mỹ giữ đúng cột lag (us_digital); thị trường khác dùng ngày Digital sớm nhất tại đó.
+ const lagCountry=selectedReleaseCountry(),lagUS=lagCountry===payload.releases.countries.indexOf('US'),lagPlace=marketPlace(lagCountry);
+ const lagValue=m=>{if(lagUS)return m.lag;if(!m.web)return null;const d=releaseDay(m,lagCountry,1);return d===null?null:isoToDay(m.web)-d};
+ const lag=currentRows.map(m=>({m,lag:lagValue(m)})).filter(r=>r.lag!==null&&Number.isFinite(r.lag)),withWeb=currentRows.filter(m=>m.web).length;
  const lagBins=[{label:'Trước Digital',test:x=>x<0,color:'#8897ab'},{label:'Ngày 0–1',test:x=>x>=0&&x<=1,color:'#e58a36'},{label:'Ngày 2–7',test:x=>x>=2&&x<=7},{label:'Ngày 8–30',test:x=>x>=8&&x<=30},{label:'Sau 30 ngày',test:x=>x>30}];
  svgBars('lag-bars',lagBins.map(b=>({label:b.label,color:b.color,value:lag.filter(m=>b.test(m.lag)).length})),{format:nf});
- $('lag-note').textContent=`${nf(lag.length)} phim đủ ngày. Mốc là Digital tại Mỹ; ngày âm có thể do phim ra ở nước khác trước đó. Bộ lọc và cửa sổ thu thập ảnh hưởng kết quả.`;
+ $('lag-scope').textContent=lagCountry<0?'Digital sớm nhất · mọi thị trường':'Digital '+lagPlace;
+ $('lag-warning').hidden=!(withWeb&&lag.length/withWeb<.3);
+ $('lag-warning').textContent=`Chỉ ${pct(withWeb?lag.length/withWeb:0)} phim có bản WEB có ngày Digital ${lagPlace}; so sánh cần thận trọng.`;
+ $('lag-note').textContent=`${nf(lag.length)} phim đủ ngày. Mốc là Digital ${lagPlace}; ngày âm có thể do phim ra Digital ở nước khác trước đó. Bộ lọc và cửa sổ thu thập ảnh hưởng kết quả.`;
  svgBars('availability-bars',[{label:'Có ghi nhận',value:currentRows.filter(m=>m.tmdb&&m.streaming===true).length},{label:'Chưa ghi nhận',value:currentRows.filter(m=>m.tmdb&&m.streaming!==true).length,color:'#a4bedc'},{label:'Thiếu TMDb',value:currentRows.filter(m=>!m.tmdb).length,color:'#aeb7c3'}],{format:nf});
+ renderFirstShare();
  renderComparison();
+}
+
+// Thời gian từ ngày ra rạp (thị trường đang chọn) đến bản chia sẻ đầu tiên trong cửa sổ quan sát.
+// Chỉ giữ phim ra rạp đủ sớm/đủ muộn để theo dõi trọn 60 ngày trước đến 365 ngày sau.
+const shareDayMin=-60,shareDayMax=365;
+let firstShareState=null;
+const isoToDay=s=>s?Math.round(Date.parse(s+'T00:00:00Z')/86400000):null;
+function marketPlace(country){return country<0?'sớm nhất ở bất kỳ thị trường nào':'tại '+(country===payload.releases.countries.indexOf('US')?'Mỹ':releaseCountryLabel(country))}
+function renderFirstShare(){
+ const {el,W,H}=svgFrame('first-share',320),country=selectedReleaseCountry(),place=marketPlace(country);
+ const start=isoToDay(payload.method.observed_start),end=isoToDay(payload.method.observed_end_exclusive)-1;
+ const cohort=[];let outside=0,noDate=0;
+ for(const m of currentRows){const t=releaseDay(m,country,0);if(t===null){noDate++;continue}if(t+shareDayMin<start||t+shareDayMax>end){outside++;continue}
+  cohort.push({m,t,any:m.first_share===null?null:m.first_share-t,hq:m.first_hq===null?null:m.first_hq-t})}
+ const n=cohort.length;
+ const curve=key=>{const v=cohort.map(r=>r[key]).filter(x=>x!==null).sort((a,b)=>a-b),pts=[];let i=0;for(let d=shareDayMin;d<=shareDayMax;d++){while(i<v.length&&v[i]<=d)i++;pts.push(n?i/n:0)}return pts};
+ const any=curve('any'),hq=curve('hq'),at=(c,d)=>c[d-shareDayMin];
+ firstShareState={n,outside,noDate,any,hq};
+ $('first-share-scope').textContent=country<0?'Ngày ra rạp sớm nhất · mọi thị trường':'Ngày ra rạp '+place;
+ $('first-share-warning').hidden=n>=50;
+ $('first-share-warning').textContent=`Chỉ ${nf(n)} phim ra rạp ${place} trong khoảng theo dõi được; đường cong dao động mạnh, đọc thận trọng.`;
+ if(n<10){svgEmpty(el,W,H,'Quá ít phim ra rạp '+place+' trong khoảng theo dõi được');$('first-share-note').textContent=`${nf(n)} phim đủ điều kiện. ${nf(noDate)} phim không có ngày ra rạp ${place}; ${nf(outside)} phim ra rạp ngoài khoảng theo dõi được.`;return}
+ const L=46,R=18,T=26,B=38,x=d=>L+(d-shareDayMin)/(shareDayMax-shareDayMin)*(W-L-R),y=p=>T+(1-p)*(H-T-B);
+ let out='';
+ for(const p of [0,.25,.5,.75,1])out+=`<line x1="${L}" x2="${W-R}" y1="${y(p)}" y2="${y(p)}" stroke="#e3e8ee"/><text x="${L-8}" y="${y(p)+4}" text-anchor="end" font-size="11" fill="#596778">${Math.round(p*100)}%</text>`;
+ for(const d of [-60,0,30,90,180,270,365])out+=`<text x="${x(d)}" y="${H-B+18}" text-anchor="middle" font-size="11" fill="#596778">${d>0?'+'+d:d}</text>`;
+ out+=`<text x="${(L+W-R)/2}" y="${H-4}" text-anchor="middle" font-size="11" fill="#596778">Số ngày so với ngày ra rạp</text>`;
+ out+=`<line x1="${x(0)}" x2="${x(0)}" y1="${T-6}" y2="${H-B}" stroke="#172334" stroke-dasharray="3 3"/><text x="${x(0)+5}" y="${T-10}" font-size="11" fill="#172334">Ra rạp</text>`;
+ const path=c=>c.map((p,i)=>(i?'L':'M')+x(i+shareDayMin).toFixed(1)+' '+y(p).toFixed(1)).join('');
+ out+=`<path d="${path(any)}" fill="none" stroke="#e58a36" stroke-width="2.5"/><path d="${path(hq)}" fill="none" stroke="#2670bc" stroke-width="2.5"/>`;
+ for(const d of [0,7,30,90,180,365])for(const [c,color,label] of [[any,'#e58a36','Bản bất kỳ'],[hq,'#2670bc','Bản chất lượng cao']])
+  out+=`<circle cx="${x(d)}" cy="${y(at(c,d))}" r="4" fill="${color}" stroke="white"><title>${label} · ${d>0?'+'+d:d} ngày: ${pct(at(c,d))} của ${nf(n)} phim</title></circle>`;
+ const lx=Math.max(x(30),W-R-330),ly=y(.18);out+=`<g font-size="12"><rect x="${lx}" y="${ly-4}" width="14" height="3" fill="#e58a36"/><text x="${lx+19}" y="${ly}" fill="#172334">Bản bất kỳ</text><rect x="${lx+100}" y="${ly-4}" width="14" height="3" fill="#2670bc"/><text x="${lx+119}" y="${ly}" fill="#172334">Bản chất lượng cao (WEB, đĩa, TV)</text></g>`;
+ el.innerHTML=out;
+ $('first-share-note').textContent=`${nf(n)} phim ra rạp ${place} từ ${dateText(isoDay(start-shareDayMin))} đến ${dateText(isoDay(end-shareDayMax))}. Ngày ra rạp: ${pct(at(any,0))} đã có bản bất kỳ; sau 30 ngày: ${pct(at(any,30))} có bản bất kỳ, ${pct(at(hq,30))} có bản chất lượng cao; sau 365 ngày: ${pct(at(hq,365))} có bản chất lượng cao. Chỉ tính bản ghi nhận trong cửa sổ quan sát; ${nf(noDate)} phim không có ngày ra rạp ${place} và ${nf(outside)} phim ra rạp ngoài khoảng theo dõi được không được tính. Đây là thời điểm hệ thống ghi nhận, không phải lượt tải.`;
 }
