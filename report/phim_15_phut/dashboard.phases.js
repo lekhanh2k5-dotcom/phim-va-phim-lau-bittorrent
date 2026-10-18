@@ -31,8 +31,7 @@ function switchView(name,hash=true){
   $('view-'+n).hidden=n!==name;$('metrics-'+n).hidden=n!==name;
   $('view-tab-'+n).setAttribute('aria-selected',String(n===name));$('view-tab-'+n).tabIndex=n===name?0:-1;
  }
- // Tab Torrent dùng ô Thị trường cho hai biểu đồ theo thị trường; ô Hình thức chỉ dùng ở tab Phát hành.
- $('release-controls').hidden=name==='ratings';$('release-mode').parentElement.style.display=name==='releases'?'':'none';
+ $('release-controls').hidden=name!=='releases';
  document.querySelectorAll('[data-torrent-filter]').forEach(el=>el.hidden=name!=='torrents');
  $('demo-note').hidden=true;$('tooltip').hidden=true;
  if(changed){sortKey=name==='torrents'?'torrents':'votes';sortDir=-1}

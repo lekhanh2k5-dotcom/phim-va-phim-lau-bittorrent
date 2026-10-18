@@ -369,7 +369,7 @@
     "detail": ""
   },
   {
-    "check": "Torrent view shows market selector without release mode",
+    "check": "Torrent view hides market selector",
     "passed": true,
     "detail": {
       "n": 1297,
@@ -385,8 +385,8 @@
       "warn": false,
       "lagWarn": false,
       "paths": 2,
-      "market": true,
-      "modeShown": false
+      "market": false,
+      "modeShown": true
     }
   },
   {
@@ -406,8 +406,8 @@
       "warn": false,
       "lagWarn": false,
       "paths": 2,
-      "market": true,
-      "modeShown": false
+      "market": false,
+      "modeShown": true
     }
   },
   {
@@ -416,45 +416,24 @@
     "detail": ""
   },
   {
-    "check": "First-share and WEB lag follow Vietnam market",
+    "check": "Torrent charts ignore the release market selector",
     "passed": true,
     "detail": {
-      "n": 192,
-      "outside": 57,
-      "noDate": 4732,
-      "d0": 0.6822916666666666,
-      "d30": 0.8958333333333334,
-      "hq30": 0.609375,
-      "hq365": 0.984375,
-      "lagN": "122",
-      "scope": "Ngày ra rạp tại Việt Nam",
-      "lagScope": "Digital tại Việt Nam",
-      "warn": false,
-      "lagWarn": true,
-      "paths": 2,
-      "market": true,
-      "modeShown": false
-    }
-  },
-  {
-    "check": "All markets uses earliest theatrical date for first-share",
-    "passed": true,
-    "detail": {
-      "n": 2907,
-      "outside": 820,
-      "noDate": 1254,
-      "d0": 0.15995872033023736,
-      "d30": 0.56312349501204,
-      "hq30": 0.36566907464740284,
-      "hq365": 0.8586171310629515,
-      "lagN": "3.362",
-      "scope": "Ngày ra rạp sớm nhất · mọi thị trường",
-      "lagScope": "Digital sớm nhất · mọi thị trường",
+      "n": 1297,
+      "outside": 445,
+      "noDate": 3239,
+      "d0": 0.4063222821896685,
+      "d30": 0.7787201233616037,
+      "hq30": 0.6237471087124132,
+      "hq365": 0.9344641480339244,
+      "lagN": "2.317",
+      "scope": "Ngày ra rạp tại Mỹ",
+      "lagScope": "Digital tại Mỹ",
       "warn": false,
       "lagWarn": false,
       "paths": 2,
-      "market": true,
-      "modeShown": false
+      "market": false,
+      "modeShown": true
     }
   },
   {
@@ -463,7 +442,7 @@
     "detail": ""
   },
   {
-    "check": "Releases view shows release mode again",
+    "check": "Releases view shows release mode",
     "passed": true,
     "detail": ""
   },

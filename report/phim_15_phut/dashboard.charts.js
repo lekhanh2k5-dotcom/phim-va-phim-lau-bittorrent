@@ -56,8 +56,8 @@ function renderTorrentCharts(){
  const gs=new Map();for(const m of currentRows)for(const g of m.genreList){if(g==='Adult')continue;if(!gs.has(g))gs.set(g,[]);gs.get(g).push(m.torrents)}
  const genreItems=[...gs].sort((a,b)=>b[1].length-a[1].length).slice(0,8).map(([g,vals])=>({label:genreNames[g]||g,value:$('genre-measure').value==='films'?vals.length:median(vals),n:vals.length})).sort((a,b)=>b.value-a.value);
  svgBars('genre-bars',genreItems);
- // Mỹ giữ đúng cột lag (us_digital); thị trường khác dùng ngày Digital sớm nhất tại đó.
- const lagCountry=selectedReleaseCountry(),lagUS=lagCountry===payload.releases.countries.indexOf('US'),lagPlace=marketPlace(lagCountry);
+ // Tab Torrent không lọc theo thị trường: torrent không có thông tin quốc gia, nên luôn so với Digital tại Mỹ.
+ const lagCountry=payload.releases.countries.indexOf('US'),lagUS=true,lagPlace=marketPlace(lagCountry);
  const lagValue=m=>{if(lagUS)return m.lag;if(!m.web)return null;const d=releaseDay(m,lagCountry,1);return d===null?null:isoToDay(m.web)-d};
  const lag=currentRows.map(m=>({m,lag:lagValue(m)})).filter(r=>r.lag!==null&&Number.isFinite(r.lag)),withWeb=currentRows.filter(m=>m.web).length;
  const lagBins=[{label:'Trước Digital',test:x=>x<0,color:'#8897ab'},{label:'Ngày 0–1',test:x=>x>=0&&x<=1,color:'#e58a36'},{label:'Ngày 2–7',test:x=>x>=2&&x<=7},{label:'Ngày 8–30',test:x=>x>=8&&x<=30},{label:'Sau 30 ngày',test:x=>x>30}];
@@ -71,14 +71,14 @@ function renderTorrentCharts(){
  renderComparison();
 }
 
-// Thời gian từ ngày ra rạp (thị trường đang chọn) đến bản chia sẻ đầu tiên trong cửa sổ quan sát.
+// Thời gian từ ngày ra rạp tại Mỹ đến bản chia sẻ đầu tiên trong cửa sổ quan sát (không đổi theo ô Thị trường).
 // Chỉ giữ phim ra rạp đủ sớm/đủ muộn để theo dõi trọn 60 ngày trước đến 365 ngày sau.
 const shareDayMin=-60,shareDayMax=365;
 let firstShareState=null;
 const isoToDay=s=>s?Math.round(Date.parse(s+'T00:00:00Z')/86400000):null;
 function marketPlace(country){return country<0?'sớm nhất ở bất kỳ thị trường nào':'tại '+(country===payload.releases.countries.indexOf('US')?'Mỹ':releaseCountryLabel(country))}
 function renderFirstShare(){
- const {el,W,H}=svgFrame('first-share',320),country=selectedReleaseCountry(),place=marketPlace(country);
+ const {el,W,H}=svgFrame('first-share',320),country=payload.releases.countries.indexOf('US'),place=marketPlace(country);
  const start=isoToDay(payload.method.observed_start),end=isoToDay(payload.method.observed_end_exclusive)-1;
  const cohort=[];let outside=0,noDate=0;
  for(const m of currentRows){const t=releaseDay(m,country,0);if(t===null){noDate++;continue}if(t+shareDayMin<start||t+shareDayMax>end){outside++;continue}
