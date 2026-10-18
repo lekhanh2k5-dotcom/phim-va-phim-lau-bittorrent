@@ -48,7 +48,7 @@ Dashboard gồm **47.089 phim** không gắn cờ `is_adult`, có năm 1920–20
 
 Nhóm mặc định có điểm trung vị **6,2**, bình chọn trung vị **2.937** và **1.185 phim đạt từ 7 điểm**. Tại Mỹ, **1.742 phim** có mốc ra rạp, **1.284 phim** đủ cả ngày rạp và Digital; **1.217 phim** có khoảng cách 0–365 ngày, trung vị **11 ngày**. Phép tính gộp loại rạp limited và theatrical, nên không dùng để thay thế số liệu của notebook gốc chỉ dùng theatrical.
 
-Ví dụ 60 giây: nhấn Ví dụ thuyết trình → xem Hành động và Tài liệu cạnh nhau → đối chiếu số phim, bình chọn, torrent trung vị và tỷ lệ ghi nhận → nhấn tên một phim trong bảng để xem các nguồn đã nối → đặt lại bộ lọc. Chênh lệch thô giữa hai thể loại chưa tách riêng ảnh hưởng của các đặc điểm phim.
+Ví dụ 60 giây: mở tab Torrent & đối chiếu → ở phần So sánh hai thể loại, xem Hành động và Tài liệu cạnh nhau → đối chiếu số phim, bình chọn, torrent trung vị và tỷ lệ ghi nhận → nhấn tên một phim trong bảng để xem các nguồn đã nối → đặt lại bộ lọc. Chênh lệch thô giữa hai thể loại chưa tách riêng ảnh hưởng của các đặc điểm phim.
 
 ## Đơn vị và thời gian
 
