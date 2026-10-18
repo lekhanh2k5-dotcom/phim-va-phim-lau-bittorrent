@@ -56,8 +56,8 @@ function renderTorrentCharts(){
  const gs=new Map();for(const m of currentRows)for(const g of m.genreList){if(g==='Adult')continue;if(!gs.has(g))gs.set(g,[]);gs.get(g).push(m.torrents)}
  const genreItems=[...gs].sort((a,b)=>b[1].length-a[1].length).slice(0,8).map(([g,vals])=>({label:genreNames[g]||g,value:$('genre-measure').value==='films'?vals.length:median(vals),n:vals.length})).sort((a,b)=>b.value-a.value);
  svgBars('genre-bars',genreItems);
- // Tab Torrent không lọc theo thị trường: torrent không có thông tin quốc gia, nên luôn so với Digital tại Mỹ.
- const lagCountry=payload.releases.countries.indexOf('US'),lagUS=true,lagPlace=marketPlace(lagCountry);
+ // Tab Torrent không dùng ô Thị trường (torrent không có thông tin quốc gia); nút riêng chọn mốc Digital tại Mỹ (mặc định, như slide 19) hoặc sớm nhất thế giới.
+ const usIndex=payload.releases.countries.indexOf('US'),lagCountry=$('lag-basis').value==='world'?-1:usIndex,lagUS=lagCountry===usIndex,lagPlace=marketPlace(lagCountry);
  const lagValue=m=>{if(lagUS)return m.lag;if(!m.web)return null;const d=releaseDay(m,lagCountry,1);return d===null?null:isoToDay(m.web)-d};
  const lag=currentRows.map(m=>({m,lag:lagValue(m)})).filter(r=>r.lag!==null&&Number.isFinite(r.lag)),withWeb=currentRows.filter(m=>m.web).length;
  const lagBins=[{label:'Trước Digital',test:x=>x<0,color:'#8897ab'},{label:'Ngày 0–1',test:x=>x>=0&&x<=1,color:'#e58a36'},{label:'Ngày 2–7',test:x=>x>=2&&x<=7},{label:'Ngày 8–30',test:x=>x>=8&&x<=30},{label:'Sau 30 ngày',test:x=>x>30}];
@@ -71,14 +71,14 @@ function renderTorrentCharts(){
  renderComparison();
 }
 
-// Thời gian từ ngày ra rạp tại Mỹ đến bản chia sẻ đầu tiên trong cửa sổ quan sát (không đổi theo ô Thị trường).
+// Thời gian từ ngày ra rạp (sớm nhất thế giới hoặc tại Mỹ, theo nút riêng) đến bản chia sẻ đầu tiên trong cửa sổ quan sát.
 // Chỉ giữ phim ra rạp đủ sớm/đủ muộn để theo dõi trọn 60 ngày trước đến 365 ngày sau.
 const shareDayMin=-60,shareDayMax=365;
 let firstShareState=null;
 const isoToDay=s=>s?Math.round(Date.parse(s+'T00:00:00Z')/86400000):null;
 function marketPlace(country){return country<0?'sớm nhất ở bất kỳ thị trường nào':'tại '+(country===payload.releases.countries.indexOf('US')?'Mỹ':releaseCountryLabel(country))}
 function renderFirstShare(){
- const {el,W,H}=svgFrame('first-share',320),country=payload.releases.countries.indexOf('US'),place=marketPlace(country);
+ const {el,W,H}=svgFrame('first-share',320),country=$('first-share-basis').value==='us'?payload.releases.countries.indexOf('US'):-1,place=marketPlace(country);
  const start=isoToDay(payload.method.observed_start),end=isoToDay(payload.method.observed_end_exclusive)-1;
  const cohort=[];let outside=0,noDate=0;
  for(const m of currentRows){const t=releaseDay(m,country,0);if(t===null){noDate++;continue}if(t+shareDayMin<start||t+shareDayMax>end){outside++;continue}
@@ -103,5 +103,5 @@ function renderFirstShare(){
   out+=`<circle cx="${x(d)}" cy="${y(at(c,d))}" r="4" fill="${color}" stroke="white"><title>${label} · ${d>0?'+'+d:d} ngày: ${pct(at(c,d))} của ${nf(n)} phim</title></circle>`;
  const lx=Math.max(x(30),W-R-330),ly=y(.18);out+=`<g font-size="12"><rect x="${lx}" y="${ly-4}" width="14" height="3" fill="#e58a36"/><text x="${lx+19}" y="${ly}" fill="#172334">Bản bất kỳ</text><rect x="${lx+100}" y="${ly-4}" width="14" height="3" fill="#2670bc"/><text x="${lx+119}" y="${ly}" fill="#172334">Bản chất lượng cao (WEB, đĩa, TV)</text></g>`;
  el.innerHTML=out;
- $('first-share-note').textContent=`${nf(n)} phim ra rạp ${place} từ ${dateText(isoDay(start-shareDayMin))} đến ${dateText(isoDay(end-shareDayMax))}. Ngày ra rạp: ${pct(at(any,0))} đã có bản bất kỳ; sau 30 ngày: ${pct(at(any,30))} có bản bất kỳ, ${pct(at(hq,30))} có bản chất lượng cao; sau 365 ngày: ${pct(at(hq,365))} có bản chất lượng cao. Chỉ tính bản ghi nhận trong cửa sổ quan sát; ${nf(noDate)} phim không có ngày ra rạp ${place} và ${nf(outside)} phim ra rạp ngoài khoảng theo dõi được không được tính. Đây là thời điểm hệ thống ghi nhận, không phải lượt tải.`;
+ $('first-share-note').textContent=`${nf(n)} phim ra rạp ${place} từ ${dateText(isoDay(start-shareDayMin))} đến ${dateText(isoDay(end-shareDayMax))}. Ngày ra rạp: ${pct(at(any,0))} đã có bản bất kỳ; sau 30 ngày: ${pct(at(any,30))} có bản bất kỳ, ${pct(at(hq,30))} có bản chất lượng cao; sau 365 ngày: ${pct(at(hq,365))} có bản chất lượng cao. Chỉ tính bản ghi nhận trong cửa sổ quan sát; ${nf(noDate)} phim không có ngày ra rạp ${place} và ${nf(outside)} phim ra rạp ngoài khoảng theo dõi được không được tính. Đây là thời điểm hệ thống ghi nhận, không phải lượt tải.${country<0?' Mốc sớm nhất thế giới có thể là suất chiếu giới hạn hoặc liên hoan phim, sớm hơn ngày chiếu đại trà.':''}`;
 }

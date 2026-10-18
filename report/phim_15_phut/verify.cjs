@@ -158,7 +158,11 @@ async function main(){
  const usShare=await shareState();
  await js("$('first-share').closest('article').scrollIntoView({block:'start'})");await shot('preview_first_share.png');
  check('Torrent view hides market selector',await js("$('release-controls').hidden"),usShare);
- check('First-share curve renders for US with WEB lag unchanged',usShare.paths===2&&usShare.n===1297&&usShare.scope==='Ngày ra rạp tại Mỹ'&&usShare.lagScope==='Digital tại Mỹ'&&!usShare.warn,usShare);
+ check('First-share defaults to earliest worldwide release; WEB lag defaults to US',usShare.paths===2&&usShare.n===2907&&usShare.scope.includes('mọi thị trường')&&usShare.lagScope==='Digital tại Mỹ'&&!usShare.warn,usShare);
+ await js("$('first-share-basis').value='us';$('lag-basis').value='world';update()");
+ const basisSwap=await js("({n:firstShareState.n,scope:$('first-share-scope').textContent,lag:$('lag-note').textContent.split(' ')[0],lagScope:$('lag-scope').textContent})");
+ check('Basis toggles switch first-share to US and WEB lag to worldwide',basisSwap.n===1297&&basisSwap.scope==='Ngày ra rạp tại Mỹ'&&basisSwap.lag==='3.362'&&basisSwap.lagScope.includes('mọi thị trường'),basisSwap);
+ await js("$('first-share-basis').value='world';$('lag-basis').value='us';update()");
  check('US WEB lag keeps the original us_digital column',await js("(()=>{const n=currentRows.filter(m=>m.lag!==null&&Number.isFinite(m.lag)).length;return $('lag-note').textContent.startsWith(nf(n)+' phim')})()"));
  await js("$('release-country').value=String(payload.releases.countries.indexOf('VN'));update()");
  const vnShare=await shareState();
