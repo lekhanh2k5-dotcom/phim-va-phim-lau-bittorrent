@@ -42,6 +42,14 @@ async function main(){
  check('Genre boxplots agree with SQL quantiles',phaseReference.default_genres.every(e=>{const a=genres.find(g=>g.genre===e.genre);return a&&a.n===e.n&&['p10','q1','median','q3','p90'].every(k=>Math.abs(a[k]-e[k])<1e-8)}));
  check('All rating points and histogram films accounted for',await js("ratingPoints.length===4981 && ratingHistogram.reduce((s,b)=>s+b.n,0)===4981 && rankingRows.every(m=>m.votes>=10000)"));
  check('Rating table shows rating columns',await js("$('movie-table').rows[0].cells[4].hidden && $('movie-table').rows[0].cells[5].hidden"));
+ const yearDefault=await js("ratingYearData.length");
+ await js("$('year-min').value=1920;$('year-max').value=2024;update()");
+ const ratingExtra=await js("({years:ratingYearData.length,first:ratingYearData[0].year,runtime:runtimeData.map(d=>Math.round(d.median*10)/10),runtimeN:runtimeData.reduce((s,d)=>s+d.n,0),regions:regionData.map(d=>Math.round(d.median*10)/10),regionN:regionData.map(d=>d.n),pair:genrePairData.cells.get('Horror|Thriller'),genres:genrePairData.genres.length,svgs:['rating-year','rating-runtime','rating-regions','genre-pairs'].every(id=>$(id).children.length>0)})");
+ check('Rating year trend ignores year filter',yearDefault===ratingExtra.years&&ratingExtra.first<=1925,{yearDefault,...ratingExtra});
+ check('Runtime and region charts match independent SQL',JSON.stringify(ratingExtra.runtime)==='[6.1,6.3,6.8,7.1]'&&ratingExtra.runtimeN===47039&&JSON.stringify(ratingExtra.regions)==='[6.3,6.4,6.3,6.6,7.3]'&&JSON.stringify(ratingExtra.regionN)==='[1379,12553,21344,10519,1294]',ratingExtra);
+ check('Genre pair heatmap matches independent SQL',ratingExtra.genres===10&&ratingExtra.pair.n===2051&&Math.round(ratingExtra.pair.median*10)/10===5.2&&ratingExtra.svgs,ratingExtra);
+ await js("$('rating-year').closest('.chart-row').scrollIntoView({block:'start'})");await shot('preview_ratings_extra.png');
+ await js("reset()");
  await shot('preview_dashboard.png');await shot('preview_ratings.png');
  await js("$('ranking-votes').value='100000';$('ranking-votes').dispatchEvent(new Event('change'))");
  check('Ranking threshold affects only the ranking',await js("rankingRows.every(m=>m.votes>=100000) && currentRows.length===4981"));

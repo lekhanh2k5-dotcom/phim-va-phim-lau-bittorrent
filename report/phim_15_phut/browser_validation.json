@@ -25,6 +25,112 @@
     "detail": ""
   },
   {
+    "check": "Rating year trend ignores year filter",
+    "passed": true,
+    "detail": {
+      "yearDefault": 101,
+      "years": 101,
+      "first": 1924,
+      "runtime": [
+        6.1,
+        6.3,
+        6.8,
+        7.1
+      ],
+      "runtimeN": 47039,
+      "regions": [
+        6.3,
+        6.4,
+        6.3,
+        6.6,
+        7.3
+      ],
+      "regionN": [
+        1379,
+        12553,
+        21344,
+        10519,
+        1294
+      ],
+      "pair": {
+        "n": 2051,
+        "median": 5.2
+      },
+      "genres": 10,
+      "svgs": true
+    }
+  },
+  {
+    "check": "Runtime and region charts match independent SQL",
+    "passed": true,
+    "detail": {
+      "years": 101,
+      "first": 1924,
+      "runtime": [
+        6.1,
+        6.3,
+        6.8,
+        7.1
+      ],
+      "runtimeN": 47039,
+      "regions": [
+        6.3,
+        6.4,
+        6.3,
+        6.6,
+        7.3
+      ],
+      "regionN": [
+        1379,
+        12553,
+        21344,
+        10519,
+        1294
+      ],
+      "pair": {
+        "n": 2051,
+        "median": 5.2
+      },
+      "genres": 10,
+      "svgs": true
+    }
+  },
+  {
+    "check": "Genre pair heatmap matches independent SQL",
+    "passed": true,
+    "detail": {
+      "years": 101,
+      "first": 1924,
+      "runtime": [
+        6.1,
+        6.3,
+        6.8,
+        7.1
+      ],
+      "runtimeN": 47039,
+      "regions": [
+        6.3,
+        6.4,
+        6.3,
+        6.6,
+        7.3
+      ],
+      "regionN": [
+        1379,
+        12553,
+        21344,
+        10519,
+        1294
+      ],
+      "pair": {
+        "n": 2051,
+        "median": 5.2
+      },
+      "genres": 10,
+      "svgs": true
+    }
+  },
+  {
     "check": "Ranking threshold affects only the ranking",
     "passed": true,
     "detail": ""

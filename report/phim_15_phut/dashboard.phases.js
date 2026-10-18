@@ -45,7 +45,7 @@ function routeFromHash(){
 }
 function renderCharts(){
  if(activeTab!=='explore')return;
- if(activeView==='ratings'){renderRatingHistogram();renderRatingGenres();renderRatingScatter();renderRanking()}
+ if(activeView==='ratings'){renderRatingHistogram();renderRatingGenres();renderRatingScatter();renderRanking();renderRatingYear();renderRatingRuntime();renderRatingRegions();renderGenrePairs()}
  else if(activeView==='releases'){renderReleaseHeatmap();renderReleaseWindow();renderReleaseCountries();renderProviders();renderBusinessCharts()}
  else renderTorrentCharts();
 }
@@ -199,4 +199,69 @@ function initPhases(){
  const nearest=e=>{const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;let found=null,best=70;for(const p of ratingPoints){const d=(p.x-x)**2+(p.y-y)**2;if(d<best){found=p.m;best=d}}return found};
  canvas.addEventListener('pointermove',e=>{const m=nearest(e);canvas.style.cursor=m?'pointer':'default';if(!m){$('tooltip').hidden=true;return}$('tooltip').innerHTML=`${esc(m.title)} (${m.year})<small>${nice(m.rating)} điểm · ${nf(m.votes)} bình chọn</small>`;$('tooltip').hidden=false;$('tooltip').style.left=Math.max(5,Math.min(innerWidth-310,e.clientX+15))+'px';$('tooltip').style.top=Math.max(5,e.clientY-65)+'px'});
  canvas.addEventListener('pointerleave',()=>{$('tooltip').hidden=true});canvas.addEventListener('click',e=>{const m=nearest(e);if(m){$('tooltip').hidden=true;openMovie(m.id)}});
+}
+
+// Bốn biểu đồ chỉ dùng IMDb: điểm theo năm, theo thời lượng, theo số vùng có tên riêng và theo cặp thể loại.
+let ratingYearData=[],runtimeData=[],regionData=[],genrePairData=null;
+function boxRowsSvg(id,rows,{left=150}={}){
+ const {el,W,H}=svgFrame(id),data=rows.filter(r=>r.values.length);
+ for(const r of data){const s=r.values.sort((a,b)=>a-b);Object.assign(r,{n:s.length,p10:quantileSorted(s,.1),q1:quantileSorted(s,.25),median:quantileSorted(s,.5),q3:quantileSorted(s,.75),p90:quantileSorted(s,.9)})}
+ if(!data.length){svgEmpty(el,W,H);return data}
+ const L=Math.min(left,W*.42),R=30,T=13,B=34,pw=W-L-R,step=(H-T-B)/rows.length,x=v=>L+v/10*pw;
+ let out='';for(let v=0;v<=10;v+=2)out+=`<line x1="${x(v)}" x2="${x(v)}" y1="${T}" y2="${H-B}" stroke="#e4e9f0"/><text x="${x(v)}" y="${H-13}" text-anchor="middle" font-size="11" fill="#596778">${v}</text>`;
+ rows.forEach((g,i)=>{const y=T+step*(i+.45);
+  if(!g.values.length){out+=`<text x="0" y="${y+4}" font-size="13" fill="#9aa6b4">${esc(g.label)} · không có phim</text>`;return}
+  out+=`<g><title>${esc(g.label)}: trung vị ${nice(g.median)}, khoảng 25–75% ${nice(g.q1)}–${nice(g.q3)} · ${nf(g.n)} phim${g.extra?' · '+g.extra:''}</title><text x="0" y="${y-1}" font-size="13" fill="#26364a">${esc(g.label)}</text><text x="0" y="${y+13}" font-size="10" fill="#647488">${nf(g.n)} phim${g.sub?' · '+esc(g.sub):''}</text><line x1="${x(g.p10)}" x2="${x(g.p90)}" y1="${y}" y2="${y}" stroke="#739ac3"/><rect x="${x(g.q1)}" y="${y-8}" width="${Math.max(1,x(g.q3)-x(g.q1))}" height="16" fill="#b4d0ee"/><line x1="${x(g.median)}" x2="${x(g.median)}" y1="${y-9}" y2="${y+9}" stroke="#16599d" stroke-width="3"/><text x="${x(g.p90)+5}" y="${y+4}" font-size="11" fill="#16599d">${nice(g.median)}</text></g>`;
+ });el.innerHTML=out;return data;
+}
+function renderRatingYear(){
+ // Luôn vẽ đủ 1920–2024 để thấy xu hướng; các bộ lọc khác (thể loại, bình chọn, tên) vẫn áp dụng.
+ const {el,W,H}=svgFrame('rating-year'),f=getFilters(),pool=movies.filter(m=>Number.isFinite(m.rating)&&matches(m,{...f,min:payload.method.year_min,max:payload.method.year_max})),byYear=new Map();
+ for(const m of pool){if(!byYear.has(m.year))byYear.set(m.year,[]);byYear.get(m.year).push(m.rating)}
+ ratingYearData=[...byYear].filter(([,v])=>v.length>=20).sort((a,b)=>a[0]-b[0]).map(([year,v])=>{const s=v.sort((a,b)=>a-b);return {year,n:s.length,q1:quantileSorted(s,.25),median:quantileSorted(s,.5),q3:quantileSorted(s,.75)}});
+ const y0=payload.method.year_min,y1=payload.method.year_max;
+ $('rating-year-note').textContent=`${nf(pool.length)} phim (mọi năm 1920–2024, theo các bộ lọc khác); chỉ vẽ năm có từ 20 phim. Vùng tô là khoảng năm đang lọc (${f.min}–${f.max}). Phim cũ còn được xem và chấm đến nay thường là phim hay (thiên lệch sống sót), nên điểm cao hơn không có nghĩa phim xưa hay hơn.`;
+ if(ratingYearData.length<2){svgEmpty(el,W,H);return}
+ const lo=Math.max(0,Math.floor(Math.min(...ratingYearData.map(d=>d.q1))-.5)),hi=Math.min(10,Math.ceil(Math.max(...ratingYearData.map(d=>d.q3))+.5));
+ const L=40,R=14,T=24,B=36,x=yr=>L+(yr-y0)/(y1-y0)*(W-L-R),y=v=>T+(hi-v)/(hi-lo)*(H-T-B);
+ let out=`<text x="${L}" y="13" font-size="12" fill="#596778">Điểm IMDb</text>`;
+ const a=Math.max(f.min,y0),b=Math.min(f.max,y1);if(a<=b)out+=`<rect x="${x(a)}" y="${T}" width="${Math.max(2,x(b)-x(a))}" height="${H-T-B}" fill="#fdf3e8"/>`;
+ for(let v=lo;v<=hi;v++)out+=`<line x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#e4e9f0"/><text x="${L-7}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="#596778">${v}</text>`;
+ for(let yr=1920;yr<=2020;yr+=20)out+=`<text x="${x(yr)}" y="${H-B+18}" text-anchor="middle" font-size="11" fill="#596778">${yr}</text>`;
+ out+=`<path d="${ratingYearData.map((d,i)=>(i?'L':'M')+x(d.year).toFixed(1)+' '+y(d.q3).toFixed(1)).join('')}${[...ratingYearData].reverse().map(d=>'L'+x(d.year).toFixed(1)+' '+y(d.q1).toFixed(1)).join('')}Z" fill="#cfe0f3"/>`;
+ out+=`<path d="${ratingYearData.map((d,i)=>(i?'L':'M')+x(d.year).toFixed(1)+' '+y(d.median).toFixed(1)).join('')}" fill="none" stroke="#16599d" stroke-width="2.2"/>`;
+ const w=Math.max(2,(W-L-R)/(y1-y0+1));for(const d of ratingYearData)out+=`<rect x="${x(d.year)-w/2}" y="${T}" width="${w}" height="${H-T-B}" fill="transparent"><title>${d.year}: trung vị ${nice(d.median)} · 25–75%: ${nice(d.q1)}–${nice(d.q3)} · ${nf(d.n)} phim</title></rect>`;
+ out+=`<g font-size="11" fill="#596778"><rect x="${W-R-215}" y="4" width="12" height="9" fill="#cfe0f3"/><text x="${W-R-199}" y="12">25–75% phim</text><rect x="${W-R-118}" y="7" width="12" height="3" fill="#16599d"/><text x="${W-R-102}" y="12">Trung vị</text></g>`;
+ el.innerHTML=out;
+}
+function renderRatingRuntime(){
+ const rated=currentRows.filter(m=>Number.isFinite(m.rating)&&Number.isFinite(m.runtime)&&m.runtime>0);
+ const bins=[['Dưới 90 phút',0,90],['90–119 phút',90,120],['120–149 phút',120,150],['Từ 150 phút',150,Infinity]];
+ runtimeData=boxRowsSvg('rating-runtime',bins.map(([label,a,b])=>({label,values:rated.filter(m=>m.runtime>=a&&m.runtime<b).map(m=>m.rating)})));
+ $('rating-runtime-note').textContent=`${nf(rated.length)} phim có thời lượng trên IMDb. Hộp: 50% phim ở giữa; vạch đậm: trung vị; râu: 10–90%. Phim dài thường là phim chính kịch/tiểu sử, nên thể loại cũng góp phần.`;
+}
+function renderRatingRegions(){
+ const rated=currentRows.filter(m=>Number.isFinite(m.rating));
+ const bins=[['Dưới 5 vùng',0,5],['5–14 vùng',5,15],['15–29 vùng',15,30],['30–49 vùng',30,50],['Từ 50 vùng',50,Infinity]];
+ regionData=boxRowsSvg('rating-regions',bins.map(([label,a,b])=>{const ms=rated.filter(m=>(m.regions||0)>=a&&(m.regions||0)<b),v=median(ms.map(m=>m.votes));return {label,values:ms.map(m=>m.rating),sub:ms.length?'trung vị '+(v>=1000?nice(v/1000)+' nghìn':nf(v))+' bình chọn':'',extra:ms.length?'bình chọn trung vị '+nf(v):''}}),{left:215});
+ $('rating-regions-note').textContent=`Số vùng (quốc gia/lãnh thổ) có tên phim riêng trong IMDb title.akas, xem như mức độ phim được phát hành ra quốc tế. Phim được đặt tên ở nhiều nước cũng là phim nổi tiếng hơn, nên đây là mối liên hệ, không phải nguyên nhân.`;
+}
+function renderGenrePairs(){
+ const box=$('genre-pairs'),bw=Math.max(270,Math.round(box.clientWidth)),cellGuess=Math.min(48,(bw-Math.min(118,bw*.26)-8)/10),Hfit=Math.round(8+10*cellGuess+86);box.style.height=Hfit+'px';
+ const {el,W,H}=svgFrame('genre-pairs',Hfit),rated=currentRows.filter(m=>Number.isFinite(m.rating)),counts=new Map();
+ for(const m of rated)for(const g of m.genreList)if(g!=='Adult')counts.set(g,(counts.get(g)||0)+1);
+ const top=[...counts].sort((a,b)=>b[1]-a[1]).slice(0,10).map(([g])=>g),cells=new Map(),key=(a,b)=>a<b?a+'|'+b:b+'|'+a;
+ for(const m of rated){const gs=m.genreList.filter(g=>top.includes(g));for(let i=0;i<gs.length;i++)for(let j=i;j<gs.length;j++){const k=key(gs[i],gs[j]);if(!cells.has(k))cells.set(k,[]);cells.get(k).push(m.rating)}}
+ const all=rated.map(m=>m.rating).sort((a,b)=>a-b),overall=quantileSorted(all,.5);
+ genrePairData={genres:top,overall,cells:new Map([...cells].map(([k,v])=>{const s=v.sort((a,b)=>a-b);return [k,{n:s.length,median:quantileSorted(s,.5)}]}))};
+ $('genre-pairs-note').textContent=`10 thể loại có nhiều phim nhất trong nhóm đang chọn. Đường chéo: mọi phim có thể loại đó; ô khác: phim có cả hai thể loại. Màu so với trung vị chung ${overall===null?'—':nice(overall)} (xanh cao hơn, cam thấp hơn); ô dưới 30 phim để trống.`;
+ if(top.length<2){svgEmpty(el,W,H);return}
+ const L=Math.min(118,W*.26),T=8,B=86,size=Math.min((W-L-8)/top.length,(H-T-B)/top.length),name=g=>genreNames[g]||g;
+ const color=v=>{const t=Math.max(-1,Math.min(1,(v-overall)/.8));return t>=0?`rgb(${Math.round(243-205*t)},${Math.round(245-133*t)},${Math.round(248-60*t)})`:`rgb(${Math.round(243+(229-243)*-t)},${Math.round(245+(138-245)*-t)},${Math.round(248+(54-248)*-t)})`};
+ let out='';
+ top.forEach((g,i)=>{out+=`<text x="${L-6}" y="${T+i*size+size/2+4}" text-anchor="end" font-size="11" fill="#26364a">${esc(name(g))}</text><text transform="translate(${L+i*size+size/2+4},${T+top.length*size+6}) rotate(-50)" text-anchor="end" font-size="11" fill="#26364a">${esc(name(g))}</text>`});
+ top.forEach((a,i)=>top.forEach((b,j)=>{if(j>i)return;const c=genrePairData.cells.get(key(a,b)),xx=L+j*size,yy=T+i*size;
+  if(!c||c.n<30){out+=`<rect x="${xx+1}" y="${yy+1}" width="${size-2}" height="${size-2}" fill="#f6f7f9"><title>${esc(name(a))}${a===b?'':' + '+esc(name(b))}: ${c?nf(c.n):0} phim (dưới 30, không tô)</title></rect>`;return}
+  const v=(c.median-overall)/.8;out+=`<g><title>${esc(name(a))}${a===b?'':' + '+esc(name(b))}: trung vị ${nice(c.median)} · ${nf(c.n)} phim</title><rect x="${xx+1}" y="${yy+1}" width="${size-2}" height="${size-2}" rx="2" fill="${color(c.median)}" ${a===b?'stroke="#26364a" stroke-width="1"':''}/>${size>=30?`<text x="${xx+size/2}" y="${yy+size/2+4}" text-anchor="middle" font-size="${size>=40?11:10}" fill="${Math.abs(v)>.6?'white':'#26364a'}">${nice(c.median)}</text>`:''}</g>`}));
+ el.innerHTML=out;
 }

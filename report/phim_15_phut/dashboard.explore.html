@@ -57,6 +57,14 @@
      <article class="plot"><h2>Được chú ý nhiều có được chấm cao?</h2><p class="caption">Mỗi chấm là một phim. Di chuột để xem, nhấn để mở hồ sơ.</p><div class="chart-box"><canvas id="rating-scatter" role="img" aria-label="Điểm IMDb và lượt bình chọn của từng phim"></canvas></div><p id="rating-scatter-note" class="chart-note"></p></article>
      <article class="plot"><div class="ranking-head"><div><h2>Những phim được đánh giá cao</h2><p class="caption">10 phim điểm cao nhất, ưu tiên nhiều bình chọn khi bằng điểm.</p></div></div><div class="chart-controls"><label for="ranking-votes">Bình chọn tối thiểu cho bảng này</label><select id="ranking-votes"><option value="1000">1.000</option><option value="10000" selected>10.000</option><option value="100000">100.000</option></select></div><div id="rating-ranking" class="ranking-list"></div><p id="ranking-note" class="chart-note"></p></article>
     </div>
+    <div class="chart-row phase-chart-row sub-row">
+     <article class="plot"><h2>Phim cũ có được chấm cao hơn?</h2><p class="caption">Điểm IMDb trung vị theo năm phát hành, dải: 50% phim ở giữa. Luôn hiện 1920–2024.</p><svg id="rating-year" class="chart-svg" role="img" aria-label="Điểm IMDb trung vị theo năm phát hành"></svg><p id="rating-year-note" class="chart-note"></p></article>
+     <article class="plot"><h2>Phim dài có được chấm cao hơn?</h2><p class="caption">Phân bố điểm IMDb theo nhóm thời lượng.</p><svg id="rating-runtime" class="chart-svg" role="img" aria-label="Phân bố điểm IMDb theo nhóm thời lượng"></svg><p id="rating-runtime-note" class="chart-note"></p></article>
+    </div>
+    <div class="chart-row phase-chart-row sub-row">
+     <article class="plot"><h2>Phim được đặt tên ở nhiều nước có điểm cao hơn?</h2><p class="caption">Phân bố điểm theo số vùng có tên phim riêng trên IMDb.</p><svg id="rating-regions" class="chart-svg" role="img" aria-label="Phân bố điểm IMDb theo số vùng có tên phim riêng"></svg><p id="rating-regions-note" class="chart-note"></p></article>
+     <article class="plot"><h2>Thể loại kết hợp nào được chấm cao?</h2><p class="caption">Điểm trung vị của phim có cả hai thể loại. Di chuột vào ô để xem số phim.</p><svg id="genre-pairs" class="chart-svg genre-pairs-svg" role="img" aria-label="Ma trận điểm IMDb trung vị theo cặp thể loại"></svg><p id="genre-pairs-note" class="chart-note"></p></article>
+    </div>
     <div class="phase-next"><span>Tiếp theo: những phim này được phát hành và xem ở đâu?</span><button data-go-view="releases">Xem phát hành →</button></div>
    </section>
    <section id="view-releases" role="tabpanel" aria-labelledby="view-tab-releases" hidden>

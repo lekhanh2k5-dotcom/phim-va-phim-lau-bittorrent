@@ -58,12 +58,18 @@ def export_data():
         date_diff('day',DATE '1970-01-01',min(discovered_at_utc)::DATE)::INTEGER,
         date_diff('day',DATE '1970-01-01',(min(discovered_at_utc) FILTER (WHERE quality_tier NOT IN ('pre_release','unknown')))::DATE)::INTEGER
         FROM tor WHERE NOT implausible AND in_stable_window GROUP BY 1""").fetchall()}
+    # IMDb-only extras for the rating view: runtime and number of regions with a localized title.
+    runtime = dict(con.execute("SELECT tconst, runtime_min FROM i WHERE tconst IN (SELECT tconst FROM ids)").fetchall())
+    regions = dict(con.execute(f"""SELECT a.titleId, count(DISTINCT a.region)::INTEGER
+        FROM read_csv('{ROOT.as_posix()}/data_raw/imdb/title.akas.tsv.gz', delim='\t', quote='', header=true, all_varchar=true) a
+        JOIN ids ON ids.tconst=a.titleId WHERE a.region<>'\\N' GROUP BY 1""").fetchall())
     for r in rows:
         r.append(alt.get(r[0]))
         r.extend(firsts.get(r[0], (None, None)))
+        r.extend((runtime.get(r[0]), regions.get(r[0], 0)))
     keys = ['id','title','year','genres','rating','votes','torrents','tmdb','streaming',
             'countries','providers','theatrical','digital','web','lag','matched',
-            'origin','tmdb_year','budget','revenue','alt','first_share','first_hq']
+            'origin','tmdb_year','budget','revenue','alt','first_share','first_hq','runtime','regions']
     # Compact, deduplicated facts for interactive country and access-mode selection.
     # Movie indices use exactly the same ordering as the IMDb-led export above.
     con.execute("""CREATE TEMP TABLE eligible AS
