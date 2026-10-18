@@ -417,7 +417,7 @@
     "detail": ""
   },
   {
-    "check": "19 slides, 12 figures, 890 seconds",
+    "check": "19 slides, 12 figures, no speaking-duration annotations",
     "passed": true,
     "detail": ""
   },

@@ -98,10 +98,10 @@ def build_method_slides(root):
                     'wrong_year':wrong_year,'implausible':fake}}
     slides = []
 
-    def add(key,title,subtitle,body,notes,reading,finding,caution,next_question,seconds,cells):
+    def add(key,title,subtitle,body,notes,reading,finding,caution,next_question,cells):
         slides.append({'kind':'method','method_id':key,'phase':'Tiền xử lý','title':title,
             'subtitle':subtitle,'body':body,'notes':notes,'why':notes,'reading':reading,'finding':finding,
-            'limitation':caution,'caution':caution,'next_question':next_question,'seconds':seconds,
+            'limitation':caution,'caution':caution,'next_question':next_question,
             'scope':'Nguồn: notebooks/00_quy_trinh_xu_ly.ipynb · kết quả đã lưu trong notebook.',
             'source_cells':cells})
 
@@ -121,7 +121,7 @@ def build_method_slides(root):
         'Đọc hai cột đầu vào và ví dụ tên thay thế ở cuối. Phân biệt định danh với tên dùng để tra.',
         'Chuẩn hóa tên và bổ sung bí danh giúp ghép được phim mang tên ở ngôn ngữ khác.',
         'Số phim ở đây là toàn danh mục IMDb trong notebook, khác mẫu dashboard có ngưỡng bình chọn.',
-        'Sau chuẩn hóa, quy tắc nào quyết định một torrent thuộc phim nào?',30,[8,10,11])
+        'Sau chuẩn hóa, quy tắc nào quyết định một torrent thuộc phim nào?',[8,10,11])
 
     precision = str(round(facts['evaluation_precision']*100,1)).replace('.',',')
     recall = str(round(facts['evaluation_recall']*100,1)).replace('.',',')
@@ -139,7 +139,7 @@ def build_method_slides(root):
         'Theo bốn bước từ trái sang phải, đọc ví dụ Parasite và phân biệt nhánh tra chính xác với phép đối chiếu gần đúng.',
         'Ghép tên có ràng buộc năm và cơ chế từ chối; không nhận mọi tên giống nhau thành cùng một phim.',
         'Nhãn MagnetDB có lỗi. Precision/recall là kết quả đối chiếu trên mẫu 20.000 file, không phải kiểm định thủ công toàn tập.',
-        'Khi đã nhận diện được phim, TMDb bổ sung thông tin bằng khóa nào?',35,[13,14,20])
+        'Khi đã nhận diện được phim, TMDb bổ sung thông tin bằng khóa nào?',[13,14,20])
 
     add('tmdb','Bổ sung TMDb bằng mã IMDb, rồi tách thành 3 bảng',
         'Bước 05–07 · Hợp danh sách phim → tìm TMDb theo imdb_id → lưu đệm JSON → xuất Parquet.',
@@ -153,7 +153,7 @@ def build_method_slides(root):
         'Theo đường mã IMDb tới ba bảng. Đọc dòng mô tả mức chi tiết trên mỗi bảng và ví dụ Top Gun.',
         'Nối bằng mã phim; giữ riêng ngày phát hành lịch sử và nơi xem tại thời điểm thu thập.',
         'Các số liệu tiền chỉ minh họa hồ sơ Top Gun trong notebook; nơi xem có thể khác thời điểm ra mắt.',
-        'Ghép được chưa đủ: những bản ghi nào còn cần bị loại hoặc gắn cờ?',30,[16,17])
+        'Ghép được chưa đủ: những bản ghi nào còn cần bị loại hoặc gắn cờ?',[16,17])
 
     add('cleaning','Bộ lọc A–J xử lý những lỗi nào?',
         'Bước 09 · Kiểm tra nội dung, danh tính phim, sự nhất quán giữa nguồn và các mốc thời gian.',
@@ -171,7 +171,7 @@ def build_method_slides(root):
         'Đọc nhóm quy tắc bên trái, rồi nối ba ví dụ bên phải với bộ lọc B, D và J.',
         'Làm sạch kiểm tra cả nội dung và danh tính phim; có cờ và nhật ký để kiểm tra lại.',
         'implausible là cờ suy ra từ metadata và thời điểm; không xác minh nội dung của tệp.',
-        'Sau làm sạch, dữ liệu có đơn vị gì và cửa sổ phân tích được chọn ra sao?',35,[22,25,27])
+        'Sau làm sạch, dữ liệu có đơn vị gì và cửa sổ phân tích được chọn ra sao?',[22,25,27])
 
     add('outputs','Chốt hai bảng sạch, phân biệt đơn vị và thời gian',
         'Đầu ra bước 09 · Một bảng theo cặp torrent–phim và một bảng tổng hợp theo phim.',
@@ -185,7 +185,7 @@ def build_method_slides(root):
         'So sánh mức chi tiết của hai bảng, ba số đếm toàn phạm vi và số cặp trong cửa sổ được tô màu.',
         'Đơn vị đếm và cửa sổ quan sát quyết định con số; không trộn cặp torrent–phim với torrent riêng biệt.',
         'Cửa sổ vẫn có gián đoạn thu thập. Danh mục dashboard còn áp dụng bộ lọc năm, người lớn và bình chọn riêng.',
-        'Bắt đầu với IMDb: quy mô kho phim và sự quan tâm của khán giả thay đổi thế nào?',30,[29,31,32])
+        'Bắt đầu với IMDb: quy mô kho phim và sự quan tâm của khán giả thay đổi thế nào?',[29,31,32])
     return slides, reference
 
 

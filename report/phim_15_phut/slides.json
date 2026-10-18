@@ -17,7 +17,6 @@
       ]
     ],
     "notes": "Trong bài này, chúng tôi theo dõi một bộ phim qua ba góc nhìn: người dùng quan tâm ra sao, phim được phát hành khi nào và hệ thống ghi nhận những bản chia sẻ nào. Chúng tôi sẽ phân tích riêng từng nguồn, sau đó nối chúng để trả lời ba câu hỏi chung.",
-    "seconds": 40,
     "kind": "hero",
     "phase": "Mở đầu",
     "steps": [],
@@ -41,7 +40,6 @@
       ]
     ],
     "notes": "IMDb giống một danh mục phim có đánh giá của người dùng. TMDb bổ sung lịch phát hành và nơi xem. BitTorrent là cách chia sẻ tệp giữa nhiều máy tính; MagnetDB ghi nhận metadata các bản chia sẻ đó. Trước khi phân tích, dữ liệu đi qua năm bước tiền xử lý. Một, chỉ giữ phim lẻ, bỏ phim người lớn và tập phim bộ. Hai, chuẩn hóa tên phim: bỏ dấu, chữ thường, thêm tên phim theo từng nước. Ba, ghép thực thể: tách tên và năm từ tên torrent rồi đối chiếu với IMDb; TMDb nối qua mã IMDb. Bốn, làm sạch: bỏ tệp nhỏ, năm lệch, ca trùng tên và torrent giả. Năm, chỉ giữ giai đoạn thu thập ổn định từ tháng tư năm hai nghìn không trăm hai mươi mốt đến tháng chín năm hai nghìn không trăm hai mươi bốn.",
-    "seconds": 65,
     "kind": "concept",
     "phase": "Mở đầu",
     "steps": [
@@ -79,8 +77,7 @@
     "reading": "Đọc ba cụm từ trái sang phải: mã IMDb có sẵn, tự ghép tên torrent, rồi hợp hai nguồn và lọc chung. Nhãn số cho biết số torrent còn lại sau mỗi bước.",
     "limitation": "Tên/năm phù hợp là bằng chứng metadata, không kiểm tra nội dung tệp. Một số bộ lọc dùng ngày Digital và vì vậy ảnh hưởng phân tích thời điểm ở phần sau.",
     "scope": "IMDb × TMDb × MagnetDB · quy trình làm sạch",
-    "caution": "Mỗi cụm có thang riêng; không so trực tiếp độ dài thanh giữa các cụm và không cộng hai nhánh vì có phần giao nhau. Phễu dùng phạm vi dữ liệu gốc, khác cửa sổ thống kê của dashboard.",
-    "seconds": 45
+    "caution": "Mỗi cụm có thang riêng; không so trực tiếp độ dài thanh giữa các cụm và không cộng hai nhánh vì có phần giao nhau. Phễu dùng phạm vi dữ liệu gốc, khác cửa sổ thống kê của dashboard."
   },
   {
     "kind": "method",
@@ -96,7 +93,6 @@
     "limitation": "Số phim ở đây là toàn danh mục IMDb trong notebook, khác mẫu dashboard có ngưỡng bình chọn.",
     "caution": "Số phim ở đây là toàn danh mục IMDb trong notebook, khác mẫu dashboard có ngưỡng bình chọn.",
     "next_question": "Sau chuẩn hóa, quy tắc nào quyết định một torrent thuộc phim nào?",
-    "seconds": 30,
     "scope": "Nguồn: notebooks/00_quy_trinh_xu_ly.ipynb · kết quả đã lưu trong notebook.",
     "source_cells": [
       8,
@@ -118,7 +114,6 @@
     "limitation": "Nhãn MagnetDB có lỗi. Precision/recall là kết quả đối chiếu trên mẫu 20.000 file, không phải kiểm định thủ công toàn tập.",
     "caution": "Nhãn MagnetDB có lỗi. Precision/recall là kết quả đối chiếu trên mẫu 20.000 file, không phải kiểm định thủ công toàn tập.",
     "next_question": "Khi đã nhận diện được phim, TMDb bổ sung thông tin bằng khóa nào?",
-    "seconds": 35,
     "scope": "Nguồn: notebooks/00_quy_trinh_xu_ly.ipynb · kết quả đã lưu trong notebook.",
     "source_cells": [
       13,
@@ -140,7 +135,6 @@
     "limitation": "Các số liệu tiền chỉ minh họa hồ sơ Top Gun trong notebook; nơi xem có thể khác thời điểm ra mắt.",
     "caution": "Các số liệu tiền chỉ minh họa hồ sơ Top Gun trong notebook; nơi xem có thể khác thời điểm ra mắt.",
     "next_question": "Ghép được chưa đủ: những bản ghi nào còn cần bị loại hoặc gắn cờ?",
-    "seconds": 30,
     "scope": "Nguồn: notebooks/00_quy_trinh_xu_ly.ipynb · kết quả đã lưu trong notebook.",
     "source_cells": [
       16,
@@ -161,7 +155,6 @@
     "limitation": "implausible là cờ suy ra từ metadata và thời điểm; không xác minh nội dung của tệp.",
     "caution": "implausible là cờ suy ra từ metadata và thời điểm; không xác minh nội dung của tệp.",
     "next_question": "Sau làm sạch, dữ liệu có đơn vị gì và cửa sổ phân tích được chọn ra sao?",
-    "seconds": 35,
     "scope": "Nguồn: notebooks/00_quy_trinh_xu_ly.ipynb · kết quả đã lưu trong notebook.",
     "source_cells": [
       22,
@@ -183,7 +176,6 @@
     "limitation": "Cửa sổ vẫn có gián đoạn thu thập. Danh mục dashboard còn áp dụng bộ lọc năm, người lớn và bình chọn riêng.",
     "caution": "Cửa sổ vẫn có gián đoạn thu thập. Danh mục dashboard còn áp dụng bộ lọc năm, người lớn và bình chọn riêng.",
     "next_question": "Bắt đầu với IMDb: quy mô kho phim và sự quan tâm của khán giả thay đổi thế nào?",
-    "seconds": 30,
     "scope": "Nguồn: notebooks/00_quy_trinh_xu_ly.ipynb · kết quả đã lưu trong notebook.",
     "source_cells": [
       29,
@@ -202,8 +194,7 @@
     "reading": "Trục ngang là năm phim trên IMDb; trục dọc là số bản ghi phim. Chỉ nhấn mạnh hình dạng xu hướng, không đọc từng năm.",
     "limitation": "Độ đầy đủ của IMDb thay đổi theo thời gian. Hình không đủ chứng minh máy quay số hoặc một sự kiện lịch sử gây ra thay đổi; năm IMDb cũng không phải thống kê sản lượng toàn thế giới.",
     "scope": "IMDb · phim điện ảnh sau lọc người lớn",
-    "caution": "Số bản ghi IMDb chịu ảnh hưởng của độ đầy đủ dữ liệu; không phải tổng điều tra sản lượng phim.",
-    "seconds": 50
+    "caution": "Số bản ghi IMDb chịu ảnh hưởng của độ đầy đủ dữ liệu; không phải tổng điều tra sản lượng phim."
   },
   {
     "phase": "IMDb",
@@ -216,8 +207,7 @@
     "reading": "Phim được xếp từ ít đến nhiều bình chọn. Nếu phân bố đều, đường xanh trùng đường chéo; đường thực tế cong mạnh cho thấy sự tập trung.",
     "limitation": "Lượt đánh giá trên IMDb không phải số người xem toàn thế giới; các phim ở nhiều giai đoạn có thời gian tích lũy đánh giá khác nhau.",
     "scope": "IMDb · số lượt đánh giá · phân bố sự chú ý",
-    "caution": "Bình chọn là chỉ báo mức độ quan tâm; không phải lượt xem. Không cần giải thích công thức Gini.",
-    "seconds": 55
+    "caution": "Bình chọn là chỉ báo mức độ quan tâm; không phải lượt xem. Không cần giải thích công thức Gini."
   },
   {
     "phase": "TMDb",
@@ -230,8 +220,7 @@
     "reading": "Đọc chú giải màu để so sánh số phim trong danh mục được ghi nhận. Chỉ chọn hai hoặc ba vùng để minh họa.",
     "limitation": "Đây là dữ liệu dịch vụ xem năm 2026, không phải lịch sử nơi xem trong giai đoạn torrent 2021–2024. Khác biệt còn phụ thuộc độ đầy đủ của nguồn.",
     "scope": "TMDb / JustWatch · ảnh chụp 2026 · thuê bao/miễn phí",
-    "caution": "Nơi xem là ảnh chụp tại thời điểm thu thập năm 2026, không phải danh mục lịch sử 2021–2024.",
-    "seconds": 45
+    "caution": "Nơi xem là ảnh chụp tại thời điểm thu thập năm 2026, không phải danh mục lịch sử 2021–2024."
   },
   {
     "phase": "TMDb",
@@ -244,8 +233,7 @@
     "reading": "Đọc khoảng cách ngày giữa hai mốc phát hành trong hình. Digital có thể gồm thuê hoặc mua phim, không chỉ xem theo thuê bao.",
     "limitation": "Ngày phát hành có thể thiếu hoặc khác nhau giữa quốc gia. Hình cho thay đổi trong mẫu, chưa đủ kết luận một biến cố làm mô hình phát hành thay đổi vĩnh viễn.",
     "scope": "TMDb · ngày ra rạp và Digital tại Mỹ",
-    "caution": "IMDb có năm phim; TMDb có ngày phát hành theo hình thức và quốc gia. Không dùng hai trường này thay thế nhau.",
-    "seconds": 50
+    "caution": "IMDb có năm phim; TMDb có ngày phát hành theo hình thức và quốc gia. Không dùng hai trường này thay thế nhau."
   },
   {
     "phase": "MagnetDB",
@@ -258,8 +246,7 @@
     "reading": "Đọc từ vòng trong ra ngoài để thấy cơ cấu nội dung. Chỉ chỉ vào nhánh video/phim, không giải thích mọi nhánh.",
     "limitation": "Hình tổng quan dùng dữ liệu/mẫu file theo phạm vi của notebook gốc. Tỷ trọng dung lượng không phải tỷ trọng người dùng hay số phim.",
     "scope": "MagnetDB · cơ cấu file tổng quan",
-    "caution": "Đây là metadata được thu thập; tên và nhãn không xác nhận nội dung thực tế của từng tệp.",
-    "seconds": 45
+    "caution": "Đây là metadata được thu thập; tên và nhãn không xác nhận nội dung thực tế của từng tệp."
   },
   {
     "phase": "MagnetDB",
@@ -272,8 +259,7 @@
     "reading": "Các điểm là số torrent được hệ thống phát hiện theo tháng. Khoảng giảm mạnh có thể liên quan đến hoạt động thu thập.",
     "limitation": "Cửa sổ được chọn vẫn có gián đoạn, đặc biệt 06/2024. Đây là thời điểm phát hiện, không phải thời điểm đăng. Bản trình bày giữ phạm vi xử lý của bản gốc.",
     "scope": "MagnetDB · lịch hoạt động thu thập",
-    "caution": "Ngày phát hiện không phải ngày đăng. Cửa sổ gốc: 01/04/2021 ≤ ngày phát hiện < 29/09/2024; vẫn có gián đoạn.",
-    "seconds": 35
+    "caution": "Ngày phát hiện không phải ngày đăng. Cửa sổ gốc: 01/04/2021 ≤ ngày phát hiện < 29/09/2024; vẫn có gián đoạn."
   },
   {
     "phase": "Tích hợp",
@@ -286,8 +272,7 @@
     "reading": "Theo hai đường nối: TMDb có imdb_id; torrent cần chuẩn hóa tên, đối chiếu tên/năm/bí danh và loại các cặp không phù hợp.",
     "limitation": "Có mã tham chiếu hoặc tên gần giống chưa chứng minh mọi cặp ghép đều đúng. Không đồng nhất cấp phim, cấp file và cặp torrent–phim.",
     "scope": "Sơ đồ phương pháp · ba nguồn",
-    "caution": "Cùng tên chưa đủ xác nhận cùng phim. Tích hợp cần làm sạch và kiểm tra các cặp ghép.",
-    "seconds": 45
+    "caution": "Cùng tên chưa đủ xác nhận cùng phim. Tích hợp cần làm sạch và kiểm tra các cặp ghép."
   },
   {
     "phase": "Tích hợp",
@@ -300,8 +285,7 @@
     "reading": "Màu biểu thị phần chỉ có ở mỗi phương pháp và phần giao nhau. So độ phủ theo thời gian, không đọc thành số người dùng.",
     "limitation": "Phương pháp nhiều bản ghi hơn chưa chắc chính xác hơn. Tự ghép cần tên/năm rõ và có thể bỏ phim trùng tên.",
     "scope": "IMDb × MagnetDB · so hai phương pháp ghép",
-    "caution": "Độ phủ tăng không chứng minh độ chính xác tăng. Tổng qua các phim là số cặp torrent–phim.",
-    "seconds": 45
+    "caution": "Độ phủ tăng không chứng minh độ chính xác tăng. Tổng qua các phim là số cặp torrent–phim."
   },
   {
     "phase": "Phân tích chung",
@@ -314,8 +298,7 @@
     "reading": "Mỗi chấm là một phim. Trục ngang là lượt bình chọn IMDb; trục dọc là số torrent + 1. Hai trục theo thang log. Khoảng cách tới đường mô hình cho thấy ngoại lệ.",
     "limitation": "Bản gốc chủ yếu phân tích phim đã quan sát được torrent. Vote là ảnh chụp hiện tại; không đại diện mức phổ biến tại thời điểm torrent xuất hiện và không chứng minh nhân quả.",
     "scope": "IMDb × MagnetDB · mẫu phim có torrent",
-    "caution": "Hình gốc dùng phim 2021–2023 ≥ 1.000 bình chọn trong nhóm đã ghép; dashboard còn giữ phim chưa ghi nhận torrent.",
-    "seconds": 75
+    "caution": "Hình gốc dùng phim 2021–2023 ≥ 1.000 bình chọn trong nhóm đã ghép; dashboard còn giữ phim chưa ghi nhận torrent."
   },
   {
     "phase": "Phân tích chung",
@@ -328,8 +311,7 @@
     "reading": "Đường cam ×1 là mức dự đoán. Vạch giữa hộp là trung vị: bên phải ×1 cao hơn dự đoán, bên trái thấp hơn. Chọn Hành động và Tài liệu làm hai ví dụ.",
     "limitation": "Phim nhiều nhãn chồng lấn giữa nhóm. Mô hình bản gốc chưa giữ cố định mọi khác biệt về năm, thị trường và cơ hội quan sát; phần còn lại có cả sai số ghép.",
     "scope": "IMDb × MagnetDB · thể loại so với mốc độ phổ biến",
-    "caution": "Đây là so sánh với mô hình, không phải số phim mỗi thể loại. Một phim có thể thuộc nhiều thể loại; chưa chứng minh nguyên nhân.",
-    "seconds": 70
+    "caution": "Đây là so sánh với mô hình, không phải số phim mỗi thể loại. Một phim có thể thuộc nhiều thể loại; chưa chứng minh nguyên nhân."
   },
   {
     "phase": "Phân tích chung",
@@ -342,7 +324,6 @@
     "reading": "Ngày 0 là Digital tại Mỹ; âm là được phát hiện trước mốc đó, dương là sau. Hai cột ngoài cùng gom độ trễ ngoài giới hạn.",
     "limitation": "Đây là ngày hệ thống phát hiện, không phải thời điểm tạo torrent. Chênh lệch quốc gia, thiếu ngày và bộ lọc trước Digital đều ảnh hưởng phân bố.",
     "scope": "Ba nguồn · mốc Digital Mỹ · phim 04/2021–09/2023",
-    "caution": "Mốc Mỹ có thể muộn hơn nước khác; bộ lọc và thời điểm phát hiện ảnh hưởng phân bố. Không suy ra tác động nhân quả.",
-    "seconds": 65
+    "caution": "Mốc Mỹ có thể muộn hơn nước khác; bộ lọc và thời điểm phát hiện ảnh hưởng phân bố. Không suy ra tác động nhân quả."
   }
 ]

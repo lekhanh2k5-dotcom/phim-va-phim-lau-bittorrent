@@ -163,7 +163,7 @@ async function main(){
  await js("location.hash='explore-releases'");await sleep(150);check('Release deep link selects the correct view',await js("activeView==='releases' && activeTab==='explore'"));
  if(!process.argv.includes('--dashboard-only')){
  await resize(1440,900);await navigate('slides.html',"typeof data!=='undefined'");
- check('19 slides, 12 figures, 890 seconds',await js("data.length===19 && data.reduce((n,s)=>n+s.seconds,0)===890 && document.querySelectorAll('.figure-frame img').length===12"));
+ check('19 slides, 12 figures, no speaking-duration annotations',await js("data.length===19 && data.every(s=>!Object.hasOwn(s,'seconds')) && document.querySelectorAll('.figure-frame img').length===12 && !document.querySelector('#stage').textContent.includes('giây') && !document.querySelector('.hero-footer').textContent.includes('phút')"));
  check('All slide images load',await js("Promise.all([...document.querySelectorAll('.figure-frame img')].map(im=>im.decode().then(()=>im.naturalWidth>0))).then(xs=>xs.every(Boolean))"));
  await shot('preview_slides.png');
  await js("show(2)");

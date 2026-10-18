@@ -4,16 +4,16 @@ Mở `slides.html` để thuyết trình; mở `dashboard.html` để khám phá
 
 ## Bộ slide
 
-19 slide: 2 slide mở đầu (slide 2 gồm ba nguồn dữ liệu và 5 bước tiền xử lý), slide 3 là biểu đồ phễu làm sạch, slide 4–8 giải thích chi tiết phương pháp từ notebook `00_quy_trinh_xu_ly`, sau đó đến 6 biểu đồ giới thiệu từng nguồn, 1 sơ đồ tích hợp, 1 biểu đồ độ phủ ghép và 3 biểu đồ phân tích chung. Có 11 biểu đồ dữ liệu và 1 sơ đồ. Lời dẫn, điều rút ra và lưu ý nằm trong ghi chú (phím N) và `kich_ban.md`. Thời lượng lời dẫn được phân bổ 14 phút 50 giây.
+19 slide: 2 slide mở đầu (slide 2 gồm ba nguồn dữ liệu và 5 bước tiền xử lý), slide 3 là biểu đồ phễu làm sạch, slide 4–8 giải thích chi tiết phương pháp từ notebook `00_quy_trinh_xu_ly`, sau đó đến 6 biểu đồ giới thiệu từng nguồn, 1 sơ đồ tích hợp, 1 biểu đồ độ phủ ghép và 3 biểu đồ phân tích chung. Có 11 biểu đồ dữ liệu và 1 sơ đồ. Lời dẫn, điều rút ra và lưu ý nằm trong ghi chú (phím N) và `kich_ban.md`.
 
-| Phần | Slide | Thời gian |
-|---|---|---|
-| Mở đầu, ba nguồn và tiền xử lý | 1–8 | 5 phút 10 giây |
-| IMDb | 9–10 | 1 phút 45 giây |
-| TMDb / JustWatch | 11–12 | 1 phút 35 giây |
-| MagnetDB | 13–14 | 1 phút 20 giây |
-| Tích hợp | 15–16 | 1 phút 30 giây |
-| Phân tích chung | 17–19 | 3 phút 30 giây |
+| Phần | Slide |
+|---|---|
+| Mở đầu, ba nguồn và tiền xử lý | 1–8 |
+| IMDb | 9–10 |
+| TMDb / JustWatch | 11–12 |
+| MagnetDB | 13–14 |
+| Tích hợp | 15–16 |
+| Phân tích chung | 17–19 |
 
 Dùng ←/→ hoặc Space để chuyển; N mở lời dẫn; Z phóng to biểu đồ; F toàn màn hình; M mở mục lục. Nút Dashboard mở dashboard ở một tab riêng. Có bản `slides.pdf` 19 trang để chia sẻ hoặc trình bày khi cần. Lời dẫn và cách chuyển phần nằm trong `kich_ban.md` và bảng Lời dẫn của slide.
 
@@ -27,7 +27,7 @@ Năm slide phương pháp nằm ngay sau biểu đồ tổng quan slide 3:
 
 `methods_slides.py` đọc các bảng kết quả HTML đã lưu trong notebook 00, không chạy lại notebook hoặc tải dữ liệu thô. `methods_reference.json` lưu số liệu, ví dụ, chỉ số ô nguồn và SHA-256 notebook để đối chiếu. Phần chữ chi tiết là HTML, nên tìm kiếm và sao chép được trong bộ slide; không dùng ảnh chụp code làm nội dung chính.
 
-Các biểu đồ slide lấy từ dự án ba nguồn gốc; lời dẫn được viết lại theo mạch 15 phút. Các kết luận được giới hạn ở mối liên hệ quan sát. Không dùng biểu đồ “tăng 22 lần” vì bộ lọc trước Digital ảnh hưởng phân bố đó.
+Các biểu đồ slide lấy từ dự án ba nguồn gốc. Các kết luận được giới hạn ở mối liên hệ quan sát. Không dùng biểu đồ “tăng 22 lần” vì bộ lọc trước Digital ảnh hưởng phân bố đó.
 
 ## Dashboard
 

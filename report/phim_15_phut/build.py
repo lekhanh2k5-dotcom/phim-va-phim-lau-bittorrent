@@ -144,18 +144,18 @@ def build_slides():
       '7_piracy_movies/03_genre_piracy_ratio': 'Hình này dùng kết quả mô hình ở hình trước. Đường cam bằng một là số torrent mô hình dự đoán từ bình chọn. Trung vị của nhóm Hành động nằm về bên phải, còn Tài liệu nằm về bên trái: trong mẫu, hai nhóm có mức ghi nhận khác nhau so với dự đoán. Hình không đếm số phim của mỗi thể loại, nên không trả lời Chính kịch hay Tài liệu có nhiều phim hơn. Một phim có thể thuộc nhiều thể loại. Ngoài sự quan tâm và thể loại, chúng tôi bổ sung lịch phát hành để xem các bản chia sẻ được phát hiện vào thời điểm nào.',
       '7_piracy_movies/07_web_lag': 'Ngày không trên hình là ngày Digital tại Mỹ. Cột dương là WEB đầu tiên được ghi nhận sau mốc đó; cột âm là trước mốc đó. Phân bố tập trung gần mốc Digital trong mẫu đang xét. Cần nhớ một phim có thể đã phát hành Digital ở nước khác trước Mỹ, và hệ thống có thể phát hiện muộn hơn ngày đăng. Bộ lọc metadata cũng ảnh hưởng phân bố. Vì vậy, ta chỉ kết luận về thời điểm ghi nhận trong dữ liệu, không khẳng định Digital gây ra chia sẻ. Đây cũng là điểm kết của bài: tích hợp ba nguồn giúp đặt sự quan tâm, thể loại và thời điểm phát hành của cùng một bộ phim vào chung một bối cảnh. Cảm ơn thầy cô và các bạn đã lắng nghe.'
     }
-    def concept(title,subtitle,cards,notes,seconds,kind='concept',phase='Mở đầu',steps=None,result=None):
-        slides.append(dict(title=title,subtitle=subtitle,cards=cards,notes=notes,seconds=seconds,kind=kind,phase=phase,
+    def concept(title,subtitle,cards,notes,kind='concept',phase='Mở đầu',steps=None,result=None):
+        slides.append(dict(title=title,subtitle=subtitle,cards=cards,notes=notes,kind=kind,phase=phase,
                            steps=steps or [],result=result))
-    def chart(image,phase,title,finding,next_question,reading,seconds,caution):
+    def chart(image,phase,title,finding,next_question,reading,caution):
         s=by_image['plots/'+image+'.png'].copy()
         s.update(phase=phase,title=title,finding=finding,next_question=next_question,reading=reading,
-                 seconds=seconds,caution=caution,why=narration[image])
+                 caution=caution,why=narration[image])
         slides.append(s)
     concept('Một bộ phim. Ba góc nhìn.',
         'Sự quan tâm của khán giả, khả năng tiếp cận và các bản chia sẻ trên BitTorrent liên hệ thế nào?',
         [('IMDb','Phim & sự quan tâm'),('TMDb / JustWatch','Phát hành & nơi xem'),('MagnetDB','Các bản chia sẻ được ghi nhận')],
-        'Trong bài này, chúng tôi theo dõi một bộ phim qua ba góc nhìn: người dùng quan tâm ra sao, phim được phát hành khi nào và hệ thống ghi nhận những bản chia sẻ nào. Chúng tôi sẽ phân tích riêng từng nguồn, sau đó nối chúng để trả lời ba câu hỏi chung.',40,'hero')
+        'Trong bài này, chúng tôi theo dõi một bộ phim qua ba góc nhìn: người dùng quan tâm ra sao, phim được phát hành khi nào và hệ thống ghi nhận những bản chia sẻ nào. Chúng tôi sẽ phân tích riêng từng nguồn, sau đó nối chúng để trả lời ba câu hỏi chung.','hero')
     concept('Ba nguồn dữ liệu và bước tiền xử lý',
         'Mỗi nguồn trả lời một phần câu hỏi; tiền xử lý đưa ba nguồn về cùng một bộ phim.',
         [('IMDb','Hồ sơ phim: tên, năm, thể loại, điểm và lượt bình chọn. Lượt bình chọn là chỉ báo sự quan tâm.'),
@@ -164,7 +164,7 @@ def build_slides():
         'IMDb giống một danh mục phim có đánh giá của người dùng. TMDb bổ sung lịch phát hành và nơi xem. BitTorrent là cách chia sẻ tệp giữa nhiều máy tính; MagnetDB ghi nhận metadata các bản chia sẻ đó. '
         'Trước khi phân tích, dữ liệu đi qua năm bước tiền xử lý. Một, chỉ giữ phim lẻ, bỏ phim người lớn và tập phim bộ. Hai, chuẩn hóa tên phim: bỏ dấu, chữ thường, thêm tên phim theo từng nước. '
         'Ba, ghép thực thể: tách tên và năm từ tên torrent rồi đối chiếu với IMDb; TMDb nối qua mã IMDb. Bốn, làm sạch: bỏ tệp nhỏ, năm lệch, ca trùng tên và torrent giả. '
-        'Năm, chỉ giữ giai đoạn thu thập ổn định từ tháng tư năm hai nghìn không trăm hai mươi mốt đến tháng chín năm hai nghìn không trăm hai mươi bốn.',65,
+        'Năm, chỉ giữ giai đoạn thu thập ổn định từ tháng tư năm hai nghìn không trăm hai mươi mốt đến tháng chín năm hai nghìn không trăm hai mươi bốn.',
         steps=[('Lọc phim','Chỉ phim lẻ; bỏ phim người lớn, tập phim bộ, sự kiện thể thao'),
                ('Chuẩn hóa tên','Bỏ dấu, chữ thường, thêm tên theo từng nước (akas)'),
                ('Ghép thực thể','Tên + năm từ tên torrent ↔ IMDb; TMDb nối qua imdb_id'),
@@ -175,71 +175,69 @@ def build_slides():
     chart('6_integration/01_cleaning_funnel','Tiền xử lý','Dữ liệu còn lại sau từng bước làm sạch',
         'Hai nhánh ghép được làm sạch riêng, sau đó hợp nhất và lọc chung trước khi phân tích.',
         'Đi vào từng thao tác: chuẩn hóa dữ liệu trước khi ghép phim.',
-        'Đọc ba cụm từ trái sang phải: mã IMDb có sẵn, tự ghép tên torrent, rồi hợp hai nguồn và lọc chung. Nhãn số cho biết số torrent còn lại sau mỗi bước.',45,
+        'Đọc ba cụm từ trái sang phải: mã IMDb có sẵn, tự ghép tên torrent, rồi hợp hai nguồn và lọc chung. Nhãn số cho biết số torrent còn lại sau mỗi bước.',
         'Mỗi cụm có thang riêng; không so trực tiếp độ dài thanh giữa các cụm và không cộng hai nhánh vì có phần giao nhau. Phễu dùng phạm vi dữ liệu gốc, khác cửa sổ thống kê của dashboard.')
     slides.extend(method_slides)
     chart('1_imdb/01_movies_per_year','IMDb','Kho phim thay đổi thế nào theo thời gian?',
         'Quy mô danh mục khác nhau giữa các năm; cần hiểu nền dữ liệu trước khi so sánh.',
         'Nhiều phim như vậy, sự chú ý có phân bố đều không?',
-        'Trục ngang là năm phim trên IMDb; trục dọc là số bản ghi phim. Chỉ nhấn mạnh hình dạng xu hướng, không đọc từng năm.',50,
+        'Trục ngang là năm phim trên IMDb; trục dọc là số bản ghi phim. Chỉ nhấn mạnh hình dạng xu hướng, không đọc từng năm.',
         'Số bản ghi IMDb chịu ảnh hưởng của độ đầy đủ dữ liệu; không phải tổng điều tra sản lượng phim.')
     chart('1_imdb/06_votes_lorenz','IMDb','Sự chú ý tập trung vào một nhóm phim nhỏ',
         'Trong nhóm phim có đánh giá, 1% phim nhiều bình chọn nhất chiếm khoảng 69% tổng lượt bình chọn.',
         'Khán giả có thể tiếp cận những bộ phim đó ở đâu?',
-        'Phim được xếp từ ít đến nhiều bình chọn. Nếu phân bố đều, đường xanh trùng đường chéo; đường thực tế cong mạnh cho thấy sự tập trung.',55,
+        'Phim được xếp từ ít đến nhiều bình chọn. Nếu phân bố đều, đường xanh trùng đường chéo; đường thực tế cong mạnh cho thấy sự tập trung.',
         'Bình chọn là chỉ báo mức độ quan tâm; không phải lượt xem. Không cần giải thích công thức Gini.')
     chart('3_tmdb_streaming/01_world_catalog_map','TMDb','Nơi xem phim khác nhau giữa các quốc gia',
         'Danh mục phim có nơi xem được ghi nhận khác nhau giữa các quốc gia.',
         'Ngoài nơi xem, thời điểm tiếp cận có khác nhau không?',
-        'Đọc chú giải màu để so sánh số phim trong danh mục được ghi nhận. Chỉ chọn hai hoặc ba vùng để minh họa.',45,
+        'Đọc chú giải màu để so sánh số phim trong danh mục được ghi nhận. Chỉ chọn hai hoặc ba vùng để minh họa.',
         'Nơi xem là ảnh chụp tại thời điểm thu thập năm 2026, không phải danh mục lịch sử 2021–2024.')
     chart('2_tmdb/04_theatrical_window','TMDb','Từ chiếu rạp đến phát hành số mất bao lâu?',
         'Ngày chiếu rạp và ngày phát hành Digital là hai mốc khác nhau của cùng một phim.',
         'Một hình thức phân phối khác được ghi nhận trong MagnetDB là gì?',
-        'Đọc khoảng cách ngày giữa hai mốc phát hành trong hình. Digital có thể gồm thuê hoặc mua phim, không chỉ xem theo thuê bao.',50,
+        'Đọc khoảng cách ngày giữa hai mốc phát hành trong hình. Digital có thể gồm thuê hoặc mua phim, không chỉ xem theo thuê bao.',
         'IMDb có năm phim; TMDb có ngày phát hành theo hình thức và quốc gia. Không dùng hai trường này thay thế nhau.')
     chart('4_magnetdb/01_content_sunburst','MagnetDB','Trong kho chia sẻ có những loại nội dung nào?',
         'MagnetDB chứa nhiều loại nội dung; nghiên cứu này chọn phần liên quan đến phim.',
         'Việc thu thập có đều qua thời gian không?',
-        'Đọc từ vòng trong ra ngoài để thấy cơ cấu nội dung. Chỉ chỉ vào nhánh video/phim, không giải thích mọi nhánh.',45,
+        'Đọc từ vòng trong ra ngoài để thấy cơ cấu nội dung. Chỉ chỉ vào nhánh video/phim, không giải thích mọi nhánh.',
         'Đây là metadata được thu thập; tên và nhãn không xác nhận nội dung thực tế của từng tệp.')
     chart('4_magnetdb/03_crawler_coverage','MagnetDB','Chọn thời gian quan sát trước khi so sánh',
         'Thu thập không đều; các phân tích chính giới hạn vào cửa sổ quan sát của dự án.',
         'Làm sao biết các bản ghi ở ba nguồn thuộc cùng một phim?',
-        'Các điểm là số torrent được hệ thống phát hiện theo tháng. Khoảng giảm mạnh có thể liên quan đến hoạt động thu thập.',35,
+        'Các điểm là số torrent được hệ thống phát hiện theo tháng. Khoảng giảm mạnh có thể liên quan đến hoạt động thu thập.',
         'Ngày phát hiện không phải ngày đăng. Cửa sổ gốc: 01/04/2021 ≤ ngày phát hiện < 29/09/2024; vẫn có gián đoạn.')
     chart('5_combined/01_integration_diagram','Tích hợp','Nối ba nguồn về cùng một bộ phim',
         'Mã IMDb là điểm nối; nhánh MagnetDB cần nhận diện tên phim và năm.',
         'Cách ghép bổ sung được bao nhiêu dữ liệu?',
-        'Theo hai đường nối: TMDb có imdb_id; torrent cần chuẩn hóa tên, đối chiếu tên/năm/bí danh và loại các cặp không phù hợp.',45,
+        'Theo hai đường nối: TMDb có imdb_id; torrent cần chuẩn hóa tên, đối chiếu tên/năm/bí danh và loại các cặp không phù hợp.',
         'Cùng tên chưa đủ xác nhận cùng phim. Tích hợp cần làm sạch và kiểm tra các cặp ghép.')
     chart('6_integration/02_coverage_by_source','Tích hợp','Tự ghép tên bổ sung độ phủ của dữ liệu',
         'Nhánh tự ghép bổ sung nhiều cặp torrent–phim ngoài các liên kết có sẵn.',
         'Sau tích hợp, phim được quan tâm nhiều có nhiều bản chia sẻ hơn không?',
-        'Màu biểu thị phần chỉ có ở mỗi phương pháp và phần giao nhau. So độ phủ theo thời gian, không đọc thành số người dùng.',45,
+        'Màu biểu thị phần chỉ có ở mỗi phương pháp và phần giao nhau. So độ phủ theo thời gian, không đọc thành số người dùng.',
         'Độ phủ tăng không chứng minh độ chính xác tăng. Tổng qua các phim là số cặp torrent–phim.')
     chart('7_piracy_movies/02_popularity_vs_piracy','Phân tích chung','Sự quan tâm liên hệ thế nào với số bản chia sẻ?',
         'Trong mẫu phim đã ghép, lượt bình chọn cao thường đi cùng nhiều torrent được ghi nhận hơn.',
         'Mức độ quan tâm đã giải thích hết khác biệt giữa các phim chưa?',
-        'Mỗi chấm là một phim. Trục ngang là lượt bình chọn IMDb; trục dọc là số torrent + 1. Hai trục theo thang log. Khoảng cách tới đường mô hình cho thấy ngoại lệ.',75,
+        'Mỗi chấm là một phim. Trục ngang là lượt bình chọn IMDb; trục dọc là số torrent + 1. Hai trục theo thang log. Khoảng cách tới đường mô hình cho thấy ngoại lệ.',
         'Hình gốc dùng phim 2021–2023 ≥ 1.000 bình chọn trong nhóm đã ghép; dashboard còn giữ phim chưa ghi nhận torrent.')
     chart('7_piracy_movies/03_genre_piracy_ratio','Phân tích chung','Thể loại còn khác nhau sau khi xét sự quan tâm?',
         'Một số thể loại có số bản chia sẻ cao hoặc thấp hơn mức mô hình dự đoán từ lượt bình chọn.',
         'Ngoài đặc điểm phim, thời điểm phát hành có cung cấp thêm thông tin không?',
-        'Đường cam ×1 là mức dự đoán. Vạch giữa hộp là trung vị: bên phải ×1 cao hơn dự đoán, bên trái thấp hơn. Chọn Hành động và Tài liệu làm hai ví dụ.',70,
+        'Đường cam ×1 là mức dự đoán. Vạch giữa hộp là trung vị: bên phải ×1 cao hơn dự đoán, bên trái thấp hơn. Chọn Hành động và Tài liệu làm hai ví dụ.',
         'Đây là so sánh với mô hình, không phải số phim mỗi thể loại. Một phim có thể thuộc nhiều thể loại; chưa chứng minh nguyên nhân.')
     chart('7_piracy_movies/07_web_lag','Phân tích chung','Bản WEB được ghi nhận gần mốc Digital đến đâu?',
         'Các bản WEB thường được ghi nhận gần ngày phát hành Digital tại Mỹ trong mẫu đang xét.',
         'Kết thúc: cảm ơn và mời câu hỏi.',
-        'Ngày 0 là Digital tại Mỹ; âm là được phát hiện trước mốc đó, dương là sau. Hai cột ngoài cùng gom độ trễ ngoài giới hạn.',65,
+        'Ngày 0 là Digital tại Mỹ; âm là được phát hiện trước mốc đó, dương là sau. Hai cột ngoài cùng gom độ trễ ngoài giới hạn.',
         'Mốc Mỹ có thể muộn hơn nước khác; bộ lọc và thời điểm phát hiện ảnh hưởng phân bố. Không suy ra tác động nhân quả.')
     N=len(slides)
-    total=sum(s['seconds'] for s in slides)
-    mmss=lambda sec:f"{sec//60} phút {sec%60} giây" if sec%60 else f"{sec//60} phút"
     esc=lambda x:html.escape(str(x),quote=True)
     rendered=[]
     for n,s in enumerate(slides):
-        head=f"<div class='slide-heading'><p class='eyebrow'>{esc(s['phase'])} <span>• {n+1:02d} / {N} · {s['seconds']} giây</span></p><h2>{esc(s['title'])}</h2></div>"
+        head=f"<div class='slide-heading'><p class='eyebrow'>{esc(s['phase'])} <span>• {n+1:02d} / {N}</span></p><h2>{esc(s['title'])}</h2></div>"
         if s['kind']=='chart':
             image=ROOT/s['image']
             asset=image.parent.name+'_'+image.name
@@ -256,7 +254,7 @@ def build_slides():
                     f"<li><span class='prep-n'>{j+1}</span><h4>{esc(t)}</h4><p>{esc(d)}</p></li>" for j,(t,d) in enumerate(s['steps']))+"</ol>"
                 if s.get('result'):body+=f"<p class='prep-result'>{esc(s['result'])}</p>"
                 body+="</div>"
-            if s['kind']=='hero':body+=f"<p class='hero-footer'>Tích hợp và Phân tích dữ liệu lớn <span>{N} slide · {mmss(total)}</span></p>"
+            if s['kind']=='hero':body+=f"<p class='hero-footer'>Tích hợp và Phân tích dữ liệu lớn <span>{N} slide</span></p>"
         extra=' with-prep' if s.get('steps') else ''
         rendered.append(f"<section class='slide {s['kind']}{extra} {'active' if n==0 else ''}' aria-label='Trang {n+1}'>{head}{body}</section>")
     template=(ROOT/'report/thuyet_trinh_ba_nguon/template.html').read_text(encoding='utf8')
@@ -278,9 +276,9 @@ def build_slides():
     result=template.replace('<!-- SLIDES -->','\n'.join(rendered)).replace('<!-- DATA -->',json_text(slides))
     (HERE/'slides.html').write_text(result,encoding='utf8')
     (HERE/'slides.json').write_text(json.dumps(slides,ensure_ascii=False,indent=2),encoding='utf8')
-    outline=['# Kịch bản thuyết trình',f'{N} slide; thời lượng lời nói dự kiến {mmss(total)}. Phân tích từng nguồn trước, tích hợp sau.']
+    outline=['# Kịch bản thuyết trình',f'{N} slide. Phân tích từng nguồn trước, tích hợp sau.']
     for n,s in enumerate(slides,1):
-        outline.append(f"## {n:02d}. {s['title']} — {s['seconds']} giây")
+        outline.append(f"## {n:02d}. {s['title']}")
         if s['kind'] in ('chart','method'):
             outline.extend([f"**Lời dẫn:** {s['why']}",f"**Cách đọc:** {s['reading']}",f"**Chốt:** {s['finding']}",f"**Chuyển:** {s['next_question']}",f"**Lưu ý:** {s['caution']}"])
         else:outline.append(s['notes'])
@@ -307,7 +305,7 @@ def main():
                       watch_facts=len(payload['watch']['rows']))
     if not args.dashboard_only:
         slides=build_slides()
-        result.update(slides=len(slides),seconds=sum(s['seconds'] for s in slides))
+        result.update(slides=len(slides))
     print(json.dumps(result,ensure_ascii=False))
 
 if __name__=='__main__':main()
