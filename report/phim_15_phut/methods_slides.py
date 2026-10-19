@@ -75,13 +75,14 @@ def build_method_slides(root):
     tables = {idx:saved_table(notebook, idx, column) for idx, column in [
         (8,'so_file_video_da_ghep'), (10,'ten_chuan_hoa'), (11,'moi_phim_IMDb'),
         (13,'ten_torrent'), (14,'torrent_ghep_duoc'), (16,'tmdb_title'), (17,'nuoc'),
-        (20,'precision'), (22,'nguon'), (25,'bi_loai_vi'), (27,'phat_hien'), (32,'cap_torrent_phim_sach')]}
+        (20,'muc_dong_thuan_pct'), (22,'nguon'), (25,'bi_loai_vi'), (27,'phat_hien'), (32,'cap_torrent_phim_sach')]}
     index, matched, evaluated, clean = (tables[idx][0] for idx in (11,14,20,32))
     facts = {
         'imdb_movies':int(index['moi_phim_IMDb']), 'indexed_names':int(index['so_ten_trong_chi_muc']),
         'matched_rows':int(matched['torrent_ghep_duoc']), 'ambiguous_rows':int(matched['ca_mo_ho_bi_bo']),
-        'matched_movies':int(matched['so_phim']), 'evaluation_files':int(evaluated['so_ten_file']),
-        'evaluation_precision':float(evaluated['precision']), 'evaluation_recall':float(evaluated['recall']),
+        'matched_movies':int(matched['so_phim']), 'labelled_torrents':int(evaluated['torrent_co_nhan_MagnetDB']),
+        'answered_torrents':int(evaluated['thuat_toan_tra_loi']), 'agreeing_torrents':int(evaluated['trung_nhan_MagnetDB']),
+        'agreement_pct':float(evaluated['muc_dong_thuan_pct']), 'coverage_pct':float(evaluated['do_phu_pct']),
         'clean_pairs':int(clean['cap_torrent_phim_sach']), 'clean_torrents':int(clean['so_torrent']),
         'clean_movies':int(clean['so_phim']), 'stable_pairs':int(clean['trong_giai_doan_on_dinh']),
     }
@@ -123,10 +124,10 @@ def build_method_slides(root):
         'Số phim ở đây là toàn danh mục IMDb trong notebook, khác mẫu dashboard có ngưỡng bình chọn.',
         'Sau chuẩn hóa, quy tắc nào quyết định một torrent thuộc phim nào?',[8,10,11])
 
-    precision = str(round(facts['evaluation_precision']*100,1)).replace('.',',')
-    recall = str(round(facts['evaluation_recall']*100,1)).replace('.',',')
+    agreement = str(facts['agreement_pct']).replace('.',',')
+    coverage = str(facts['coverage_pct']).replace('.',',')
     add('matching','Ghép chính xác tên chuẩn hóa + năm; bỏ ca mơ hồ',
-        'Bước 04, 08 · Nhánh ghép tên chính dùng chỉ mục IMDb; một pipeline khác được dùng để đối chiếu.',
+        'Bước 04, 08 · Ghép tên bằng chỉ mục IMDb; kiểm tra bằng cách so với nhãn có sẵn của MagnetDB.',
         f'''<ol class="method-flow"><li><b>01 · Làm sạch tên</b><span>Bỏ tiền tố trang, đuôi file; loại dấu hiệu phim bộ.</span></li>
         <li><b>02 · Tách tên + năm</b><span>Lấy tên trước năm; không nhầm 1080p với năm phim.</span></li>
         <li><b>03 · Tra chính xác</b><span>Tên chuẩn hóa trùng chỉ mục; năm lệch tối đa ±1.</span></li>
@@ -134,11 +135,11 @@ def build_method_slides(root):
         <div class="method-example method-match-example"><span class="method-label">Ví dụ ghép thật</span><code class="method-raw-name">{esc(parasite['ten_torrent'])}</code>
         <div class="method-alias"><span>parasite + {esc(parasite['nam'])}</span><span class="method-arrow">→</span><strong>{esc(parasite['phim_IMDb'])} ({esc(parasite['start_year'])})</strong></div></div>
         <div class="method-metrics"><div><strong>{number(facts['matched_rows'])}</strong><span>dòng ghép ban đầu</span></div><div><strong>{number(facts['ambiguous_rows'])}</strong><span>ca mơ hồ bị bỏ</span></div><div><strong>{number(facts['matched_movies'])}</strong><span>phim sau loại mơ hồ</span></div></div>
-        <p class="method-audit"><b>Đối chiếu độc lập:</b> guessit + rapidfuzz trên {number(facts['evaluation_files'])} tên file, so với nhãn MagnetDB: precision <b>{precision}%</b>, recall <b>{recall}%</b>. Đây là phép đối chiếu tham chiếu, không phải tỷ lệ đúng của toàn bộ pipeline chính.</p>''',
-        'Nhánh ghép tên chính bỏ tiền tố rác, tách năm và phần tên đứng trước năm, rồi tra chính xác tên đã chuẩn hóa trong chỉ mục IMDb. Năm cho phép lệch một đơn vị. Những tên trùng nhiều phim hoặc quá chung chung được đánh dấu mơ hồ và bỏ. Notebook ghi nhận hơn 2,25 triệu dòng ghép ban đầu, trong đó gần 194 nghìn ca mơ hồ. Để đối chiếu, bước tám chạy riêng guessit và rapidfuzz trên 20 nghìn tên file, so với nhãn MagnetDB. Các chỉ số precision và recall của phép đối chiếu này không được coi là độ chính xác của toàn bộ nhánh ghép chính.',
-        'Theo bốn bước từ trái sang phải, đọc ví dụ Parasite và phân biệt nhánh tra chính xác với phép đối chiếu gần đúng.',
+        <p class="method-audit"><b>Kiểm tra thuật toán này</b> trên {number(facts['labelled_torrents'])} torrent MagnetDB đã gán phim: thuật toán trả lời {number(facts['answered_torrents'])} torrent, <b>{agreement}%</b> trùng nhãn MagnetDB (mức đồng thuận); độ phủ <b>{coverage}%</b> vì thuật toán từ chối tên không có năm hoặc mơ hồ. Ca lệch phần lớn do MagnetDB gán nhầm phần phim/năm (vd. Paranormal Activity 4 → phần 1).</p>''',
+        'Nhánh ghép tên chính bỏ tiền tố rác, tách năm và phần tên đứng trước năm, rồi tra chính xác tên đã chuẩn hóa trong chỉ mục IMDb. Năm cho phép lệch một đơn vị. Những tên trùng nhiều phim hoặc quá chung chung được đánh dấu mơ hồ và bỏ. Notebook ghi nhận hơn 2,25 triệu dòng ghép ban đầu, trong đó gần 194 nghìn ca mơ hồ. Để kiểm tra, nhóm so kết quả với nhãn mà MagnetDB tự gán sẵn, trên khoảng 226 nghìn torrent cả hai cùng xét. Khi thuật toán đã trả lời, 92 phần trăm trùng nhãn MagnetDB; độ phủ khoảng 53 phần trăm vì thuật toán chỉ ghép khi chắc chắn. Các ca lệch phần lớn là MagnetDB gán nhầm phần phim hoặc bản khác năm, như Paranormal Activity 4 bị gán vào phần 1.',
+        'Theo bốn bước từ trái sang phải, đọc ví dụ Parasite, rồi đọc dòng kiểm tra: mức đồng thuận là khi đã trả lời thì trùng bao nhiêu, độ phủ là trùng được bao nhiêu trên tổng số.',
         'Ghép tên có ràng buộc năm và cơ chế từ chối; không nhận mọi tên giống nhau thành cùng một phim.',
-        'Nhãn MagnetDB có lỗi. Precision/recall là kết quả đối chiếu trên mẫu 20.000 file, không phải kiểm định thủ công toàn tập.',
+        'Nhãn MagnetDB cũng có lỗi, nên 92% là mức đồng thuận, không phải độ chính xác tuyệt đối; các ca lệch xem thử phần lớn là MagnetDB sai.',
         'Ghép được chưa đủ: những bản ghi nào còn cần bị loại hoặc gắn cờ?',[13,14,20])
 
     add('cleaning','Bộ lọc A–J xử lý những lỗi nào?',

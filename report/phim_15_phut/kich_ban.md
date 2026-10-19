@@ -36,15 +36,15 @@ IMDb giống một danh mục phim có đánh giá của người dùng. TMDb b�
 
 ## 05. Ghép chính xác tên chuẩn hóa + năm; bỏ ca mơ hồ
 
-**Lời dẫn:** Nhánh ghép tên chính bỏ tiền tố rác, tách năm và phần tên đứng trước năm, rồi tra chính xác tên đã chuẩn hóa trong chỉ mục IMDb. Năm cho phép lệch một đơn vị. Những tên trùng nhiều phim hoặc quá chung chung được đánh dấu mơ hồ và bỏ. Notebook ghi nhận hơn 2,25 triệu dòng ghép ban đầu, trong đó gần 194 nghìn ca mơ hồ. Để đối chiếu, bước tám chạy riêng guessit và rapidfuzz trên 20 nghìn tên file, so với nhãn MagnetDB. Các chỉ số precision và recall của phép đối chiếu này không được coi là độ chính xác của toàn bộ nhánh ghép chính.
+**Lời dẫn:** Nhánh ghép tên chính bỏ tiền tố rác, tách năm và phần tên đứng trước năm, rồi tra chính xác tên đã chuẩn hóa trong chỉ mục IMDb. Năm cho phép lệch một đơn vị. Những tên trùng nhiều phim hoặc quá chung chung được đánh dấu mơ hồ và bỏ. Notebook ghi nhận hơn 2,25 triệu dòng ghép ban đầu, trong đó gần 194 nghìn ca mơ hồ. Để kiểm tra, nhóm so kết quả với nhãn mà MagnetDB tự gán sẵn, trên khoảng 226 nghìn torrent cả hai cùng xét. Khi thuật toán đã trả lời, 92 phần trăm trùng nhãn MagnetDB; độ phủ khoảng 53 phần trăm vì thuật toán chỉ ghép khi chắc chắn. Các ca lệch phần lớn là MagnetDB gán nhầm phần phim hoặc bản khác năm, như Paranormal Activity 4 bị gán vào phần 1.
 
-**Cách đọc:** Theo bốn bước từ trái sang phải, đọc ví dụ Parasite và phân biệt nhánh tra chính xác với phép đối chiếu gần đúng.
+**Cách đọc:** Theo bốn bước từ trái sang phải, đọc ví dụ Parasite, rồi đọc dòng kiểm tra: mức đồng thuận là khi đã trả lời thì trùng bao nhiêu, độ phủ là trùng được bao nhiêu trên tổng số.
 
 **Chốt:** Ghép tên có ràng buộc năm và cơ chế từ chối; không nhận mọi tên giống nhau thành cùng một phim.
 
 **Chuyển:** Ghép được chưa đủ: những bản ghi nào còn cần bị loại hoặc gắn cờ?
 
-**Lưu ý:** Nhãn MagnetDB có lỗi. Precision/recall là kết quả đối chiếu trên mẫu 20.000 file, không phải kiểm định thủ công toàn tập.
+**Lưu ý:** Nhãn MagnetDB cũng có lỗi, nên 92% là mức đồng thuận, không phải độ chính xác tuyệt đối; các ca lệch xem thử phần lớn là MagnetDB sai.
 
 ## 06. Bộ lọc A–J xử lý những lỗi nào?
 

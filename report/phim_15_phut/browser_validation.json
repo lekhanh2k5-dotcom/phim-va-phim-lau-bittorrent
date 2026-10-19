@@ -727,6 +727,96 @@
     "detail": ""
   },
   {
+    "check": "18 slides, 12 figures, no speaking-duration annotations",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All slide images load",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Cleaning figure remains slide 3 immediately after the source overview",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Slide 3 uses the original high resolution image and updated contents",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Slide 3 image enlarges",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Method slides retain provenance of the saved notebook",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Four method slides follow slide 3 in the intended order",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Normalization and exact-matching examples appear in slides",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Matching slide reports agreement and coverage of the main algorithm",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Cleaning slide shows actual rejected examples and flags",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Final processing slide separates pairs, torrents and observation window",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Notes tab is removed from slides",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "N key does not open notes",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "Dashboard button links to dashboard",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "All slides fit desktop",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "All slides fit laptop",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "All slides fit phone width",
+    "passed": true,
+    "detail": []
+  },
+  {
+    "check": "PDF exports exactly 18 pages",
+    "passed": true,
+    "detail": 18
+  },
+  {
     "check": "No external assets or data requested",
     "passed": true,
     "detail": []

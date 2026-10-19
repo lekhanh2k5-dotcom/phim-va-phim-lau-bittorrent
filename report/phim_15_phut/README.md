@@ -20,7 +20,7 @@ Dùng ←/→ hoặc Space để chuyển; Z phóng to biểu đồ; F toàn mà
 Bốn slide phương pháp nằm ngay sau biểu đồ tổng quan slide 3:
 
 - **4 — Chuẩn hóa:** trích metadata từ SQLite, giữ định danh, bổ sung tên `akas`; ví dụ tên thay thế của The Big Lebowski và chỉ mục 1.875.336 tên.
-- **5 — Ghép thực thể:** tra chính xác tên chuẩn hóa + năm lệch tối đa ±1; loại ca mơ hồ; ví dụ Parasite. Phân biệt pipeline chính với phép đối chiếu riêng `guessit` + `rapidfuzz` trên 20.000 tên file (precision 87,9%, recall 63,2% so với nhãn MagnetDB).
+- **5 — Ghép thực thể:** tra chính xác tên chuẩn hóa + năm lệch tối đa ±1; loại ca mơ hồ; ví dụ Parasite. Kiểm tra bằng cách so với nhãn có sẵn của MagnetDB trên 226.006 torrent: khi thuật toán trả lời, 92% trùng nhãn (mức đồng thuận); độ phủ 52,6% vì thuật toán từ chối tên không có năm hoặc mơ hồ. Nhãn MagnetDB cũng có lỗi, nên đây không phải độ chính xác tuyệt đối.
 - **6 — Làm sạch A–J:** nhóm các quy tắc, ví dụ tập phim bộ, năm lệch và bản tự xưng BluRay trước khi ra rạp; giải thích nhật ký và cờ `implausible`.
 - **7 — Đầu ra:** phân biệt cặp torrent–phim, torrent riêng biệt và phim. Toàn phạm vi có 2.078.927 cặp sạch, 2.066.598 torrent và 126.081 phim; trong cửa sổ quan sát còn 923.998 cặp. Phân biệt ba loại thời gian.
 

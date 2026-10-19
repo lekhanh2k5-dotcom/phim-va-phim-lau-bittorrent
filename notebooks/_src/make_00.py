@@ -50,8 +50,16 @@ code("""q(\"\"\"SELECT torrent_id, name AS ten_torrent, round(total_size/1e9, 2)
      FROM '@mdb_torrents_all.parquet'
      WHERE name ILIKE '%Avatar.The.Way.of.Water.2022%' OR name ILIKE '%Top.Gun.Maverick.2022%' OR name ILIKE '%Dune.2021.1080p%'
      ORDER BY torrent_id LIMIT 5\"\"\")"""),
-md("Tổng quy mô bảng `torrents` (mọi loại nội dung: phim, nhạc, phần mềm, ảnh…):"),
-code("""q("SELECT count(*) AS so_torrent, min(discovered_at_utc) AS tu, max(discovered_at_utc) AS den FROM '@mdb_torrents_all.parquet'")"""),
+md("""Tổng quy mô bảng `torrents` (mọi loại nội dung: phim, nhạc, phần mềm, ảnh…) và phần được đưa vào bước tự ghép tên (Bước 4):
+chỉ giữ torrent **phát hiện từ 01/04/2019 đến trước 30/09/2024** và **tổng dung lượng ≥ 100 MB** (một bộ phim hiếm khi nhỏ hơn;
+bỏ bớt nhạc lẻ, ảnh, phụ đề…). Đây là lý do Bước 4 làm việc trên ~23,5 triệu torrent chứ không phải 28,6 triệu:"""),
+code("""# Đầu vào của Bước 4 (src/04): cùng khoảng thời gian và ngưỡng dung lượng
+DAU_VAO = \"\"\"SELECT torrent_id FROM '@mdb_torrents_all.parquet'
+            WHERE discovered_at_utc >= '2019-04-01' AND discovered_at_utc < '2024-09-30' AND total_size >= 100e6\"\"\"
+q(\"\"\"SELECT count(*) AS so_torrent, min(discovered_at_utc) AS tu, max(discovered_at_utc) AS den,
+            count(*) FILTER (WHERE discovered_at_utc >= '2019-04-01' AND discovered_at_utc < '2024-09-30') AS trong_04_2019_09_2024,
+            count(*) FILTER (WHERE discovered_at_utc >= '2019-04-01' AND discovered_at_utc < '2024-09-30' AND total_size >= 100e6) AS dau_vao_buoc_4
+     FROM '@mdb_torrents_all.parquet'\"\"\")"""),
 
 md("""## Bước 1–2 — Mã IMDb có sẵn trong MagnetDB (`src/01`, `src/02`)
 
@@ -82,7 +90,7 @@ md("""## Bước 4 — Tự ghép tên torrent → phim (`src/04`, bước tích
 
 **Vì sao:** MagnetDB tách tên đúng nhưng tra IMDb sai (vd. `Deadpool.2016.1080p.BluRay` → một video ca nhạc, điểm 11 nên bị loại),
 nên bom tấn gần như vắng mặt trong dữ liệu gốc.
-**Việc làm (toàn bộ bằng SQL trên 23,5 triệu torrent ≥ 100 MB, ~2 phút):**
+**Việc làm (toàn bộ bằng SQL trên 23,5 triệu torrent ≥ 100 MB phát hiện 04/2019–09/2024 — xem Bước 0; ~2 phút):**
 1. Bỏ tiền tố rác (`[YTS.MX]`, `www.site.com -`), đuôi file.
 2. Tách **NĂM** (1920–2029, không nhầm với `1080p`, `1920x1080`) và **TÊN** = phần trước năm.
 3. Bỏ torrent phim bộ (`S01E02`, `Season`, `Сезон`…).
@@ -112,13 +120,44 @@ code("""q(\"\"\"SELECT imdb_id, tmdb_title, release_date::DATE AS ngay_phat_hanh
 code("""q("SELECT imdb_id, country AS nuoc, type AS loai, release_date::DATE AS ngay FROM '@tmdb_release_dates.parquet' WHERE imdb_id = 'tt1745960' ORDER BY ngay LIMIT 8")"""),
 md("Loại phát hành TMDb: 1 công chiếu, 2 rạp giới hạn, 3 rạp, **4 Digital (bản online)**, 5 đĩa, 6 TV."),
 
-md("""## Bước 8 — Đánh giá chất lượng ghép (`src/08`)
+md("""## Bước 8 — Kiểm tra thuật toán ghép tên của Bước 4
 
-Một pipeline độc lập thứ hai (thư viện `guessit` tách tên file + `rapidfuzz` so tên gần đúng) được chạy trên 20.000 tên file
-và so với mã của MagnetDB — để biết các cách ghép đồng thuận đến đâu:"""),
-code("""ev = q("SELECT * FROM '@match_eval.parquet'")
-pred, ok = ev["pred"].notna(), ev["pred"] == ev["truth"]
-pd.DataFrame({"so_ten_file": [len(ev)], "precision": [round(ok.sum() / pred.sum(), 3)], "recall": [round(ok.sum() / len(ev), 3)]})"""),
+Không có đáp án đúng cho 23,5 triệu torrent, nên thuật toán ghép tên ở Bước 4 được **so với nhãn có sẵn của MagnetDB**
+(mã IMDb mà MagnetDB tự gán cho file video, Bước 1–2) trên những torrent mà cả hai cùng xét: thuộc đầu vào Bước 4 và
+được MagnetDB gán vào một phim lẻ.
+
+- **Mức đồng thuận** = số torrent thuật toán ghép trùng nhãn MagnetDB ÷ số torrent thuật toán đưa ra kết quả (không mơ hồ).
+  Cho biết: *khi thuật toán đã trả lời, bao nhiêu lần giống MagnetDB.*
+- **Độ phủ** = số torrent ghép trùng nhãn MagnetDB ÷ mọi torrent có nhãn MagnetDB.
+  Thấp hơn vì thuật toán **cố ý từ chối** tên không có năm hoặc tên mơ hồ thay vì đoán.
+
+Nhãn MagnetDB **cũng sai** (Bước 1–2), nên đây là *mức đồng thuận*, không phải độ chính xác tuyệt đối:"""),
+code("""con.execute((\"\"\"CREATE OR REPLACE TEMP TABLE kiem_tra AS
+WITH nhan AS (   -- nhãn MagnetDB: torrent có file video được MagnetDB gán vào một phim lẻ IMDb
+    SELECT f.torrent_id, list(DISTINCT f.imdb_id) AS ma_magnetdb, mode(f.imdb_id) AS ma_magnetdb_chinh
+    FROM '@matched_files.parquet' f JOIN '@imdb_movies_all.parquet' m ON m.tconst = f.imdb_id
+    WHERE f.torrent_id IN (\"\"\" + DAU_VAO + \"\"\")
+    GROUP BY 1)
+SELECT nhan.*, o.imdb_id AS ma_thuat_toan, o.torrent_name,
+       coalesce(NOT o.ambiguous, false) AS tra_loi,
+       coalesce(NOT o.ambiguous AND list_contains(nhan.ma_magnetdb, o.imdb_id), false) AS trung
+FROM nhan LEFT JOIN '@name_matches.parquet' o USING (torrent_id)\"\"\").replace("@", DC.as_posix() + "/"))
+display(q(\"\"\"SELECT count(*) AS torrent_co_nhan_MagnetDB, count(*) FILTER (WHERE tra_loi) AS thuat_toan_tra_loi,
+            count(*) FILTER (WHERE trung) AS trung_nhan_MagnetDB,
+            round(100.0 * count(*) FILTER (WHERE trung) / count(*) FILTER (WHERE tra_loi), 1) AS muc_dong_thuan_pct,
+            round(100.0 * count(*) FILTER (WHERE trung) / count(*), 1) AS do_phu_pct
+     FROM kiem_tra\"\"\"))
+# Ví dụ ca bất đồng: phần lớn là MagnetDB gán nhầm phần phim hoặc bản khác năm
+q(\"\"\"SELECT k.torrent_name AS ten_torrent, a.title || ' (' || a.start_year || ')' AS thuat_toan_ghep,
+            b.title || ' (' || b.start_year || ')' AS MagnetDB_gan
+     FROM kiem_tra k JOIN '@imdb_movies_all.parquet' a ON a.tconst = k.ma_thuat_toan
+                     JOIN '@imdb_movies_all.parquet' b ON b.tconst = k.ma_magnetdb_chinh
+     WHERE k.tra_loi AND NOT k.trung
+       AND (k.torrent_name ILIKE 'Paranormal Activity 4 [BluRay%' OR k.torrent_name ILIKE 'Perfetti.Sconosciuti.2016.%'
+            OR k.torrent_name ILIKE 'The.Kindergarten.Teacher.2018.%' OR k.torrent_name ILIKE 'The Neverending Story 1984%'
+            OR k.torrent_name ILIKE 'Блуждающая Земля.2019%')
+     QUALIFY row_number() OVER (PARTITION BY a.tconst ORDER BY k.torrent_id) = 1
+     ORDER BY a.start_year\"\"\")"""),
 
 md("""## Bước 9 — Làm sạch và gộp hai nguồn (`src/09`, bộ lọc A–J)
 
@@ -175,7 +214,7 @@ md("""## Tóm tắt quy trình
 | Trích xuất | 01–02, 10 | `matched_files`, `magnetdb_matched_slice`, `mdb_*` | Lấy phần cần dùng từ SQLite 117 GB |
 | Chuẩn hóa | 03 | `imdb_title_index` | Mọi tên phim ở mọi ngôn ngữ về một dạng |
 | Tích hợp | 04, 05, 06–07 | `name_matches`, `movies`, `tmdb_*` | Ghép torrent ↔ IMDb ↔ TMDb |
-| Đánh giá | 08 | `match_eval` | Đo mức đồng thuận của phép ghép |
+| Kiểm tra | Bước 8 notebook này | — | So thuật toán ghép tên với nhãn MagnetDB: mức đồng thuận, độ phủ |
 | Làm sạch | 09 | `torrents_clean`, `movie_analysis` | 10 bộ lọc A–J, loại lỗi ghép và torrent giả |
 
 Các notebook 01–08 dùng hai bảng sạch này để phân tích và vẽ biểu đồ."""),

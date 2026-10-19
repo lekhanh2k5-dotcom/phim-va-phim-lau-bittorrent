@@ -1,6 +1,6 @@
 {
   "notebook": "notebooks/00_quy_trinh_xu_ly.ipynb",
-  "notebook_sha256": "cdedc003512c8ee8e99dc30bc288a592265a467f79547f6e9cce3173284d7df7",
+  "notebook_sha256": "654e7238d5af782da444087a2d5068b3b489f45f89660e6a8e4c4960e98b583d",
   "source_cells": [
     8,
     10,
@@ -21,9 +21,11 @@
     "matched_rows": 2253337,
     "ambiguous_rows": 193739,
     "matched_movies": 122990,
-    "evaluation_files": 20000,
-    "evaluation_precision": 0.879,
-    "evaluation_recall": 0.632,
+    "labelled_torrents": 226006,
+    "answered_torrents": 129184,
+    "agreeing_torrents": 118812,
+    "agreement_pct": 92.0,
+    "coverage_pct": 52.6,
     "clean_pairs": 2078927,
     "clean_torrents": 2066598,
     "clean_movies": 126081,
