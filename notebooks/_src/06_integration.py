@@ -107,29 +107,22 @@ V.titles(fig, "Nếu chỉ dùng dữ liệu có sẵn, gần như mọi bom t�
          f"20 phim có nhiều torrent nhất sau khi tự ghép; chấm xanh = số torrent mà mã IMDb của MagnetDB tìm được. {SRC}")
 V.save(fig, FOLDER, "03_top_movies_dumbbell")
 
-# ---- 04. Hai phương pháp ghép đồng thuận đến đâu? -------------------------------------------------------------------------
-ev = duckdb.sql(f"SELECT * FROM read_parquet('{P('match_eval.parquet')}')").df()
-
-
-def prf(df):
-    n_pred, n_ok = df["pred"].notna().sum(), (df["pred"] == df["truth"]).sum()
-    p, r = n_ok / max(n_pred, 1), n_ok / max(len(df), 1)
-    return pd.Series({"Precision": p, "Recall": r, "F1": 2 * p * r / (p + r) if p + r else 0})
-
-
-groups = {"Mọi tên file": ev, "Chữ Latin": ev[ev["script"] == "latin/other"], "Chữ Kirin": ev[ev["script"] == "cyrillic"],
-          "Không có số mùa/tập": ev[~ev["is_tv_hint"]]}
-tab = pd.DataFrame({k: prf(v) for k, v in groups.items()}).T
-# So với mã GỐC của MagnetDB (trước khi gộp/làm sạch, để hai bên độc lập): chỉ torrent mà
-# MagnetDB gán đúng 1 phim, không phải tập phim bộ, file >= 100 MB.
-agree = con.execute(f"""
-    WITH mdb AS (SELECT torrent_id, any_value(imdb_id) AS imdb_id
-                 FROM read_parquet('{P('matched_files.parquet')}')
-                 WHERE NOT is_tv_hint AND file_size >= 1e8
-                 GROUP BY torrent_id HAVING count(DISTINCT imdb_id) = 1)
-    SELECT avg((n.imdb_id = m.imdb_id)::INT), count(*)
-    FROM read_parquet('{P('name_matches.parquet')}') n JOIN mdb m USING (torrent_id) WHERE NOT n.ambiguous
-""").fetchone()
+# ---- 04. Thuật toán ghép tên khớp với nhãn MagnetDB đến đâu? -------------------------------------------------------------
+# Cùng định nghĩa với notebook 00 (Bước 8): đầu vào của src/04 (04/2019–09/2024, >= 100 MB), nhãn MagnetDB là phim lẻ IMDb.
+con.execute(f"""
+    CREATE OR REPLACE TEMP TABLE kiem_tra AS
+    WITH dau_vao AS (SELECT torrent_id FROM read_parquet('{P('mdb_torrents_all.parquet')}')
+                     WHERE discovered_at_utc >= '2019-04-01' AND discovered_at_utc < '2024-09-30' AND total_size >= 100e6),
+         nhan AS (SELECT f.torrent_id, list(DISTINCT f.imdb_id) AS ma_magnetdb
+                  FROM read_parquet('{P('matched_files.parquet')}') f
+                  JOIN read_parquet('{P('imdb_movies_all.parquet')}') m ON m.tconst = f.imdb_id
+                  WHERE f.torrent_id IN (SELECT torrent_id FROM dau_vao) GROUP BY 1)
+    SELECT nhan.torrent_id, coalesce(NOT o.ambiguous, false) AS tra_loi,
+           coalesce(NOT o.ambiguous AND list_contains(nhan.ma_magnetdb, o.imdb_id), false) AS trung
+    FROM nhan LEFT JOIN read_parquet('{P('name_matches.parquet')}') o USING (torrent_id)""")
+total, answered, agreeing = con.execute(
+    "SELECT count(*), count(*) FILTER (WHERE tra_loi), count(*) FILTER (WHERE trung) FROM kiem_tra").fetchone()
+agree_raw, coverage = agreeing / answered, agreeing / total
 # So với MagnetDB SAU các bộ lọc A–E2 của chính nó nhưng TRƯỚC khi gộp (chưa bỏ ca mâu thuẫn)
 agree_clean = con.execute(f"""
     WITH mdb AS (SELECT torrent_id, any_value(imdb_id) AS imdb_id
@@ -138,35 +131,33 @@ agree_clean = con.execute(f"""
     SELECT avg((n.imdb_id = m.imdb_id)::INT), count(*)
     FROM read_parquet('{P('name_matches.parquet')}') n JOIN mdb m USING (torrent_id) WHERE NOT n.ambiguous
 """).fetchone()
-print(f"đồng thuận tự ghép vs MagnetDB gốc: {agree[0]:.3f} ({agree[1]:,}); vs MagnetDB đã làm sạch: "
-      f"{agree_clean[0]:.3f} ({agree_clean[1]:,})")
-fig, (ax, ax2) = plt.subplots(1, 2, figsize=(12, 5), gridspec_kw=dict(width_ratios=[3, 1.2]))
-V.style_axes(ax)
-x = np.arange(len(tab))
-w = 0.26
-for i, (col, color) in enumerate(zip(tab.columns, V.CAT[:3])):
-    bars = ax.bar(x + (i - 1) * w, tab[col], width=w - 0.03, color=color, label=col)
-    for b, v in zip(bars, tab[col]):
-        ax.text(b.get_x() + b.get_width() / 2, v + 0.015, f"{v:.2f}", ha="center", color=V.INK2, fontsize=8)
-ax.set_xticks(x)
-ax.set_xticklabels(tab.index, color=V.INK2)
-ax.set_ylim(0, 1.08)
-ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0%}"))
-ax.legend(loc="upper left", ncol=3)
-ax.set_title("① Pipeline tách tên file (guessit + rapidfuzz)\nso với mã của MagnetDB, 20.000 tên file", loc="left",
-             color=V.INK, fontsize=10)
+print(f"{total:,} torrent có nhãn MagnetDB; thuật toán trả lời {answered:,}; trùng {agreeing:,} "
+      f"-> đồng thuận {agree_raw:.1%}, độ phủ {coverage:.1%}; vs MagnetDB đã làm sạch: {agree_clean[0]:.1%} ({agree_clean[1]:,})")
+fig, (ax, ax2) = plt.subplots(1, 2, figsize=(12, 5), gridspec_kw=dict(width_ratios=[2.2, 1.2]))
+V.style_axes(ax, grid="x")
+steps = [("Có nhãn MagnetDB (phim lẻ)", total, V.OTHER), ("Thuật toán đưa ra kết quả", answered, V.BLUE),
+         ("Trùng nhãn MagnetDB", agreeing, V.ORANGE)]
+for yi, (label, val, color) in enumerate(steps):
+    ax.barh([yi], [val], color=color, height=0.6)
+    ax.text(val + total * 0.01, yi, f"{val:,}".replace(",", "."), va="center", color=V.INK2, fontsize=10)
+ax.set_yticks(range(len(steps)))
+ax.set_yticklabels([s[0] for s in steps], color=V.INK2)
+ax.invert_yaxis()
+ax.set_xlim(0, total * 1.18)
+ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v / 1e3:,.0f}k"))
+ax.set_title(f"① Thuật toán ghép tên trên {total / 1e3:,.0f}k torrent MagnetDB đã gán phim".replace(",", "."),
+             loc="left", color=V.INK, fontsize=10)
 V.style_axes(ax2, grid=None)
-for xi, (val, n) in enumerate([agree, agree_clean]):
-    ax2.bar([xi], [val], width=0.6, color=V.ORANGE)
-    ax2.text(xi, val + 0.015, f"{val:.1%}", ha="center", color=V.INK2, fontsize=10)
-ax2.set_xticks([0, 1])
-ax2.set_xticklabels([f"mã gốc\n({agree[1] / 1e3:,.0f}k torrent)", f"đã làm sạch\n({agree_clean[1] / 1e3:,.0f}k torrent)"],
-                    color=V.INK2, fontsize=9)
+for xi, (val, label) in enumerate([(agree_raw, f"mức đồng thuận\n(nhãn gốc)"), (coverage, "độ phủ\n(nhãn gốc)"),
+                                   (agree_clean[0], "đồng thuận\n(nhãn đã làm sạch)")]):
+    ax2.bar([xi], [val], width=0.6, color=V.ORANGE if xi != 1 else V.BLUE)
+    ax2.text(xi, val + 0.015, f"{val:.1%}".replace(".", ","), ha="center", color=V.INK2, fontsize=10)
+ax2.set_xticks([0, 1, 2])
+ax2.set_xticklabels([f"mức đồng thuận\n(nhãn gốc)", "độ phủ\n(nhãn gốc)", "đồng thuận\n(nhãn đã làm sạch)"], color=V.INK2, fontsize=9)
 ax2.set_ylim(0, 1.08)
 ax2.set_yticks([])
-ax2.set_xlim(-0.6, 1.6)
-ax2.set_title("② Tự ghép tên torrent đồng thuận\nvới mã MagnetDB", loc="left", color=V.INK, fontsize=10)
-V.titles(fig, "Hai cách ghép độc lập cho kết quả rất khớp nhau",
-         f"Precision = trong các ca đưa ra đáp án, bao nhiêu % trùng mã MagnetDB; Recall = bao nhiêu % tên file được ghép đúng. "
-         f"Đây là MỨC ĐỒNG THUẬN, không phải độ chính xác tuyệt đối — mã của MagnetDB cũng có lỗi. {SRC}")
+ax2.set_title("② Tỷ lệ", loc="left", color=V.INK, fontsize=10)
+V.titles(fig, "Khi đã trả lời, thuật toán ghép tên trùng nhãn MagnetDB trong phần lớn trường hợp",
+         f"Mức đồng thuận = trùng nhãn ÷ số ca thuật toán trả lời; độ phủ = trùng nhãn ÷ mọi torrent có nhãn (thấp vì thuật toán từ chối tên "
+         f"không có năm hoặc mơ hồ). Nhãn MagnetDB cũng có lỗi, nên đây là MỨC ĐỒNG THUẬN, không phải độ chính xác tuyệt đối. {SRC}")
 V.save(fig, FOLDER, "04_match_agreement")

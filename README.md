@@ -196,7 +196,7 @@ curl -L -o data_raw/geo/ne_110m_admin_0_countries.geojson \
 | `05_build_movie_list` | Danh sách phim từ hai nguồn ghép | `movies` | vài giây |
 | `06_fetch_tmdb --catalog-min-votes 1000` | Gọi TMDb (cả phim IMDb ≥ 1.000 vote không có trên torrent) | `data_raw/tmdb_cache/*.json` | ~4–5 giờ |
 | `07_tmdb_to_table` | JSON → bảng | `tmdb_movies`, `tmdb_release_dates`, `tmdb_watch_providers` | ~1 phút |
-| `08_match_eval` | Pipeline guessit + rapidfuzz, đánh giá vs MagnetDB (cho notebook 06) | `match_eval` | ~3 phút |
+| `08_match_eval` | Pipeline phụ guessit + rapidfuzz trên 20.000 tên file (tham khảo; notebook 00 và 06 đánh giá trực tiếp thuật toán của `04` so với nhãn MagnetDB) | `match_eval` | ~3 phút |
 | `09_build_tables` | Làm sạch (A–J) + gộp hai nguồn | `torrents_clean`, `movie_analysis`, `cleaning_log.csv` | ~1 phút |
 | `10_extract_magnetdb_overview` | Mọi torrent + mẫu 1% bảng files (cho notebook 04) | `mdb_torrents_all`, `mdb_files_sample`, `mdb_files_per_torrent` | ~7 phút |
 
